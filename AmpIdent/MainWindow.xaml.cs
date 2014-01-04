@@ -46,7 +46,7 @@ namespace AmpIdent
 
             for (int i = 0; i <= 9; i++)
             {
-                vectorY[i,0] = 1.234F * vectorX[i,0] + 4.523F;
+                vectorY[i,0] = 1.234F * vectorX[i,0] - 4.523F;
             }
             Console.WriteLine(newLine + "Vector Y:");
             Console.WriteLine(vectorY.ToString());
@@ -109,12 +109,6 @@ namespace AmpIdent
             Console.WriteLine(newLine + "Solved:");
             Console.WriteLine(tempX.ToString());
             Console.WriteLine(tempY.ToString());
-
-            while (true)
-            {
-
-            }
-
         }
     }
 }
