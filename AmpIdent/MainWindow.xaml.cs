@@ -26,7 +26,7 @@ namespace AmpIdent
     {
         public MainWindow()
         {
-            //InitializeComponent();
+            InitializeComponent();
 
             MainViewModel mainViewModel = new MainViewModel();
             string newLine = Environment.NewLine;
