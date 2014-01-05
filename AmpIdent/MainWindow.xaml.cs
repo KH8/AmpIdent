@@ -35,8 +35,8 @@ namespace AmpIdent
             //first Czech example
             // parameters
             
-            double k = 0.2; 
-            double q = 1;
+            double k = -0.2; 
+            double q = -4.53;
             double sigma2 = 5;
 
             Random random = new Random();
@@ -50,12 +50,10 @@ namespace AmpIdent
             {
                 int i = j - 1;
                 X[i, 0] = j;
-                Y[i, 0] = k * X[i, 0] + q + random.Next(-5,5)/10.0;
+                Y[i, 0] = k * X[i, 0] + q +random.Next(-5, 5) / 10.0;
                 mainViewModel.AddPoint(1, new DataPoint(X[i, 0], Y[i, 0]));
                 mainViewModel.AddPoint(2, new DataPoint(X[i, 0], k * X[i, 0] + q));
             }
-            Console.WriteLine(X.ToString());
-            Console.WriteLine(Y.ToString());
 
             var Z = new DenseMatrix(10, 2, 1.0);
             for (int i = 0; i <= 9; i++)
@@ -81,11 +79,9 @@ namespace AmpIdent
                 int i = j - 1;
                 X[i, 0] = j;
                 Y[i, 0] = Theta[0, 0] * X[i, 0] + Theta[1, 0];
-                mainViewModel.AddPoint(3, new DataPoint(X[i, 0], Y[i, 0]));
+                mainViewModel.AddPoint(9, new DataPoint(X[i, 0], Y[i, 0]));
             }
-            Console.WriteLine(X.ToString());
-            Console.WriteLine(Y.ToString());
-
+            
             DataContext = mainViewModel;
         }
     }
