@@ -43,20 +43,20 @@ namespace AmpIdent
             
             // experiments
 
-            var X = new DenseMatrix(10, 1, 0.0);
-            var Y = new DenseMatrix(10, 1, 0.0);
+            var X = new DenseMatrix(50, 1, 0.0);
+            var Y = new DenseMatrix(50, 1, 0.0);
 
-            for (int j = 1; j <= 10; j++)
+            for (int j = 1; j <= 50; j++)
             {
                 int i = j - 1;
                 X[i, 0] = j;
-                Y[i, 0] = k * X[i, 0] + q +random.Next(-5, 5) / 10.0;
+                Y[i, 0] = k * X[i, 0] + q + random.Next(-5, 5) / 10.0;
                 mainViewModel.AddPoint(1, new DataPoint(X[i, 0], Y[i, 0]));
                 mainViewModel.AddPoint(2, new DataPoint(X[i, 0], k * X[i, 0] + q));
             }
 
-            var Z = new DenseMatrix(10, 2, 1.0);
-            for (int i = 0; i <= 9; i++)
+            var Z = new DenseMatrix(50, 2, 1.0);
+            for (int i = 0; i <= 49; i++)
             {
                 Z[i, 0] = X[i, 0];
             }
@@ -74,7 +74,7 @@ namespace AmpIdent
             var Theta = ZTZ.Inverse() * ZT * Y;
             Console.WriteLine(Theta.ToString());
 
-            for (int j = 1; j <= 10; j++)
+            for (int j = 1; j <= 50; j++)
             {
                 int i = j - 1;
                 X[i, 0] = j;
