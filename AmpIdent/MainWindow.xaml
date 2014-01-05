@@ -1,8 +1,11 @@
 ﻿<Window x:Class="AmpIdent.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf" 
         Title="MainWindow" Height="484.329" Width="722.016">
     <Grid>
-        
+        <oxy:Plot>
+            <oxy:LineSeries ItemsSource="{Binding MyCollection}" DataFieldX="X" DataFieldY="Y"/>
+        </oxy:Plot>
     </Grid>
 </Window>

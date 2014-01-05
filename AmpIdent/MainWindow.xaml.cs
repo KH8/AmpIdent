@@ -13,6 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MathNet.Numerics.LinearAlgebra.Double;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 
 namespace AmpIdent
 {
@@ -26,14 +29,35 @@ namespace AmpIdent
             InitializeComponent();
             string newLine = Environment.NewLine;
 
+            /*
+            //first Czech example
             // parameters
             
-            //double k = 0.2; 
-            //double q = 1;
-            //double sigma2 = 0.5;
+            double k = 0.2; 
+            double q = 1;
+            double sigma2 = 0.5;
+
+            Random random = new Random();
             
             // experiments
 
+            var X = new DenseMatrix(10, 1, 0);
+            var Y = new DenseMatrix(10, 1, 0);
+
+            for (int i = 0; i <= 9; i++)
+            {
+                X[i, 0] = i;
+                Y[i, 0] = k * X[i, 0] + q + sigma2 * random.Next(0, 10);
+            }
+
+            Console.WriteLine(newLine + "Vector X:");
+            Console.WriteLine(X.ToString());
+            Console.WriteLine(newLine + "Vector Y:");
+            Console.WriteLine(Y.ToString());
+            ///*/
+
+            /*
+            //second exapmle
             var vectorX = new DenseMatrix(10,1,1);
             var vectorY = new DenseMatrix(10, 1, 1);
 
@@ -109,10 +133,7 @@ namespace AmpIdent
             Console.WriteLine(newLine + "Solved:");
             Console.WriteLine(tempX.ToString());
             Console.WriteLine(tempY.ToString());
-
-            while (true)
-            {
-            }
+            ///*/
         }
     }
 }
