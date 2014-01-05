@@ -32,7 +32,6 @@ namespace AmpIdent
             string newLine = Environment.NewLine;
 
             
-            //first Czech example
             // parameters
             
             double k1 = -0.2;
