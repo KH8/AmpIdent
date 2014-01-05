@@ -38,10 +38,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\MathNet.Numerics.dll</HintPath>
     </Reference>
-    <Reference Include="OxyPlot">
+    <Reference Include="OxyPlot, Version=2013.2.142.1, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.\OxyPlot.dll</HintPath>
     </Reference>
-    <Reference Include="OxyPlot.Wpf">
+    <Reference Include="OxyPlot.Wpf, Version=2013.2.142.1, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.\OxyPlot.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -63,6 +65,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\MainWindowModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -103,8 +106,17 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Content Include="MathNet.Numerics.dll" />
+    <Resource Include="MathNet.Numerics.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="OxyPlot.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="OxyPlot.Wpf.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
