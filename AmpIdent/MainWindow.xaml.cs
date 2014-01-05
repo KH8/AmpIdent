@@ -34,8 +34,8 @@ namespace AmpIdent
             
             // experiments
 
-            var vectorX = new DenseMatrix(10, 1, 0);
-            var vectorY = new DenseMatrix(10, 1, 0);
+            var vectorX = new DenseMatrix(10,1,1);
+            var vectorY = new DenseMatrix(10, 1, 1);
 
             for (int i = 0; i <= 9; i++)
             {
@@ -46,12 +46,12 @@ namespace AmpIdent
 
             for (int i = 0; i <= 9; i++)
             {
-                vectorY[i,0] = 1.234F * vectorX[i,0] - 4.523F;
+                vectorY[i,0] = 1.234F * vectorX[i,0] + 4.523F;
             }
             Console.WriteLine(newLine + "Vector Y:");
             Console.WriteLine(vectorY.ToString());
 
-            var matrixZ = new DenseMatrix(4, 4, 0);
+            var matrixZ = new DenseMatrix(4, 4, 1);
 
             int k = 5;
 
@@ -75,7 +75,7 @@ namespace AmpIdent
             matrixZ[3, 2] = vectorX[k + 1,0];
             matrixZ[3, 3] = vectorX[k + 2,0];
 
-            var vectorYk = new DenseMatrix(4, 1, 0);
+            var vectorYk = new DenseMatrix(4, 1, 1);
             vectorYk[0, 0] = vectorY[k, 0];
             vectorYk[1, 0] = vectorY[k+1, 0];
             vectorYk[2, 0] = vectorY[k+2, 0];
@@ -93,8 +93,8 @@ namespace AmpIdent
             Console.WriteLine(newLine + "Matrix Theta:");
             Console.WriteLine(matrixTheta.ToString());
 
-            var tempX = new DenseMatrix(20, 1, 0);
-            var tempY = new DenseMatrix(20, 1, 0);
+            var tempX = new DenseMatrix(20, 1, 1);
+            var tempY = new DenseMatrix(20, 1, 1);
 
             for (int i = 0; i <= 19; i++)
             {
@@ -109,6 +109,10 @@ namespace AmpIdent
             Console.WriteLine(newLine + "Solved:");
             Console.WriteLine(tempX.ToString());
             Console.WriteLine(tempY.ToString());
+
+            while (true)
+            {
+            }
         }
     }
 }
