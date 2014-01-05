@@ -36,15 +36,15 @@
   <ItemGroup>
     <Reference Include="MathNet.Numerics, Version=2.6.1.30, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\MathNet.Numerics.dll</HintPath>
+      <HintPath>Resources\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="OxyPlot, Version=2013.2.142.1, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\OxyPlot.dll</HintPath>
+      <HintPath>Resources\OxyPlot.dll</HintPath>
     </Reference>
     <Reference Include="OxyPlot.Wpf, Version=2013.2.142.1, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\OxyPlot.Wpf.dll</HintPath>
+      <HintPath>Resources\OxyPlot.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -109,13 +109,13 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Resource Include="MathNet.Numerics.dll">
+    <Resource Include="Resources\MathNet.Numerics.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="OxyPlot.dll">
+    <Resource Include="Resources\OxyPlot.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="OxyPlot.Wpf.dll">
+    <Resource Include="Resources\OxyPlot.Wpf.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
