@@ -24,18 +24,38 @@ namespace AmpIdent
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ViewModels.MainWindowModel viewModel;
-        public PlotModel MyPlotModel
-        {
-            get { return viewModel.MyPlotModel; }
-        }
-
         public MainWindow()
         {
-            viewModel = new ViewModels.MainWindowModel();
-            DataContext = viewModel;
- 
+            //InitializeComponent();
+
+            MainViewModel mainViewModel = new MainViewModel();
+            string newLine = Environment.NewLine;
+
+            ///*
+            //first Czech example
+            // parameters
             
+            double k = 0.2; 
+            double q = 1;
+            double sigma2 = 0.5;
+
+            Random random = new Random();
+            
+            // experiments
+
+            var X = new DenseMatrix(10, 1, 0);
+            var Y = new DenseMatrix(10, 1, 0);
+
+            for (int i = 0; i <= 9; i++)
+            {
+                X[i, 0] = i;
+                Y[i, 0] = k * X[i, 0] + q + sigma2 * random.Next(0, 10);
+                mainViewModel.AddPoint(1, new DataPoint(X[i, 0], Y[i, 0]));
+                mainViewModel.AddPoint(2, new DataPoint(X[i, 0], k * X[i, 0] + q));
+            }
+            ///*/
+
+            DataContext = mainViewModel;
         }
     }
 }

@@ -4,6 +4,6 @@
         xmlns:oxy="http://oxyplot.codeplex.com"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <oxy:Plot Model="{Binding MyPlotModel}"/>
+        <oxy:Plot Model="{Binding Model}"/>
     </Grid>
 </Window>
