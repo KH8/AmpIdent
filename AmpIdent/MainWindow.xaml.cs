@@ -31,18 +31,44 @@ namespace AmpIdent
             MainViewModel mainViewModel = new MainViewModel();
             string newLine = Environment.NewLine;
 
-            //test model
+            //TEST MODEL
             var X1 = new DenseMatrix(500, 1, 0.0);
             var Y1 = new DenseMatrix(500, 1, 0.0);
 
             for (int i = 0; i <= 499; i++)
             {
-                X1[i, 0] = -54 * Math.Sin(i / 10F) * Math.Tan(i);
+                X1[i, 0] = -54 * Math.Sin(Math.Sqrt(i));
                 mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
 
-                Y1[i, 0] = 200 * Math.Sqrt(X1[i, 0]);
+                Y1[i, 0] = X1[i, 0] * X1[i, 0] / 100;
                 mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
             }
+
+            int na = 5;
+            int nb = 5;
+
+            //I STEP: Y(L)
+            int L = 100;
+            var YL = new DenseMatrix(L, 1, 0.0);
+
+            for (int i = 1; i <= L - 1; i++)
+            {
+                YL[i, 0] = Y1[i, 0];
+            }
+            Console.WriteLine("I step: YL");
+            Console.WriteLine(YL.ToString());
+
+            //II STEP:
+            int k = 1;
+            var V0 = new DenseMatrix(L, 1, 0.0);
+            Random random = new Random();
+            for (int i = 1; i <= L - 1; i++)
+            {
+                V0[i, 0] = random.Next(-10, 10);
+            }
+            Console.WriteLine("II step: V0");
+            Console.WriteLine(V0.ToString());
+
 
 
             /*
@@ -104,7 +130,7 @@ namespace AmpIdent
                 Y[i, 0] = Theta[0, 0] + Theta[1, 0] * X1[i, 0] + Theta[2, 0] * X1[i, 0] * X1[i, 0] + Theta[3, 0] * X1[i, 0] * X1[i, 0] * X1[i, 0];
                 mainViewModel.AddPoint(9, new DataPoint(X1[i, 0], Y[i, 0]));
             }*/
-            
+
             DataContext = mainViewModel;
         }
     }
