@@ -31,7 +31,21 @@ namespace AmpIdent
             MainViewModel mainViewModel = new MainViewModel();
             string newLine = Environment.NewLine;
 
-            
+            //test model
+            var X1 = new DenseMatrix(500, 1, 0.0);
+            var Y1 = new DenseMatrix(500, 1, 0.0);
+
+            for (int i = 0; i <= 499; i++)
+            {
+                X1[i, 0] = -54 * Math.Sin(i / 10F) * Math.Tan(i);
+                mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
+
+                Y1[i, 0] = 200 * Math.Sqrt(X1[i, 0]);
+                mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
+            }
+
+
+            /*
             // parameters
             
             double k1 = -0.2;
@@ -89,7 +103,7 @@ namespace AmpIdent
             {
                 Y[i, 0] = Theta[0, 0] + Theta[1, 0] * X1[i, 0] + Theta[2, 0] * X1[i, 0] * X1[i, 0] + Theta[3, 0] * X1[i, 0] * X1[i, 0] * X1[i, 0];
                 mainViewModel.AddPoint(9, new DataPoint(X1[i, 0], Y[i, 0]));
-            }
+            }*/
             
             DataContext = mainViewModel;
         }
