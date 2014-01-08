@@ -30,6 +30,7 @@ namespace AmpIdent
 
             MainViewModel mainViewModel = new MainViewModel();
             string newLine = Environment.NewLine;
+            Random random = new Random();
 
             //TEST MODEL
             var X1 = new DenseMatrix(500, 1, 0.0);
@@ -37,20 +38,21 @@ namespace AmpIdent
 
             for (int i = 0; i <= 499; i++)
             {
-                X1[i, 0] = -54 * Math.Sin(Math.Sqrt(i));
+                X1[i, 0] = -54 * Math.Sin(Math.Sqrt(i)) + random.Next(-10, 100);
+                //X1[i, 0] = random.Next(-10, 100);
                 mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
 
-                Y1[i, 0] = X1[i, 0] * X1[i, 0] / 100;
+                Y1[i, 0] = 30 * Math.Abs(X1[i, 0]) - X1[i, 0];
                 mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
             }
 
-            int na = 5;
-            int nb = 5;
+            int na = 10;
+            int nb = 12;
             int nd = 5;
+            int L = 450;
+            int tStart = 15;
 
-            //I STEP: Y(L)
-            int L = 100;
-            int tStart = 10;
+            //I Step: Y(L)
             var YL = new DenseMatrix(L, 1, 0.0);
 
             for (int i = 0; i <= L - 1; i++)
@@ -60,36 +62,55 @@ namespace AmpIdent
             Console.WriteLine("I step: YL");
             Console.WriteLine(YL.ToString());
 
-            //II STEP:
+            //II Step:
             int k = 1;
-            var V0 = new DenseMatrix(L, 1, 0.0);
-            Random random = new Random();
-            for (int i = 0; i <= L - 1; i++)
+            var V0 = new DenseMatrix(L + 2 * tStart, 1, 0.0);
+            for (int i = 0; i <= L + 2 * tStart - 1; i++)
             {
                 V0[i, 0] = random.Next(-10, 10);
             }
             Console.WriteLine("II step: V0");
             Console.WriteLine(V0.ToString());
 
-            //III Step: Theta(L)
-            var Theta_k = new DenseMatrix(na + nb + nd, 1, 0.0);
-            for (int i = 1; i <= na + nb + nd; i++)
+            //III Step: Fi_k(L)
+            var Fi_k = new DenseMatrix(na + nb + nd, 1, 0.0);
+            var Fi_k_L = new DenseMatrix(na + nb + nd, L, 0.0);
+            for (int t = tStart; t <= tStart + L - 1; t++)
             {
-                if (i <= na)
+                Fi_k = CalculateFi_k(na, nb, nd, t, X1, Y1, V0);
+                for (int i = 0; i <= na + nb + nd - 1; i++)
                 {
-                    Theta_k[i - 1, 0] = -1 * Y1[tStart - i, 0];
-                }
-                if (i > na && i <= na + nb)
-                {
-                    Theta_k[i - 1, 0] = X1[tStart - i + na, 0];
-                }
-                if (i > na + nb && i <= na + nb + nd)
-                {
-                    Theta_k[i - 1, 0] = V0[tStart - i + na + nb, 0];
+                    Fi_k_L[i, t - tStart] = Fi_k[i, 0];
                 }
             }
-            Console.WriteLine("III step: Theta_k");
-            Console.WriteLine(Theta_k.ToString());
+            Console.WriteLine("III step: Fi_k");
+            Console.WriteLine(Fi_k.ToString());
+            Console.WriteLine("III step: Fi_k_L");
+            Console.WriteLine(Fi_k_L.ToString());
+
+            //IV Step: Theta(k)
+            var FiFiT = Fi_k_L * Fi_k_L.Transpose();
+            var Theta_k = FiFiT.Inverse() * Fi_k_L * YL;
+            Console.WriteLine("IV step: Theta_k");
+            Console.WriteLine(Theta_k.ToString()); 
+
+            //V Step: Vk_t
+            var Fi_k_t = new DenseMatrix(na + nb + nd, 1, 0.0);
+            var Vk_t = new DenseMatrix(L + tStart, 1, 0.0);
+            for (int i = 0; i <= L + tStart - 1; i++)
+            {
+                Fi_k_t = CalculateFi_k(na, nb, nd, i + tStart, X1, Y1, V0);
+
+                var Theta_k_Y_1 = Theta_k.Transpose() * Fi_k_t;
+                mainViewModel.AddPoint(3, new DataPoint(i + tStart, Theta_k_Y_1[0, 0]));
+                Vk_t[i, 0] = Y1[i + tStart, 0] - Theta_k_Y_1[0, 0];
+            }
+            Console.WriteLine("V Step: Vk_t");
+            Console.WriteLine(Vk_t.ToString());
+
+
+
+
 
             /*
             // parameters
@@ -152,6 +173,28 @@ namespace AmpIdent
             }*/
 
             DataContext = mainViewModel;
+        }
+
+        private DenseMatrix CalculateFi_k(int t_na, int t_nb, int t_nd, int t_t, DenseMatrix t_X, DenseMatrix t_Y, DenseMatrix t_V)
+        {
+            var t_Fi_k = new DenseMatrix(t_na + t_nb + t_nd, 1, 0.0);
+            for (int i = 1; i <= t_na + t_nb + t_nd; i++)
+            {
+                if (i <= t_na)
+                {
+                    t_Fi_k[i - 1, 0] = -1 * t_Y[t_t - i, 0];
+                }
+                if (i > t_na && i <= t_na + t_nb)
+                {
+                    t_Fi_k[i - 1, 0] = t_X[t_t - i + t_na, 0];
+                }
+                if (i > t_na + t_nb && i <= t_na + t_nb + t_nd)
+                {
+                    t_Fi_k[i - 1, 0] = t_V[t_t - i + t_na + t_nb, 0];
+                }
+            }
+
+            return t_Fi_k;
         }
     }
 }
