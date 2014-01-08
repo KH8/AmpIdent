@@ -49,7 +49,8 @@ namespace AmpIdent
             int na = 10;
             int nb = 12;
             int nd = 5;
-            int L = 450;
+            int L = 250;
+            int iterations = 1;
             int tStart = 15;
 
             //I Step: Y(L)
@@ -63,7 +64,6 @@ namespace AmpIdent
             Console.WriteLine(YL.ToString());
 
             //II Step:
-            int k = 1;
             var V0 = new DenseMatrix(L + 2 * tStart, 1, 0.0);
             for (int i = 0; i <= L + 2 * tStart - 1; i++)
             {
@@ -72,43 +72,61 @@ namespace AmpIdent
             Console.WriteLine("II step: V0");
             Console.WriteLine(V0.ToString());
 
-            //III Step: Fi_k(L)
+            var Theta_k_1 = new DenseMatrix(na + nb + nd, 1, 0.0);
+            for (int i = 0; i <= na + nb + nd - 1; i++)
+            {
+                Theta_k_1[i, 0] = 0.0;
+            }
+
             var Fi_k = new DenseMatrix(na + nb + nd, 1, 0.0);
             var Fi_k_L = new DenseMatrix(na + nb + nd, L, 0.0);
-            for (int t = tStart; t <= tStart + L - 1; t++)
-            {
-                Fi_k = CalculateFi_k(na, nb, nd, t, X1, Y1, V0);
-                for (int i = 0; i <= na + nb + nd - 1; i++)
-                {
-                    Fi_k_L[i, t - tStart] = Fi_k[i, 0];
-                }
-            }
-            Console.WriteLine("III step: Fi_k");
-            Console.WriteLine(Fi_k.ToString());
-            Console.WriteLine("III step: Fi_k_L");
-            Console.WriteLine(Fi_k_L.ToString());
 
-            //IV Step: Theta(k)
-            var FiFiT = Fi_k_L * Fi_k_L.Transpose();
-            var Theta_k = FiFiT.Inverse() * Fi_k_L * YL;
-            Console.WriteLine("IV step: Theta_k");
-            Console.WriteLine(Theta_k.ToString()); 
-
-            //V Step: Vk_t
             var Fi_k_t = new DenseMatrix(na + nb + nd, 1, 0.0);
             var Vk_t = new DenseMatrix(L + tStart, 1, 0.0);
-            for (int i = 0; i <= L + tStart - 1; i++)
+
+            for (int k = 1; k <= iterations; k++)
             {
-                Fi_k_t = CalculateFi_k(na, nb, nd, i + tStart, X1, Y1, V0);
+                //III Step: Fi_k(L)
 
-                var Theta_k_Y_1 = Theta_k.Transpose() * Fi_k_t;
-                mainViewModel.AddPoint(3, new DataPoint(i + tStart, Theta_k_Y_1[0, 0]));
-                Vk_t[i, 0] = Y1[i + tStart, 0] - Theta_k_Y_1[0, 0];
+                for (int t = tStart; t <= tStart + L - 1; t++)
+                {
+                    Fi_k = CalculateFi_k(na, nb, nd, t, X1, Y1, V0);
+                    for (int i = 0; i <= na + nb + nd - 1; i++)
+                    {
+                        Fi_k_L[i, t - tStart] = Fi_k[i, 0];
+                    }
+                }
+                Console.WriteLine("III step: Fi_k :" + k.ToString());
+                Console.WriteLine(Fi_k.ToString());
+                Console.WriteLine("III step: Fi_k_L :" + k.ToString());
+                Console.WriteLine(Fi_k_L.ToString());
+
+                //IV Step: Theta(k)
+                var FiFiT = Fi_k_L * Fi_k_L.Transpose();
+                var Theta_k = FiFiT.Inverse() * Fi_k_L * YL;
+                Console.WriteLine("IV step: Theta_k :" + k.ToString());
+                Console.WriteLine(Theta_k.ToString());
+
+                //V Step: Vk_t
+                for (int i = 0; i <= L + tStart - 1; i++)
+                {
+                    Fi_k_t = CalculateFi_k(na, nb, nd, i + tStart, X1, Y1, V0);
+
+                    var Theta_k_Y_1 = Theta_k.Transpose() * Fi_k_t;
+                    mainViewModel.AddPoint(3, new DataPoint(i + tStart, Theta_k_Y_1[0, 0]));
+                    Vk_t[i, 0] = Y1[i + tStart, 0] - Theta_k_Y_1[0, 0];
+                }
+                Console.WriteLine("V Step: Vk_t :" + k.ToString());
+                Console.WriteLine(Vk_t.ToString());
+
+
+                //Decision
+                V0 = Vk_t;
+                for (int i = 0; i <= na + nb + nd - 1; i++)
+                {
+                    Theta_k_1[i, 0] = Theta_k[i, 0];
+                }
             }
-            Console.WriteLine("V Step: Vk_t");
-            Console.WriteLine(Vk_t.ToString());
-
-
 
 
 
