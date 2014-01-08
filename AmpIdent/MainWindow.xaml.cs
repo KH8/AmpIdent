@@ -38,7 +38,7 @@ namespace AmpIdent
 
             for (int i = 0; i <= 499; i++)
             {
-                X1[i, 0] = -54 * Math.Sin(Math.Sqrt(i)) + random.Next(-10, 100);
+                X1[i, 0] = -54 * Math.Sin(Math.Sqrt(i)); //+ random.Next(-10, 100);
                 //X1[i, 0] = random.Next(-10, 100);
                 mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
 
@@ -46,12 +46,13 @@ namespace AmpIdent
                 mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
             }
 
-            int na = 10;
-            int nb = 12;
+            int na = 5;
+            int nb = 5;
             int nd = 5;
-            int L = 250;
-            int iterations = 1;
+            int L = 450;
+            int iterations = 100;
             int tStart = 15;
+            double averageDiff = 0.0;
 
             //I Step: Y(L)
             var YL = new DenseMatrix(L, 1, 0.0);
@@ -60,17 +61,17 @@ namespace AmpIdent
             {
                 YL[i, 0] = Y1[i + tStart, 0];
             }
-            Console.WriteLine("I step: YL");
-            Console.WriteLine(YL.ToString());
+            //Console.WriteLine("I step: YL");
+            //Console.WriteLine(YL.ToString());
 
             //II Step:
-            var V0 = new DenseMatrix(L + 2 * tStart, 1, 0.0);
+            var V0 = new DenseMatrix(L + (iterations + 1) * tStart , 1, 1.0);
             for (int i = 0; i <= L + 2 * tStart - 1; i++)
             {
                 V0[i, 0] = random.Next(-10, 10);
             }
-            Console.WriteLine("II step: V0");
-            Console.WriteLine(V0.ToString());
+            //Console.WriteLine("II step: V0");
+            //Console.WriteLine(V0.ToString());
 
             var Theta_k_1 = new DenseMatrix(na + nb + nd, 1, 0.0);
             for (int i = 0; i <= na + nb + nd - 1; i++)
@@ -82,7 +83,9 @@ namespace AmpIdent
             var Fi_k_L = new DenseMatrix(na + nb + nd, L, 0.0);
 
             var Fi_k_t = new DenseMatrix(na + nb + nd, 1, 0.0);
-            var Vk_t = new DenseMatrix(L + tStart, 1, 0.0);
+            var Vk_t = new DenseMatrix(L + (iterations + 1) * tStart, 1, 1.0);
+
+            var ThetaDiff = new DenseMatrix(na + nb + nd, 1, 0.0);
 
             for (int k = 1; k <= iterations; k++)
             {
@@ -96,16 +99,16 @@ namespace AmpIdent
                         Fi_k_L[i, t - tStart] = Fi_k[i, 0];
                     }
                 }
-                Console.WriteLine("III step: Fi_k :" + k.ToString());
-                Console.WriteLine(Fi_k.ToString());
-                Console.WriteLine("III step: Fi_k_L :" + k.ToString());
-                Console.WriteLine(Fi_k_L.ToString());
+                //Console.WriteLine("III step: Fi_k :" + k.ToString());
+                //Console.WriteLine(Fi_k.ToString());
+                //Console.WriteLine("III step: Fi_k_L :" + k.ToString());
+                //Console.WriteLine(Fi_k_L.ToString());
 
                 //IV Step: Theta(k)
                 var FiFiT = Fi_k_L * Fi_k_L.Transpose();
                 var Theta_k = FiFiT.Inverse() * Fi_k_L * YL;
-                Console.WriteLine("IV step: Theta_k :" + k.ToString());
-                Console.WriteLine(Theta_k.ToString());
+                //Console.WriteLine("IV step: Theta_k :" + k.ToString());
+                //Console.WriteLine(Theta_k.ToString());
 
                 //V Step: Vk_t
                 for (int i = 0; i <= L + tStart - 1; i++)
@@ -113,12 +116,26 @@ namespace AmpIdent
                     Fi_k_t = CalculateFi_k(na, nb, nd, i + tStart, X1, Y1, V0);
 
                     var Theta_k_Y_1 = Theta_k.Transpose() * Fi_k_t;
-                    mainViewModel.AddPoint(3, new DataPoint(i + tStart, Theta_k_Y_1[0, 0]));
                     Vk_t[i, 0] = Y1[i + tStart, 0] - Theta_k_Y_1[0, 0];
                 }
-                Console.WriteLine("V Step: Vk_t :" + k.ToString());
-                Console.WriteLine(Vk_t.ToString());
+                //Console.WriteLine("V Step: Vk_t :" + k.ToString());
+                //Console.WriteLine(Vk_t.ToString());
 
+                //VI Step Average Error;
+                for (int i = 0; i <= na + nb + nd - 1; i++)
+                {
+                    ThetaDiff[i, 0] = Math.Abs(Theta_k[i, 0] - Theta_k_1[i, 0]);
+                }
+                //Console.WriteLine("VI Step: Theta Difference :" + k.ToString());
+                //Console.WriteLine(ThetaDiff.ToString());
+                averageDiff = 0.0;
+                for (int i = 0; i <= na + nb + nd - 1; i++)
+                {
+                    averageDiff = averageDiff + ThetaDiff[i, 0];
+                }
+                averageDiff = averageDiff / (na + nb + nd);
+                Console.WriteLine("VI Step: Average Difference :" + k.ToString());
+                Console.WriteLine(averageDiff.ToString());
 
                 //Decision
                 V0 = Vk_t;
@@ -126,6 +143,17 @@ namespace AmpIdent
                 {
                     Theta_k_1[i, 0] = Theta_k[i, 0];
                 }
+
+                if (averageDiff < 1.0E-12) k = iterations;
+            }
+
+            //FINAL: Vk
+            for (int i = 0; i <= L + tStart - 1; i++)
+            {
+                Fi_k_t = CalculateFi_k(na, nb, nd, i + tStart, X1, Y1, V0);
+
+                var Theta_k_Y_1 = Theta_k_1.Transpose() * Fi_k_t;
+                mainViewModel.AddPoint(3, new DataPoint(i + tStart, Theta_k_Y_1[0, 0]));
             }
 
 
