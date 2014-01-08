@@ -42,8 +42,17 @@ namespace AmpIdent
                 //X1[i, 0] = random.Next(-10, 100);
                 mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
 
-                Y1[i, 0] = 30 * Math.Abs(X1[i, 0]) - X1[i, 0];
-                mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
+                if (i <= 10)
+                {
+                    Y1[i, 0] = X1[i, 0];
+                    mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
+                }
+
+                if (i > 10)
+                {
+                    Y1[i, 0] = 30 * Math.Abs(X1[i, 0]) - X1[i, 0];
+                    mainViewModel.AddPoint(2, new DataPoint(i, Y1[i - 10, 0]));
+                }
             }
 
             int na = 5;
