@@ -46,14 +46,16 @@ namespace AmpIdent
 
             int na = 5;
             int nb = 5;
+            int nd = 5;
 
             //I STEP: Y(L)
             int L = 100;
+            int tStart = 10;
             var YL = new DenseMatrix(L, 1, 0.0);
 
-            for (int i = 1; i <= L - 1; i++)
+            for (int i = 0; i <= L - 1; i++)
             {
-                YL[i, 0] = Y1[i, 0];
+                YL[i, 0] = Y1[i + tStart, 0];
             }
             Console.WriteLine("I step: YL");
             Console.WriteLine(YL.ToString());
@@ -62,14 +64,32 @@ namespace AmpIdent
             int k = 1;
             var V0 = new DenseMatrix(L, 1, 0.0);
             Random random = new Random();
-            for (int i = 1; i <= L - 1; i++)
+            for (int i = 0; i <= L - 1; i++)
             {
                 V0[i, 0] = random.Next(-10, 10);
             }
             Console.WriteLine("II step: V0");
             Console.WriteLine(V0.ToString());
 
-
+            //III Step: Theta(L)
+            var Theta_k = new DenseMatrix(na + nb + nd, 1, 0.0);
+            for (int i = 1; i <= na + nb + nd; i++)
+            {
+                if (i <= na)
+                {
+                    Theta_k[i - 1, 0] = -1 * Y1[tStart - i, 0];
+                }
+                if (i > na && i <= na + nb)
+                {
+                    Theta_k[i - 1, 0] = X1[tStart - i + na, 0];
+                }
+                if (i > na + nb && i <= na + nb + nd)
+                {
+                    Theta_k[i - 1, 0] = V0[tStart - i + na + nb, 0];
+                }
+            }
+            Console.WriteLine("III step: Theta_k");
+            Console.WriteLine(Theta_k.ToString());
 
             /*
             // parameters
