@@ -32,6 +32,7 @@ namespace AmpIdent
             string newLine = Environment.NewLine;
             Random random = new Random();
 
+            ///*
             //TEST MODEL
             var X1 = new DenseMatrix(500, 1, 0.0);
             var Y1 = new DenseMatrix(500, 1, 0.0);
@@ -60,8 +61,9 @@ namespace AmpIdent
             int nd = 5;
             int nk = 10;
             int L = 450;
-            int iterations = 100;
+            int iterations = 1000;
             int tStart = 15;
+            double averageLimit = 1.0E-12;
             double averageDiff = 0.0;
 
             //I Step: Y(L)
@@ -154,7 +156,7 @@ namespace AmpIdent
                     Theta_k_1[i, 0] = Theta_k[i, 0];
                 }
 
-                if (averageDiff < 1.0E-12) k = iterations;
+                if (averageDiff < averageLimit) k = iterations;
             }
 
             //FINAL: Vk
@@ -170,18 +172,18 @@ namespace AmpIdent
             {
                 X1[i, 0] = 100*(i-3)*(i-400)*(i-230);
                 //X1[i, 0] = random.Next(-10, 100);
-                mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
+                mainViewModel.AddPoint(4, new DataPoint(i, X1[i, 0]));
 
                 if (i <= 10)
                 {
                     Y1[i, 0] = X1[i, 0];
-                    mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
+                    mainViewModel.AddPoint(5, new DataPoint(i, Y1[i, 0]));
                 }
 
                 if (i > 10)
                 {
                     Y1[i, 0] = 30 * Math.Sin(X1[i - 10, 0]) - X1[i, 0];
-                    mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
+                    mainViewModel.AddPoint(5, new DataPoint(i, Y1[i, 0]));
                 }
             }
             for (int i = 0; i <= L + tStart - 1; i++)
@@ -189,10 +191,12 @@ namespace AmpIdent
                 Fi_k_t = CalculateFi_k(na, nb, nd, nk, i + tStart, X1, Y1, V0);
 
                 var Theta_k_Y_1 = Theta_k_1.Transpose() * Fi_k_t;
-                mainViewModel.AddPoint(3, new DataPoint(i + tStart, Theta_k_Y_1[0, 0]));
+                mainViewModel.AddPoint(6, new DataPoint(i + tStart, Theta_k_Y_1[0, 0]));
             }
+            //*/
 
             /*
+            //INTERPOLATION
             // parameters
             
             double k1 = -0.2;
@@ -201,8 +205,6 @@ namespace AmpIdent
             double k4 = -0.9;
             double q = -4.53;
             int sigma2 = 9000;
-
-            Random random = new Random();
             
             // experiments
 
@@ -213,10 +215,10 @@ namespace AmpIdent
             {
                 int i = j - 1;
 
-                if (i != 0) X1[i, 0] = random.Next((int)X1[i - 1, 0], (int)X1[i - 1, 0] + 10);
+                if (i != 0) X1[i, 0] = i;
                 else X1[i, 0] = random.Next(0, 10);
 
-                Y1[i, 0] = k4 * Math.Pow(X1[i, 0], -2) *  k3 * Math.Pow(X1[i, 0], -3) + k2 * Math.Pow(X1[i, 0], 2) + k1 * X1[i, 0] +  q + random.Next(-6 * sigma2, 6* sigma2);
+                Y1[i, 0] = (X1[i, 0] - 100) * (X1[i, 0] - 250) * (X1[i, 0] - 30) + random.Next(-6 * sigma2, 6 * sigma2);
                 mainViewModel.AddPoint(1, new DataPoint(X1[i, 0], Y1[i, 0]));
                 mainViewModel.AddPoint(2, new DataPoint(X1[i, 0], k4 * Math.Pow(X1[i, 0], -2) * k3 * Math.Pow(X1[i, 0], -3) + k2 * Math.Pow(X1[i, 0], 2) + k1 * X1[i, 0] + q));
             }
@@ -250,7 +252,8 @@ namespace AmpIdent
             {
                 Y[i, 0] = Theta[0, 0] + Theta[1, 0] * X1[i, 0] + Theta[2, 0] * X1[i, 0] * X1[i, 0] + Theta[3, 0] * X1[i, 0] * X1[i, 0] * X1[i, 0];
                 mainViewModel.AddPoint(9, new DataPoint(X1[i, 0], Y[i, 0]));
-            }*/
+            }
+            //*/
 
             DataContext = mainViewModel;
         }
