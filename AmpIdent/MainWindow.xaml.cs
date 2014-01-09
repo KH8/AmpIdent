@@ -50,7 +50,7 @@ namespace AmpIdent
 
                 if (i > 10)
                 {
-                    Y1[i, 0] = 30 * Math.Abs(X1[i - 10, 0]) - X1[i, 0];
+                    Y1[i, 0] = 30 * Math.Sin(X1[i - 10, 0]) - X1[i, 0];
                     //mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
                 }
             }
@@ -58,10 +58,10 @@ namespace AmpIdent
             int na = 5;
             int nb = 5;
             int nd = 5;
-            int nk = 20;
-            int L = 410;
+            int nk = 10;
+            int L = 450;
             int iterations = 100;
-            int tStart = 25;
+            int tStart = 15;
             double averageDiff = 0.0;
 
             //I Step: Y(L)
@@ -180,7 +180,7 @@ namespace AmpIdent
 
                 if (i > 10)
                 {
-                    Y1[i, 0] = 30 * Math.Abs(X1[i - 10, 0]) - X1[i, 0];
+                    Y1[i, 0] = 30 * Math.Sin(X1[i - 10, 0]) - X1[i, 0];
                     mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
                 }
             }
