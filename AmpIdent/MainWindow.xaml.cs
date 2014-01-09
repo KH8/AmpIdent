@@ -40,18 +40,18 @@ namespace AmpIdent
             {
                 X1[i, 0] = -54 * Math.Sin(Math.Sqrt(i)); //+ random.Next(-10, 100);
                 //X1[i, 0] = random.Next(-10, 100);
-                mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
+                //mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
 
                 if (i <= 10)
                 {
                     Y1[i, 0] = X1[i, 0];
-                    mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
+                    //mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
                 }
 
                 if (i > 10)
                 {
                     Y1[i, 0] = 30 * Math.Abs(X1[i - 10, 0]) - X1[i, 0];
-                    mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
+                    //mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
                 }
             }
 
@@ -163,10 +163,34 @@ namespace AmpIdent
                 Fi_k_t = CalculateFi_k(na, nb, nd, nk, i + tStart, X1, Y1, V0);
 
                 var Theta_k_Y_1 = Theta_k_1.Transpose() * Fi_k_t;
-                mainViewModel.AddPoint(3, new DataPoint(i + tStart, Theta_k_Y_1[0, 0]));
+                //mainViewModel.AddPoint(3, new DataPoint(i + tStart, Theta_k_Y_1[0, 0]));
             }
 
+            for (int i = 0; i <= 499; i++)
+            {
+                X1[i, 0] = 100*(i-3)*(i-400)*(i-230);
+                //X1[i, 0] = random.Next(-10, 100);
+                mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
 
+                if (i <= 10)
+                {
+                    Y1[i, 0] = X1[i, 0];
+                    mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
+                }
+
+                if (i > 10)
+                {
+                    Y1[i, 0] = 30 * Math.Abs(X1[i - 10, 0]) - X1[i, 0];
+                    mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
+                }
+            }
+            for (int i = 0; i <= L + tStart - 1; i++)
+            {
+                Fi_k_t = CalculateFi_k(na, nb, nd, nk, i + tStart, X1, Y1, V0);
+
+                var Theta_k_Y_1 = Theta_k_1.Transpose() * Fi_k_t;
+                mainViewModel.AddPoint(3, new DataPoint(i + tStart, Theta_k_Y_1[0, 0]));
+            }
 
             /*
             // parameters
