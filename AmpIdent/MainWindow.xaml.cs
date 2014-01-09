@@ -50,17 +50,18 @@ namespace AmpIdent
 
                 if (i > 10)
                 {
-                    Y1[i, 0] = 30 * Math.Abs(X1[i, 0]) - X1[i, 0];
-                    mainViewModel.AddPoint(2, new DataPoint(i, Y1[i - 10, 0]));
+                    Y1[i, 0] = 30 * Math.Abs(X1[i - 10, 0]) - X1[i, 0];
+                    mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
                 }
             }
 
             int na = 5;
             int nb = 5;
             int nd = 5;
-            int L = 450;
+            int nk = 20;
+            int L = 410;
             int iterations = 100;
-            int tStart = 15;
+            int tStart = 25;
             double averageDiff = 0.0;
 
             //I Step: Y(L)
@@ -102,7 +103,7 @@ namespace AmpIdent
 
                 for (int t = tStart; t <= tStart + L - 1; t++)
                 {
-                    Fi_k = CalculateFi_k(na, nb, nd, t, X1, Y1, V0);
+                    Fi_k = CalculateFi_k(na, nb, nd, nk, t, X1, Y1, V0);
                     for (int i = 0; i <= na + nb + nd - 1; i++)
                     {
                         Fi_k_L[i, t - tStart] = Fi_k[i, 0];
@@ -122,7 +123,7 @@ namespace AmpIdent
                 //V Step: Vk_t
                 for (int i = 0; i <= L + tStart - 1; i++)
                 {
-                    Fi_k_t = CalculateFi_k(na, nb, nd, i + tStart, X1, Y1, V0);
+                    Fi_k_t = CalculateFi_k(na, nb, nd, nk, i + tStart, X1, Y1, V0);
 
                     var Theta_k_Y_1 = Theta_k.Transpose() * Fi_k_t;
                     Vk_t[i, 0] = Y1[i + tStart, 0] - Theta_k_Y_1[0, 0];
@@ -159,7 +160,7 @@ namespace AmpIdent
             //FINAL: Vk
             for (int i = 0; i <= L + tStart - 1; i++)
             {
-                Fi_k_t = CalculateFi_k(na, nb, nd, i + tStart, X1, Y1, V0);
+                Fi_k_t = CalculateFi_k(na, nb, nd, nk, i + tStart, X1, Y1, V0);
 
                 var Theta_k_Y_1 = Theta_k_1.Transpose() * Fi_k_t;
                 mainViewModel.AddPoint(3, new DataPoint(i + tStart, Theta_k_Y_1[0, 0]));
@@ -230,7 +231,7 @@ namespace AmpIdent
             DataContext = mainViewModel;
         }
 
-        private DenseMatrix CalculateFi_k(int t_na, int t_nb, int t_nd, int t_t, DenseMatrix t_X, DenseMatrix t_Y, DenseMatrix t_V)
+        private DenseMatrix CalculateFi_k(int t_na, int t_nb, int t_nd, int t_nk, int t_t, DenseMatrix t_X, DenseMatrix t_Y, DenseMatrix t_V)
         {
             var t_Fi_k = new DenseMatrix(t_na + t_nb + t_nd, 1, 0.0);
             for (int i = 1; i <= t_na + t_nb + t_nd; i++)
@@ -241,7 +242,7 @@ namespace AmpIdent
                 }
                 if (i > t_na && i <= t_na + t_nb)
                 {
-                    t_Fi_k[i - 1, 0] = t_X[t_t - i + t_na, 0];
+                    t_Fi_k[i - 1, 0] = t_X[t_t - t_nk - i + t_na, 0];
                 }
                 if (i > t_na + t_nb && i <= t_na + t_nb + t_nd)
                 {
