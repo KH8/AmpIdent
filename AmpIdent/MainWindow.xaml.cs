@@ -39,7 +39,7 @@ namespace AmpIdent
 
             for (int i = 0; i <= 499; i++)
             {
-                X1[i, 0] = -54 * Math.Sin(Math.Sqrt(i)); //+ random.Next(-10, 100);
+                X1[i, 0] = -54 * Math.Sin(i / 10);// +random.Next(-10, 100);
                 //X1[i, 0] = random.Next(-10, 100);
                 //mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
 
@@ -51,7 +51,7 @@ namespace AmpIdent
 
                 if (i > 10)
                 {
-                    Y1[i, 0] = 30 * Math.Sin(X1[i - 10, 0]) - X1[i, 0];
+                    Y1[i, 0] = 30 * Math.Sin(X1[i -10, 0]) - X1[i, 0];
                     //mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
                 }
             }
