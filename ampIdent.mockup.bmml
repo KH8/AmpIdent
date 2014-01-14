@@ -285,7 +285,7 @@
     </control>
     <control controlID="134" controlTypeID="com.balsamiq.mockups::DataGrid" x="1692" y="947" w="1220" h="624" measuredW="406" measuredH="187" zOrder="34" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>Name%5Cr%28job%20title%29%20%5E%2C%20Computed%20Values%20%5Ev%2C%20Modify%20Values%2C%20Actual%20Values%20%5Ev%0ANA%5B0%5D%2C%201%2C%202%2C%200%0ANA%5B1%5D%2C%201%2C%20%202%2C%200%0ANA%5B2%5D%2C%201%2C%20%202%2C%200%0ANB%5B0%5D%2C%201%2C%20%202%2C%200%0ANB%5B1%5D%2C%201%2C%20%202%2C%200</text>
+        <text>Name%5Cr%28job%20title%29%20%5E%2C%20Computed%20Values%20%5Ev%2C%20Modify%20Values%2C%20Actual%20Values%20%5Ev%0ANA%5B0%5D%2C%201%2C%20%202%2C%200%0ANA%5B1%5D%2C%201%2C%20%202%2C%200%0ANA%5B2%5D%2C%201%2C%20%202%2C%200%0ANB%5B0%5D%2C%201%2C%20%202%2C%200%0ANB%5B1%5D%2C%201%2C%20%202%2C%200</text>
       </controlProperties>
     </control>
     <control controlID="135" controlTypeID="com.balsamiq.mockups::Button" x="1692" y="1571" w="-1" h="-1" measuredW="61" measuredH="27" zOrder="35" locked="false" isInGroup="-1">
