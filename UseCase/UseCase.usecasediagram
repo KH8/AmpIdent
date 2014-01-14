@@ -24,20 +24,6 @@ the model computation</body>
       </annotatedElements>
     </comment>
   </ownedCommentsInternal>
-  <profileInstances>
-    <packageHasProfileInstances Id="c9c1da6a-7395-45c5-850b-551a1aee3569">
-      <profileInstance Id="bcb469d5-c45e-4d90-8192-7d32ce114fdf" name="StandardProfileL2">
-        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
-      </profileInstance>
-      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
-    </packageHasProfileInstances>
-    <packageHasProfileInstances Id="21befadf-3487-425a-a70d-afb682674d85">
-      <profileInstance Id="43f7e54c-b33e-4a06-a428-9c4fffdd659c" name="StandardProfileL3">
-        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
-      </profileInstance>
-      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
-    </packageHasProfileInstances>
-  </profileInstances>
   <packagedElements>
     <useCaseModelRootHasTypes>
       <actor Id="68278a75-9cd3-48c7-b604-93aafeecf799" name="User" isAbstract="false" isLeaf="false">
@@ -777,5 +763,19 @@ the model computation</body>
   </packagedElements>
   <package Id="43d685eb-5493-4000-82b8-60e85e2e389d" name="UseCase">
     <elementDefinition Id="98f6e6a7-ea8a-4d25-8aa5-2e30bada6d50" />
+    <profileInstances>
+      <packageHasProfileInstances Id="c9c1da6a-7395-45c5-850b-551a1aee3569">
+        <profileInstance Id="bcb469d5-c45e-4d90-8192-7d32ce114fdf" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="21befadf-3487-425a-a70d-afb682674d85">
+        <profileInstance Id="43f7e54c-b33e-4a06-a428-9c4fffdd659c" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
   </package>
 </useCaseModelRoot>
