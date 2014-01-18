@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,28 @@ namespace AmpIdent
             string newLine = Environment.NewLine;
             Random random = new Random();
 
-            ///*
+            // first we need to read our wav file, so we can get our info:
+            byte[] wav = File.ReadAllBytes("c:/button-2.wav");
+
+            // then we are going to get our file's info
+            var NumChannnels = wav[22];
+            var SampleRate = wav[24] + 256 * wav[25];
+
+            // nr of samples is the length - the 44 bytes that where needed for the offset
+            int samples = (wav.Length - 44) / 2;
+
+            // if there are 2 channels, we need to devide the nr of sample in 2
+            if (NumChannnels == 2) samples /= 2;
+
+            int pos = 44; // start of data chunk
+            for (int i = 0; i < samples / 2; i++)
+            {
+                mainViewModel.AddPoint(1, new DataPoint(i, wav[pos] + 256 * wav[pos + 1]));
+                
+                pos += 4;
+            }
+
+            /*
             //TEST MODEL
             var X1 = new DenseMatrix(500, 1, 0.0);
             var Y1 = new DenseMatrix(500, 1, 0.0);
@@ -56,10 +78,10 @@ namespace AmpIdent
                 }
             }
 
-            int na = 5;
-            int nb = 5;
-            int nd = 5;
-            int nk = 10;
+            int na = 6;
+            int nb = 6;
+            int nd = 6;
+            int nk = 5;
             int L = 450;
             int iterations = 1000;
             int tStart = 15;
