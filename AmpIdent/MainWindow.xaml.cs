@@ -301,5 +301,10 @@ namespace AmpIdent
 
             return t_Fi_k;
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
