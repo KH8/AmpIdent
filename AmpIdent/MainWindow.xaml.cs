@@ -313,14 +313,14 @@ namespace AmpIdent
             int pos = 44; // start of data chunk
             _loadingPercentage = 0;
 
-            for (int i = 0; i < samples / 100; i++)
+            for (int i = 0; i < samples; i++)
             {
                 int number = wav[pos] + 256 * wav[pos + 1];
                 if (number > 32767) number -= 65534;
                 mainViewModel.AddPoint(1, new DataPoint(i, number));
 
                 _loadingPercentage = i * 100 / samples;
-                pos += 400;
+                pos += 2;
                 Console.WriteLine(_loadingPercentage.ToString());
             }
 
