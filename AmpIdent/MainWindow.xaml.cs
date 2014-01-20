@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -25,34 +26,24 @@ namespace AmpIdent
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string _path;
+        private int _loadingPercentage;
+        private Boolean _toggle;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            _path = "";
+            _loadingPercentage = 0;
 
             MainViewModel mainViewModel = new MainViewModel();
             string newLine = Environment.NewLine;
             Random random = new Random();
 
-            // first we need to read our wav file, so we can get our info:
-            byte[] wav = File.ReadAllBytes("c:/button-2.wav");
-
-            // then we are going to get our file's info
-            var NumChannnels = wav[22];
-            var SampleRate = wav[24] + 256 * wav[25];
-
-            // nr of samples is the length - the 44 bytes that where needed for the offset
-            int samples = (wav.Length - 44) / 2;
-
-            // if there are 2 channels, we need to devide the nr of sample in 2
-            if (NumChannnels == 2) samples /= 2;
-
-            int pos = 44; // start of data chunk
-            for (int i = 0; i < samples / 2; i++)
-            {
-                mainViewModel.AddPoint(1, new DataPoint(i, wav[pos] + 256 * wav[pos + 1]));
-                
-                pos += 4;
-            }
+            Thread _thread = new Thread(new ThreadStart(Update));
+            _thread.IsBackground = false;
+            _thread.Start();
 
             /*
             //TEST MODEL
@@ -277,7 +268,7 @@ namespace AmpIdent
             }
             //*/
 
-            DataContext = mainViewModel;
+            //DataContext = mainViewModel;
         }
 
         private DenseMatrix CalculateFi_k(int t_na, int t_nb, int t_nd, int t_nk, int t_t, DenseMatrix t_X, DenseMatrix t_Y, DenseMatrix t_V)
@@ -302,9 +293,48 @@ namespace AmpIdent
             return t_Fi_k;
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Load(object sender, RoutedEventArgs e)
         {
+            MainViewModel mainViewModel = new MainViewModel();
 
+            // first we need to read our wav file, so we can get our info:
+            byte[] wav = File.ReadAllBytes(_path);
+
+            // then we are going to get our file's info
+            var NumChannnels = wav[22];
+            var SampleRate = wav[24] + 256 * wav[25];
+
+            // nr of samples is the length - the 44 bytes that where needed for the offset
+            int samples = (wav.Length - 44) / 2;
+
+            // if there are 2 channels, we need to devide the nr of sample in 2
+            if (NumChannnels == 2) samples /= 2;
+
+            int pos = 44; // start of data chunk
+            _loadingPercentage = 0;
+
+            for (int i = 0; i < samples; i++)
+            {
+                int number = wav[pos] + 256 * wav[pos + 1];
+                if (number > 32767) number -= 65534;
+                mainViewModel.AddPoint(1, new DataPoint(i, number));
+
+                _loadingPercentage = i * 100 / samples;
+                pos += 4;
+                Console.WriteLine(_loadingPercentage.ToString());
+            }
+
+            DataContext = mainViewModel;
+        }
+
+        private void PathBox_TextChanged_1(object sender, TextChangedEventArgs e)
+        {
+            TextBox _pathBox = (TextBox)sender;
+            _path = _pathBox.Text.ToString();
+        }
+
+        private void Update()
+        {
         }
     }
 }
