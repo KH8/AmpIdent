@@ -151,7 +151,7 @@ namespace AmpIdent
             //Setting preparation.....................................................................................................
             _estimationError = 0.0;
             _estimationStatusPercentage = 0;
-            if (estimationLength == 0) _estimationLength = X1.Values.Length - ( _startingPoint + _naParameter 
+            if (estimationLength == 0) _estimationLength = X1.Values.Length - 2 * ( _startingPoint + _naParameter 
                                                                                 + _nbParameter + _ndParameter + _nkParameter);
             else _estimationLength = estimationLength;
 

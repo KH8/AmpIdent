@@ -72,118 +72,10 @@ namespace AmpIdent
                 }
             }
 
-            int na = 6;
-            int nb = 6;
-            int nd = 6;
-            int nk = 5;
-            int L = 450;
-            int iterations = 1000;
-            int tStart = 15;
-            double averageLimit = 1.0E-12;
-            double averageDiff = 0.0;
+            ARMAX modeller = new ARMAX();
+            modeller.Compute(X1, Y1, 0);
 
-            //I Step: Y(L)
-            var YL = new DenseMatrix(L, 1, 0.0);
-
-            for (int i = 0; i <= L - 1; i++)
-            {
-                YL[i, 0] = Y1[i + tStart, 0];
-            }
-            //Console.WriteLine("I step: YL");
-            //Console.WriteLine(YL.ToString());
-
-            //II Step:
-            var V0 = new DenseMatrix(L + (iterations + 1) * tStart , 1, 1.0);
-            for (int i = 0; i <= L + 2 * tStart - 1; i++)
-            {
-                V0[i, 0] = random.Next(-10, 10);
-            }
-            //Console.WriteLine("II step: V0");
-            //Console.WriteLine(V0.ToString());
-
-            var Theta_k_1 = new DenseMatrix(na + nb + nd, 1, 0.0);
-            for (int i = 0; i <= na + nb + nd - 1; i++)
-            {
-                Theta_k_1[i, 0] = 0.0;
-            }
-
-            var Fi_k = new DenseMatrix(na + nb + nd, 1, 0.0);
-            var Fi_k_L = new DenseMatrix(na + nb + nd, L, 0.0);
-
-            var Fi_k_t = new DenseMatrix(na + nb + nd, 1, 0.0);
-            var Vk_t = new DenseMatrix(L + (iterations + 1) * tStart, 1, 1.0);
-
-            var ThetaDiff = new DenseMatrix(na + nb + nd, 1, 0.0);
-
-            for (int k = 1; k <= iterations; k++)
-            {
-                //III Step: Fi_k(L)
-
-                for (int t = tStart; t <= tStart + L - 1; t++)
-                {
-                    Fi_k = CalculateFi_k(na, nb, nd, nk, t, X1, Y1, V0);
-                    for (int i = 0; i <= na + nb + nd - 1; i++)
-                    {
-                        Fi_k_L[i, t - tStart] = Fi_k[i, 0];
-                    }
-                }
-                //Console.WriteLine("III step: Fi_k :" + k.ToString());
-                //Console.WriteLine(Fi_k.ToString());
-                //Console.WriteLine("III step: Fi_k_L :" + k.ToString());
-                //Console.WriteLine(Fi_k_L.ToString());
-
-                //IV Step: Theta(k)
-                var FiFiT = Fi_k_L * Fi_k_L.Transpose();
-                var Theta_k = FiFiT.Inverse() * Fi_k_L * YL;
-                //Console.WriteLine("IV step: Theta_k :" + k.ToString());
-                //Console.WriteLine(Theta_k.ToString());
-
-                //V Step: Vk_t
-                for (int i = 0; i <= L + tStart - 1; i++)
-                {
-                    Fi_k_t = CalculateFi_k(na, nb, nd, nk, i + tStart, X1, Y1, V0);
-
-                    var Theta_k_Y_1 = Theta_k.Transpose() * Fi_k_t;
-                    Vk_t[i, 0] = Y1[i + tStart, 0] - Theta_k_Y_1[0, 0];
-                }
-                //Console.WriteLine("V Step: Vk_t :" + k.ToString());
-                //Console.WriteLine(Vk_t.ToString());
-
-                //VI Step Average Error;
-                for (int i = 0; i <= na + nb + nd - 1; i++)
-                {
-                    ThetaDiff[i, 0] = Math.Abs(Theta_k[i, 0] - Theta_k_1[i, 0]);
-                }
-                //Console.WriteLine("VI Step: Theta Difference :" + k.ToString());
-                //Console.WriteLine(ThetaDiff.ToString());
-                averageDiff = 0.0;
-                for (int i = 0; i <= na + nb + nd - 1; i++)
-                {
-                    averageDiff = averageDiff + ThetaDiff[i, 0];
-                }
-                averageDiff = averageDiff / (na + nb + nd);
-                Console.WriteLine("VI Step: Average Difference :" + k.ToString());
-                Console.WriteLine(averageDiff.ToString());
-
-                //Decision
-                V0 = Vk_t;
-                for (int i = 0; i <= na + nb + nd - 1; i++)
-                {
-                    Theta_k_1[i, 0] = Theta_k[i, 0];
-                }
-
-                if (averageDiff < averageLimit) k = iterations;
-            }
-
-            //FINAL: Vk
-            for (int i = 0; i <= L + tStart - 1; i++)
-            {
-                Fi_k_t = CalculateFi_k(na, nb, nd, nk, i + tStart, X1, Y1, V0);
-
-                var Theta_k_Y_1 = Theta_k_1.Transpose() * Fi_k_t;
-                //mainViewModel.AddPoint(3, new DataPoint(i + tStart, Theta_k_Y_1[0, 0]));
-            }
-
+            /*
             for (int i = 0; i <= 499; i++)
             {
                 X1[i, 0] = 100*(i-3)*(i-400)*(i-230);
@@ -272,28 +164,6 @@ namespace AmpIdent
             //*/
 
             DataContext = mainViewModel;
-        }
-
-        private DenseMatrix CalculateFi_k(int t_na, int t_nb, int t_nd, int t_nk, int t_t, DenseMatrix t_X, DenseMatrix t_Y, DenseMatrix t_V)
-        {
-            var t_Fi_k = new DenseMatrix(t_na + t_nb + t_nd, 1, 0.0);
-            for (int i = 1; i <= t_na + t_nb + t_nd; i++)
-            {
-                if (i <= t_na)
-                {
-                    t_Fi_k[i - 1, 0] = -1 * t_Y[t_t - i, 0];
-                }
-                if (i > t_na && i <= t_na + t_nb)
-                {
-                    t_Fi_k[i - 1, 0] = t_X[t_t - t_nk - i + t_na, 0];
-                }
-                if (i > t_na + t_nb && i <= t_na + t_nb + t_nd)
-                {
-                    t_Fi_k[i - 1, 0] = t_V[t_t - i + t_na + t_nb, 0];
-                }
-            }
-
-            return t_Fi_k;
         }
 
         private void Load(object sender, RoutedEventArgs e)
