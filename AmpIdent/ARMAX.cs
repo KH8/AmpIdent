@@ -242,7 +242,7 @@ namespace AmpIdent
             _estimationDone = true;
         }
 
-        private DenseMatrix CalculateFi_k(int t_na, int t_nb, int t_nd, int t_nk, int t_t, DenseMatrix t_X, DenseMatrix t_Y, DenseMatrix t_V)
+        public DenseMatrix CalculateFi_k(int t_na, int t_nb, int t_nd, int t_nk, int t_t, DenseMatrix t_X, DenseMatrix t_Y, DenseMatrix t_V)
         {
             var t_Fi_k = new DenseMatrix(t_na + t_nb + t_nd, 1, 0.0);
             for (int i = 1; i <= t_na + t_nb + t_nd; i++)
