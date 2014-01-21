@@ -28,12 +28,14 @@ namespace AmpIdent
     {
         private string _path;
         private int _loadingPercentage;
-        private Boolean _toggle;
+        Random random = new Random();
 
         public MainWindow()
         {
             InitializeComponent();
+            MainViewModel mainViewModel = new MainViewModel();
 
+            /*
             _path = "";
             _loadingPercentage = 0;
 
@@ -44,8 +46,9 @@ namespace AmpIdent
             Thread _thread = new Thread(new ThreadStart(Update));
             _thread.IsBackground = false;
             _thread.Start();
+            //*/
 
-            /*
+            ///*
             //TEST MODEL
             var X1 = new DenseMatrix(500, 1, 0.0);
             var Y1 = new DenseMatrix(500, 1, 0.0);
@@ -268,7 +271,7 @@ namespace AmpIdent
             }
             //*/
 
-            //DataContext = mainViewModel;
+            DataContext = mainViewModel;
         }
 
         private DenseMatrix CalculateFi_k(int t_na, int t_nb, int t_nd, int t_nk, int t_t, DenseMatrix t_X, DenseMatrix t_Y, DenseMatrix t_V)
