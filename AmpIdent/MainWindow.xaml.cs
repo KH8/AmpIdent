@@ -57,24 +57,28 @@ namespace AmpIdent
             {
                 X1[i, 0] = -54 * Math.Sin(i / 10);// +random.Next(-10, 100);
                 //X1[i, 0] = random.Next(-10, 100);
-                //mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
+                mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
 
                 if (i <= 10)
                 {
                     Y1[i, 0] = X1[i, 0];
-                    //mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
+                    mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
                 }
 
                 if (i > 10)
                 {
                     Y1[i, 0] = 30 * Math.Sin(X1[i -10, 0]) - X1[i, 0];
-                    //mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
+                    mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
                 }
             }
 
             ARMAX modeller = new ARMAX();
             modeller.Compute(X1, Y1, 0);
 
+            for (int i = 0; i <= modeller.YK.Values.Length - 1; i++)
+            {
+                mainViewModel.AddPoint(3, new DataPoint(i, modeller.YK[i,0]));
+            }
             /*
             for (int i = 0; i <= 499; i++)
             {

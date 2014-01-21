@@ -151,19 +151,19 @@ namespace AmpIdent
             //Setting preparation.....................................................................................................
             _estimationError = 0.0;
             _estimationStatusPercentage = 0;
-            if (estimationLength == 0) _estimationLength = X1.Values.Length - 2 * ( _startingPoint + _naParameter 
+            if (estimationLength == 0) _estimationLength = X1.Values.Length - ( _startingPoint + _naParameter 
                                                                                 + _nbParameter + _ndParameter + _nkParameter);
             else _estimationLength = estimationLength;
 
             //I Step: Y(L)............................................................................................................
 
-            var YL = new DenseMatrix(_estimationLength, 1, 0.0); 
-            for (int i = 0; i <= _estimationLength - 1; i++) { YL[i, 0] = Y1[i + _estimationLength, 0]; }
+            var YL = new DenseMatrix(_estimationLength, 1, 0.0);
+            for (int i = 0; i <= _estimationLength - 1; i++) { YL[i, 0] = Y1[i + _startingPoint, 0]; }
 
             //II Step: V0.............................................................................................................
-            
-            _V0 = new DenseMatrix(_estimationLength + (_numberOfIterations + 1) * _estimationLength, 1, 1.0); //
-            for (int i = 0; i <= _estimationLength + 2 * _estimationLength - 1; i++) { _V0[i, 0] = random.Next(-10, 10); }
+
+            _V0 = new DenseMatrix(_estimationLength + (_numberOfIterations + 1) * _startingPoint, 1, 1.0); //
+            for (int i = 0; i <= _estimationLength + 2 * _startingPoint - 1; i++) { _V0[i, 0] = random.Next(-10, 10); }
 
             //Definition of temporary matrixes
             var Theta_k_1 = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
@@ -171,23 +171,23 @@ namespace AmpIdent
             var Fi_k = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
             var Fi_k_L = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, _estimationLength, 0.0);
             var Fi_k_t = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
-            var Vk_t = new DenseMatrix(_estimationLength + (_numberOfIterations + 1) * _estimationLength, 1, 1.0);
+            var Vk_t = new DenseMatrix(_estimationLength + (_numberOfIterations + 1) * _startingPoint, 1, 1.0);
             var ThetaDiff = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
 
             //Predefinition of results
             _Theta = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
-            _YK = new DenseMatrix(_estimationLength, 1, 0.0); 
+            _YK = new DenseMatrix(_estimationLength + 2 * _startingPoint, 1, 0.0); 
 
             for (int k = 1; k <= _numberOfIterations; k++)
             {
                 //III Step: Fi_k(_estimationLength)...................................................................................
-               
-                for (int t = _estimationLength; t <= _estimationLength + _estimationLength - 1; t++)
+
+                for (int t = _startingPoint; t <= _startingPoint + _estimationLength - 1; t++)
                 {
                     Fi_k = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, t, X1, Y1, _V0);
                     for (int i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++)
                     {
-                        Fi_k_L[i, t - _estimationLength] = Fi_k[i, 0];
+                        Fi_k_L[i, t - _startingPoint] = Fi_k[i, 0];
                     }
                 }
 
@@ -197,13 +197,13 @@ namespace AmpIdent
                 var Theta_k = FiFiT.Inverse() * Fi_k_L * YL;
 
                 //V Step: Vk_t........................................................................................................
-                
-                for (int i = 0; i <= _estimationLength + _estimationLength - 1; i++)
+
+                for (int i = 0; i <= _estimationLength + _startingPoint - 1; i++)
                 {
-                    Fi_k_t = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _estimationLength, X1, Y1, _V0);
+                    Fi_k_t = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _startingPoint, X1, Y1, _V0);
 
                     var Theta_k_Y_1 = Theta_k.Transpose() * Fi_k_t;
-                    Vk_t[i, 0] = Y1[i + _estimationLength, 0] - Theta_k_Y_1[0, 0];
+                    Vk_t[i, 0] = Y1[i + _startingPoint, 0] - Theta_k_Y_1[0, 0];
                 }
 
                 //VI Step: Average Error..............................................................................................
@@ -231,9 +231,9 @@ namespace AmpIdent
             }
 
             //END: Vk.................................................................................................................
-            for (int i = 0; i <= _estimationLength + _estimationLength - 1; i++)
+            for (int i = 0; i <= _estimationLength + _startingPoint - 1; i++)
             {
-                Fi_k_t = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _estimationLength, X1, Y1, _V0);
+                Fi_k_t = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _startingPoint, X1, Y1, _V0);
                 var Theta_k_Y_1 = Theta_k_1.Transpose() * Fi_k_t;
                 _YK[i + _startingPoint, 0] = Theta_k_Y_1[0, 0];
             }
