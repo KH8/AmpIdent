@@ -28,12 +28,12 @@ namespace AmpIdent
     {
         private string _path;
         private int _loadingPercentage;
-        Random random = new Random();
 
         public MainWindow()
         {
             InitializeComponent();
             MainViewModel mainViewModel = new MainViewModel();
+            Random random = new Random();
 
             /*
             _path = "";
@@ -53,58 +53,20 @@ namespace AmpIdent
             var X1 = new DenseMatrix(500, 1, 0.0);
             var Y1 = new DenseMatrix(500, 1, 0.0);
 
-            for (int i = 0; i <= 499; i++)
+            for (int i = 0; i <= X1.Values.Length - 1; i++)
             {
-                X1[i, 0] = -54 * Math.Sin(i / 10);// +random.Next(-10, 100);
-                //X1[i, 0] = random.Next(-10, 100);
-                //mainViewModel.AddPoint(1, new DataPoint(i, X1[i, 0]));
+                X1[i, 0] = i;
 
-                if (i <= 10)
-                {
-                    Y1[i, 0] = X1[i, 0];
-                    //mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
-                }
-
-                if (i > 10)
-                {
-                    Y1[i, 0] = 30 * Math.Cos(X1[i -10, 0]) - X1[i, 0];
-                    //mainViewModel.AddPoint(2, new DataPoint(i, Y1[i, 0]));
-                }
+                Y1[i, 0] = -38  * Math.Sqrt(X1[i, 0] + 6);
+                mainViewModel.AddPoint(1, new DataPoint(i, Y1[i, 0]));
             }
 
-            ARMAX modeller = new ARMAX();
-            modeller.Compute(X1, Y1, 0);
+            Interpolation interpolator = new Interpolation();
+            interpolator.Compute(Y1, 3);
 
-            for (int i = 0; i <= modeller.YK.Values.Length - 1; i++)
+            for (int i = 0; i <= interpolator.Output.Values.Length - 1; i++)
             {
-                //mainViewModel.AddPoint(3, new DataPoint(i, modeller.YK[i,0]));
-            }
-
-
-            ///*
-            for (int i = 0; i <= 499; i++)
-            {
-                X1[i, 0] = 100*(i-3)*(i-400)*(i-230);
-                mainViewModel.AddPoint(4, new DataPoint(i, X1[i, 0]));
-
-                if (i <= 10)
-                {
-                    Y1[i, 0] = X1[i, 0];
-                    mainViewModel.AddPoint(5, new DataPoint(i, Y1[i, 0]));
-                }
-
-                if (i > 10)
-                {
-                    Y1[i, 0] = 30 * Math.Sin(X1[i - 10, 0]) - X1[i, 0];
-                    mainViewModel.AddPoint(5, new DataPoint(i, Y1[i, 0]));
-                }
-            }
-            for (int i = 0; i <= 400 + modeller.StartingPoint - 1; i++)
-            {
-                var Fi_k_t = modeller.CalculateFi_k(modeller.NAParameter, modeller.NBParameter, modeller.NDParameter, modeller.NKParameter, i + modeller.StartingPoint, X1, Y1, modeller.V0);
-
-                var Theta_k_Y_1 = modeller.Theta.Transpose() * Fi_k_t;
-                mainViewModel.AddPoint(6, new DataPoint(i + modeller.StartingPoint, Theta_k_Y_1[0, 0]));
+                mainViewModel.AddPoint(2, new DataPoint(i, interpolator.Output[i, 0]));
             }
 
             DataContext = mainViewModel;
@@ -148,10 +110,6 @@ namespace AmpIdent
         {
             TextBox _pathBox = (TextBox)sender;
             _path = _pathBox.Text.ToString();
-        }
-
-        private void Update()
-        {
         }
     }
 }

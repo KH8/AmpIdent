@@ -4,73 +4,84 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using MathNet.Numerics.LinearAlgebra.Double;
+
 namespace AmpIdent
 {
     class Interpolation
     {
+        //Private fields
+        //Parameters
+        private int _estimationLength;
+
+        //Status
+        private Boolean _estimationDone;
+
+        //Outputs
+        private DenseMatrix _output;
+
+        //Public fields
+        //Status
+        public Boolean EstimationDone
+        {
+            get { return _estimationDone; }
+        }
+
+        //matrixes
+        public DenseMatrix Output
+        {
+            get
+            {
+                if (_estimationDone)
+                {
+                    return _output;
+                }
+                else return null;
+            }
+        }
+
+        //Methods
+        //Constructor
         public Interpolation()
         {
-            //*/
+            _estimationLength = 0;
+            _estimationDone = false;
+        }
 
-            /*
-            //INTERPOLATION
-            // parameters
+        public void Compute(DenseMatrix X1, int size)
+        {
+            //Setting Preparation.....................................................................................................
+            _estimationLength = X1.Values.Length;
             
-            double k1 = -0.2;
-            double k2 = +0.7;
-            double k3 = -3;
-            double k4 = -0.9;
-            double q = -4.53;
-            int sigma2 = 9000;
-            
-            // experiments
-
-            var X1 = new DenseMatrix(500, 1, 0.0);
-            var Y1 = new DenseMatrix(500, 1, 0.0);
-
-            for (int j = 1; j <= 500; j++)
+            //Creation of a Z matrix..................................................................................................
+            var Z = new DenseMatrix(_estimationLength, size, 1.0);
+            for (int i = 0; i <= _estimationLength - 1; i++)
             {
-                int i = j - 1;
-
-                if (i != 0) X1[i, 0] = i;
-                else X1[i, 0] = random.Next(0, 10);
-
-                Y1[i, 0] = (X1[i, 0] - 100) * (X1[i, 0] - 250) * (X1[i, 0] - 30) + random.Next(-6 * sigma2, 6 * sigma2);
-                mainViewModel.AddPoint(1, new DataPoint(X1[i, 0], Y1[i, 0]));
-                mainViewModel.AddPoint(2, new DataPoint(X1[i, 0], k4 * Math.Pow(X1[i, 0], -2) * k3 * Math.Pow(X1[i, 0], -3) + k2 * Math.Pow(X1[i, 0], 2) + k1 * X1[i, 0] + q));
+                for (int j = 0; j <= size - 1; j++)
+                {
+                    Z[i, j] = Math.Pow(X1[i, 0],j);
+                }
             }
 
-            var Z = new DenseMatrix(500, 4, 1.0);
-            for (int i = 0; i <= 498; i++)
-            {
-                Z[i, 0] = 1;
-                Z[i, 1] = X1[i, 0];
-                Z[i, 2] = X1[i, 0] * X1[i, 0];
-                Z[i, 3] = X1[i, 0] * X1[i, 0] * X1[i, 0];
-            }
-            Console.WriteLine(Z.ToString());
-
+            //Computation of Theta matrix.............................................................................................
             var ZT = Z.Transpose();
-            Console.WriteLine(ZT.ToString());
-
             var ZTZ = ZT * Z;
-            Console.WriteLine(ZTZ.ToString());
-
             var determinant = ZTZ.Determinant();
-            Console.WriteLine(newLine + "Determinant: " +determinant.ToString() +newLine);
+            var Theta = ZTZ.Inverse() * ZT * X1;
 
-            var Theta = ZTZ.Inverse() * ZT * Y1;
-            Console.WriteLine(Theta.ToString());
+            _output = new DenseMatrix(_estimationLength, 1, 1.0);
 
-            var X = new DenseMatrix(500, 1, 0.0);
-            var Y = new DenseMatrix(500, 1, 0.0);
-
-            for (int i = 0; i <= 499; i++)
+            //Output creation.........................................................................................................
+            for (int i = 0; i <= _estimationLength - 1; i++)
             {
-                Y[i, 0] = Theta[0, 0] + Theta[1, 0] * X1[i, 0] + Theta[2, 0] * X1[i, 0] * X1[i, 0] + Theta[3, 0] * X1[i, 0] * X1[i, 0] * X1[i, 0];
-                mainViewModel.AddPoint(9, new DataPoint(X1[i, 0], Y[i, 0]));
+               for (int j = 0; j <= size - 1; j++)
+               {
+                   _output[i, 0] += Theta[j,0]*Math.Pow(i,j);
+               }
+
             }
-            //*/
+
+            _estimationDone = true;
         }
     }
 }
