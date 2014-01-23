@@ -26,6 +26,7 @@ namespace AmpIdent
             for (int i = 1; i <= 9; i++)
             {
                 series[i] = new LineSeries("Series " +i.ToString()) { MarkerType = MarkerType.Circle };
+                series[i].MarkerSize = 1;
 
                 // Add the series to the plot model
                 tmp.Series.Add(series[i]);

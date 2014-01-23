@@ -23,7 +23,7 @@ namespace AmpIdent
         private int _estimationLength;
 
         //status
-        private int _estimationStatusPercentage;
+        private float _estimationStatusPercentage;
         private Boolean _estimationDone;
         private double _estimationError;
 
@@ -78,7 +78,7 @@ namespace AmpIdent
         }
 
         //status
-        public int EstimationPercentage
+        public float EstimationPercentage
         {
             get { return _estimationStatusPercentage; }
         }
@@ -225,9 +225,10 @@ namespace AmpIdent
                 for (int i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++)
                 {
                     Theta_k_1[i, 0] = Theta_k[i, 0];
-                    _estimationStatusPercentage = k * 100 / _numberOfIterations;
                 }
                 if (_estimationError < _acceptableError) k = _numberOfIterations;
+
+                _estimationStatusPercentage = k * 100.0F / _numberOfIterations;
             }
 
             //END: Vk.................................................................................................................
