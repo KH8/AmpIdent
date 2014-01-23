@@ -59,7 +59,7 @@ namespace AmpIdent
             {
                 for (int j = 0; j <= size - 1; j++)
                 {
-                    Z[i, j] = Math.Pow(X1[i, 0],j);
+                    Z[i, j] = Math.Pow(i,j);
                 }
             }
 

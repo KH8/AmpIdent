@@ -33,41 +33,11 @@ namespace AmpIdent
         {
             InitializeComponent();
             MainViewModel mainViewModel = new MainViewModel();
-            Random random = new Random();
-
-            /*
-            _path = "";
-            _loadingPercentage = 0;
-
-            MainViewModel mainViewModel = new MainViewModel();
             string newLine = Environment.NewLine;
             Random random = new Random();
-
-            Thread _thread = new Thread(new ThreadStart(Update));
-            _thread.IsBackground = false;
-            _thread.Start();
-            //*/
-
-            ///*
-            //TEST MODEL
-            var X1 = new DenseMatrix(500, 1, 0.0);
-            var Y1 = new DenseMatrix(500, 1, 0.0);
-
-            for (int i = 0; i <= X1.Values.Length - 1; i++)
-            {
-                X1[i, 0] = i;
-
-                Y1[i, 0] = -38  * Math.Sqrt(X1[i, 0] + 6);
-                mainViewModel.AddPoint(1, new DataPoint(i, Y1[i, 0]));
-            }
-
-            Interpolation interpolator = new Interpolation();
-            interpolator.Compute(Y1, 3);
-
-            for (int i = 0; i <= interpolator.Output.Values.Length - 1; i++)
-            {
-                mainViewModel.AddPoint(2, new DataPoint(i, interpolator.Output[i, 0]));
-            }
+            
+            _path = "";
+            _loadingPercentage = 0;
 
             DataContext = mainViewModel;
         }
@@ -92,14 +62,14 @@ namespace AmpIdent
             int pos = 44; // start of data chunk
             _loadingPercentage = 0;
 
-            for (int i = 0; i < samples; i++)
+            for (int i = 0; i < samples / 1000; i++)
             {
                 int number = wav[pos] + 256 * wav[pos + 1];
                 if (number > 32767) number -= 65534;
                 mainViewModel.AddPoint(1, new DataPoint(i, number));
 
                 _loadingPercentage = i * 100 / samples;
-                pos += 2 * NumChannnels;
+                pos += 2000 * NumChannnels;
                 Console.WriteLine(_loadingPercentage.ToString());
             }
 
