@@ -30,8 +30,13 @@ namespace AmpIdent
         private string _path;
         private int _loadingPercentage;
         private Boolean _playing;
+        private Boolean _compute;
         private SoundPlayer _sp;
         private ARMAX armax;
+        private DenseMatrix _leftChannel;
+        private DenseMatrix _rightChannel;
+        private Ploter _ploter;
+
 
         public MainWindow()
         {
@@ -39,6 +44,7 @@ namespace AmpIdent
             string newLine = Environment.NewLine;
             Random random = new Random();
             _sp = new SoundPlayer();
+            _ploter = new Ploter();
 
             //Loading.Content = "Loading: " + _loadingPercentage.ToString() + "%";
             
@@ -46,11 +52,17 @@ namespace AmpIdent
             _loadingPercentage = 0;
             armax = new ARMAX();
 
-            Thread _thread = new Thread(new ThreadStart(Update));
+            Thread _thread1 = new Thread(new ThreadStart(Update));
+            Thread _thread2 = new Thread(new ThreadStart(Compute));
 
-            _thread.SetApartmentState(ApartmentState.STA);
-            _thread.IsBackground = false;
-            _thread.Start();
+            _thread1.SetApartmentState(ApartmentState.STA);
+            _thread1.IsBackground = false;
+            _thread1.Start();
+            _thread2.SetApartmentState(ApartmentState.STA);
+            _thread2.IsBackground = false;
+            _thread2.Start();
+
+            DataContext = _ploter.MainViewModel;
         }
 
         private void Load(object sender, RoutedEventArgs e)
@@ -71,14 +83,14 @@ namespace AmpIdent
             int pos = 44; // start of data chunk
             _loadingPercentage = 0;
 
-            DenseMatrix leftChannel = new DenseMatrix(samples, 1, 0.0);
-            DenseMatrix rightChannel = new DenseMatrix(samples, 1, 0.0);
+            _leftChannel = new DenseMatrix(samples, 1, 0.0);
+            _rightChannel = new DenseMatrix(samples, 1, 0.0);
 
             for (int i = 0; i < samples - 1; i++)
             {
                 int number = wav[pos] + 256 * wav[pos + 1];
                 if (number > 32767) number -= 65534;
-                leftChannel[i, 0] = number;
+                _leftChannel[i, 0] = number;
 
                 pos += 2 * NumChannels;
 
@@ -91,7 +103,7 @@ namespace AmpIdent
                 {
                     int number = wav[pos + 2] + 256 * wav[pos + 3];
                     if (number > 32767) number -= 65534;
-                    rightChannel[i, 0] = number;
+                    _rightChannel[i, 0] = number;
 
                     pos += 2 * NumChannels;
 
@@ -99,17 +111,7 @@ namespace AmpIdent
                 }
             }
 
-
-            Ploter ploter = new Ploter();
-            ploter.PlottingResolution = 100;
-            ploter.Plot(leftChannel, 1);
-            ploter.Plot(rightChannel, 2);
-
-            armax.NumberOfIterations = 1;
-            armax.Compute(leftChannel, rightChannel, 200000);
-            ploter.Plot(armax.YK, 3);
-
-            DataContext = ploter.MainViewModel;
+            _compute = true;
         }
 
         private void Play(object sender, RoutedEventArgs e)
@@ -147,8 +149,26 @@ namespace AmpIdent
                 {
                     Loading.Content = "Loading: " + _loadingPercentage.ToString() + "%";
                 })));
-                Console.WriteLine(armax.EstimationPercentage.ToString());
-                System.Threading.Thread.Sleep(2000);
+                System.Threading.Thread.Sleep(5);
+            }
+        }
+
+        private void Compute()
+        {
+            while (true)
+            {
+                if (_compute)
+                {
+                    armax.NumberOfIterations = 1;
+                    armax.Compute(_leftChannel, _rightChannel, 0);
+                    _ploter.PlottingResolution = 100;
+                    _ploter.Plot(_leftChannel, 1);
+                    _ploter.Plot(_rightChannel, 2);
+                    _ploter.Plot(armax.YK, 3);
+
+                    _compute = false;
+                }
+                System.Threading.Thread.Sleep(10);
             }
         }
     }

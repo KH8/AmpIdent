@@ -159,11 +159,13 @@ namespace AmpIdent
 
             var YL = new DenseMatrix(_estimationLength, 1, 0.0);
             for (int i = 0; i <= _estimationLength - 1; i++) { YL[i, 0] = Y1[i + _startingPoint, 0]; }
+            Console.WriteLine("Step I: Done");
 
             //II Step: V0.............................................................................................................
 
             _V0 = new DenseMatrix(_estimationLength + (_numberOfIterations + 1) * _startingPoint, 1, 1.0); //
             for (int i = 0; i <= _estimationLength + 2 * _startingPoint - 1; i++) { _V0[i, 0] = random.Next(-10, 10); }
+            Console.WriteLine("Step II: Done");
 
             //Definition of temporary matrixes
             var Theta_k_1 = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
@@ -190,11 +192,16 @@ namespace AmpIdent
                         Fi_k_L[i, t - _startingPoint] = Fi_k[i, 0];
                     }
                 }
+                Console.WriteLine("Step III: Done");
 
                 //IV Step: Theta(k)...................................................................................................
 
-                var FiFiT = Fi_k_L * Fi_k_L.Transpose();
-                var Theta_k = FiFiT.Inverse() * Fi_k_L * YL;
+                var Fi_k_LT = Fi_k_L.Transpose();
+                var FiFiT = Fi_k_L * Fi_k_LT;
+                var FiFiTI = FiFiT.Inverse();
+                var Fi_k_L_YL = Fi_k_L * YL; ;
+                var Theta_k = FiFiTI * Fi_k_L_YL;
+                Console.WriteLine("Step IV: Done");
 
                 //V Step: Vk_t........................................................................................................
 
@@ -205,6 +212,7 @@ namespace AmpIdent
                     var Theta_k_Y_1 = Theta_k.Transpose() * Fi_k_t;
                     Vk_t[i, 0] = Y1[i + _startingPoint, 0] - Theta_k_Y_1[0, 0];
                 }
+                Console.WriteLine("Step V: Done");
 
                 //VI Step: Average Error..............................................................................................
                 for (int i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++)
@@ -227,6 +235,7 @@ namespace AmpIdent
                     Theta_k_1[i, 0] = Theta_k[i, 0];
                 }
                 if (_estimationError < _acceptableError) k = _numberOfIterations;
+                Console.WriteLine("Step VII: Done");
 
                 _estimationStatusPercentage = k * 100.0F / _numberOfIterations;
             }
