@@ -36,6 +36,8 @@ namespace AmpIdent
         private DenseMatrix _leftChannel;
         private DenseMatrix _rightChannel;
         private Ploter _ploter;
+        byte[] _wav;
+        int _samples;
 
 
         public MainWindow()
@@ -68,51 +70,59 @@ namespace AmpIdent
         private void Load(object sender, RoutedEventArgs e)
         {
             // first we need to read our wav file, so we can get our info:
-            byte[] wav = File.ReadAllBytes(_path);
+            _wav = File.ReadAllBytes(_path);
 
             // then we are going to get our file's info
-            var NumChannels = wav[22];
-            var SampleRate = wav[24] + 256 * wav[25];
+            var NumChannels = _wav[22];
+            var SampleRate = _wav[24] + 256 * _wav[25];
 
             // nr of samples is the length - the 44 bytes that where needed for the offset
-            int samples = (wav.Length - 44) / 2;
+            _samples = (_wav.Length - 44) / 2;
 
             // if there are 2 channels, we need to devide the nr of sample in 2
-            if (NumChannels == 2) samples /= 2;
+            if (NumChannels == 2) _samples /= 2;
 
             int pos = 44; // start of data chunk
             _loadingPercentage = 0;
 
-            _leftChannel = new DenseMatrix(samples, 1, 0.0);
-            _rightChannel = new DenseMatrix(samples, 1, 0.0);
+            _leftChannel = new DenseMatrix(_samples, 1, 0.0);
+            _rightChannel = new DenseMatrix(_samples, 1, 0.0);
 
-            for (int i = 0; i < samples - 1; i++)
+            for (int i = 0; i < _samples - 1; i++)
             {
-                int number = wav[pos] + 256 * wav[pos + 1];
+                int number = _wav[pos] + 256 * _wav[pos + 1];
                 if (number > 32767) number -= 65534;
                 _leftChannel[i, 0] = number;
 
                 pos += 2 * NumChannels;
 
-                _loadingPercentage = i * 100 / samples;
+                _loadingPercentage = i * 100 / _samples;
             }
             if (NumChannels == 2)
             {
                 pos = 44;
-                for (int i = 0; i < samples - 3; i++)
+                for (int i = 0; i < _samples - 3; i++)
                 {
-                    int number = wav[pos + 2] + 256 * wav[pos + 3];
+                    int number = _wav[pos + 2] + 256 * _wav[pos + 3];
                     if (number > 32767) number -= 65534;
                     _rightChannel[i, 0] = number;
 
                     pos += 2 * NumChannels;
 
-                    _loadingPercentage = i * 100 / samples;
+                    _loadingPercentage = i * 100 / _samples;
                 }
             }
 
-            _compute = true;
+            if ((Boolean)Graph.IsChecked)
+            {
+                _ploter.PlottingResolution = 100;
+                _ploter.Plot(_rightChannel, 1);
+                _ploter.Plot(_leftChannel, 2);
+            }
+
+            if (!(Boolean)Graph.IsChecked) _compute = true;
         }
+
 
         private void Play(object sender, RoutedEventArgs e)
         {
@@ -159,14 +169,32 @@ namespace AmpIdent
             {
                 if (_compute)
                 {
-                    armax.NumberOfIterations = 1;
+                    armax.NumberOfIterations = 3;
                     armax.Compute(_leftChannel, _rightChannel, 0);
+
                     _ploter.PlottingResolution = 100;
-                    _ploter.Plot(_leftChannel, 1);
-                    _ploter.Plot(_rightChannel, 2);
                     _ploter.Plot(armax.YK, 3);
 
+                    byte[] wavOutput = _wav;
+
+                    int pos2 = 44;
+                    for (int i = 0; i < _samples - 10; i++)
+                    {
+                        double value1 = armax.YK[i, 0];
+                        int value2 = (int)value1;
+                        byte[] value = BitConverter.GetBytes(value2);
+
+                        wavOutput[pos2] = value[0];
+                        wavOutput[pos2 + 1] = value[1];
+
+                        pos2 += 4;
+                    }
+
+                    File.WriteAllBytes("C:\\Output\\output.wav", wavOutput);
+
                     _compute = false;
+
+                    Console.WriteLine("DONE!");
                 }
                 System.Threading.Thread.Sleep(10);
             }
