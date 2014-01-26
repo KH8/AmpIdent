@@ -42,6 +42,7 @@ namespace AmpIdent
         private DenseMatrix _rightChannel1;
         private DenseMatrix _leftChannel2;
         private DenseMatrix _rightChannel2;
+        private DenseMatrix _outputChannel;
         private Ploter _ploter;
         byte[] _wav1;
         byte[] _wav2;
@@ -130,8 +131,6 @@ namespace AmpIdent
                 _ploter.Plot(_rightChannel1, 1);
                 _ploter.Plot(_leftChannel1, 2);
             }
-
-            if (!(Boolean)Graph.IsChecked && _2loaded) _compute = true;
         }
 
         private void Load2(object sender, RoutedEventArgs e)
@@ -270,25 +269,6 @@ namespace AmpIdent
                     _ploter.PlottingResolution = 100;
                     _ploter.Plot(armax.YK, 3);
 
-                    byte[] wavOutput = _wav1;
-
-                    int pos2 = 44;
-                    for (int i = 0; i < _samples - 10; i++)
-                    {
-                        double value1 = armax.YK[i, 0];
-                        int value2 = (int)value1;
-                        byte[] value = BitConverter.GetBytes(value2);
-
-                        wavOutput[pos2] = value[0];
-                        wavOutput[pos2 + 1] = value[1];
-                        wavOutput[pos2 + 2] = value[0];
-                        wavOutput[pos2 + 3] = value[1];
-
-                        pos2 += 4;
-                    }
-
-                    File.WriteAllBytes("C:\\Output\\output.wav", wavOutput);
-
                     _compute = false;
 
                     Console.WriteLine("DONE!");
@@ -299,13 +279,38 @@ namespace AmpIdent
 
         private void Output(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i <= _leftChannel1.Values.Length + armax.StartingPoint - 1; i++)
+            _outputChannel = new DenseMatrix(_samples, 1, 0.0);
+
+            for (int i = 0; i <= _leftChannel1.Values.Length + armax.StartingPoint - 50; i++)
             {
-                Fi_k_t = armax.CalculateFi_k(armax.NAParameter, armax.NBParameter, armax.NDParameter, armax.NKParameter, i + armax.StartingPoint, X1, Y1, _V0);
+                var Fi_k_t = armax.CalculateFi_k(armax.NAParameter, armax.NBParameter, armax.NDParameter, armax.NKParameter, i + armax.StartingPoint, _leftChannel1, _outputChannel, armax.V0);
                 var Theta = armax.Theta.Transpose();
                 var Theta_k_Y_1 = armax.Theta.Transpose() * Fi_k_t;
-                _YK[i + _startingPoint, 0] = Theta_k_Y_1[0, 0];
+                _outputChannel[i + armax.StartingPoint, 0] = Theta_k_Y_1[0, 0];
             }
+            Console.WriteLine("DONE!");
+
+            byte[] wavOutput = _wav1;
+
+            int pos2 = 44;
+            for (int i = 0; i < _samples - 10; i++)
+            {
+                double value1 = _outputChannel[i, 0];
+                int value2 = (int)value1;
+                byte[] value = BitConverter.GetBytes(value2);
+
+                wavOutput[pos2] = value[0];
+                wavOutput[pos2 + 1] = value[1];
+                wavOutput[pos2 + 2] = value[0];
+                wavOutput[pos2 + 3] = value[1];
+
+                pos2 += 4;
+            }
+
+            File.WriteAllBytes("C:\\Output\\output.wav", wavOutput);
+
+            Console.WriteLine("DONE!");
+
         }
     }
 }

@@ -133,9 +133,9 @@ namespace AmpIdent
             _estimationStatusPercentage = 0;
             _estimationDone = false;
 
-            _naParameter = 5;
-            _nbParameter = 5;
-            _ndParameter = 5;
+            _naParameter = 10;
+            _nbParameter = 10;
+            _ndParameter = 10;
             _nkParameter = 0;
 
             _numberOfIterations = 1000;

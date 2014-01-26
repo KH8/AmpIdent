@@ -2,9 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf" 
-        Title="MainWindow" Height="308" Width="593" ResizeMode="NoResize">
+        Title="MainWindow" Height="349.791" Width="593" ResizeMode="NoResize">
     <Grid>
-        <oxy:Plot Model="{Binding Model}" Margin="10,67,10,10" BorderBrush="Black" Background="White" BorderThickness="1"/>
+        <oxy:Plot Model="{Binding Model}" Margin="10,67,10,37" BorderBrush="Black" Background="White" BorderThickness="1"/>
         <TextBox Name="PathBox1" HorizontalAlignment="Left" Height="22" Margin="83,10,0,0" TextWrapping="Wrap" Text="Type file path here" VerticalAlignment="Top" Width="203" TextChanged="PathBox_TextChanged_1"/>
         <Label Content="WAV1 path:" HorizontalAlignment="Left" Height="26" Margin="6,9,0,0" VerticalAlignment="Top" Width="76"/>
         <Label Name="Loading" Content="..." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="499,10,0,0" Width="83"/>
@@ -15,5 +15,6 @@
         <Label Content="WAV2 path:" HorizontalAlignment="Left" Height="26" Margin="6,36,0,0" VerticalAlignment="Top" Width="76"/>
         <Button Content="Load" HorizontalAlignment="Left" Margin="291,37,0,0" VerticalAlignment="Top" Width="75" Click="Load2"/>
         <Button Content="Play" HorizontalAlignment="Left" Margin="371,37,0,0" VerticalAlignment="Top" Width="75" Click="Play2"/>
+        <Button Content="Compute" HorizontalAlignment="Right" Margin="0,0,13,10" VerticalAlignment="Bottom" Width="75" Click="Output"/>
     </Grid>
 </Window>
