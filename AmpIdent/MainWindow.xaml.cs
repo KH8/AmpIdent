@@ -264,7 +264,7 @@ namespace AmpIdent
                 if (_compute)
                 {
                     armax.NumberOfIterations = 3;
-                    armax.Compute(_leftChannel1, _leftChannel2, 0);
+                    armax.Compute(_leftChannel1, _leftChannel2, 20000);
 
                     _ploter.PlottingResolution = 100;
                     _ploter.Plot(armax.YK, 3);
@@ -279,14 +279,15 @@ namespace AmpIdent
 
         private void Output(object sender, RoutedEventArgs e)
         {
+            var V0 = new DenseMatrix(_samples, 1, 0.0);
             _outputChannel = new DenseMatrix(_samples, 1, 0.0);
 
-            for (int i = 0; i <= _leftChannel1.Values.Length + armax.StartingPoint - 50; i++)
+            for (int i = armax.StartingPoint; i <= _samples - armax.StartingPoint - 1; i++)
             {
-                var Fi_k_t = armax.CalculateFi_k(armax.NAParameter, armax.NBParameter, armax.NDParameter, armax.NKParameter, i + armax.StartingPoint, _leftChannel1, _outputChannel, armax.V0);
+                var Fi_k_t = armax.CalculateFi_k(armax.NAParameter, armax.NBParameter, armax.NDParameter, armax.NKParameter, i, _leftChannel1, _outputChannel, V0);
                 var Theta = armax.Theta.Transpose();
                 var Theta_k_Y_1 = armax.Theta.Transpose() * Fi_k_t;
-                _outputChannel[i + armax.StartingPoint, 0] = Theta_k_Y_1[0, 0];
+                _outputChannel[i, 0] = Theta_k_Y_1[0, 0];
             }
             Console.WriteLine("DONE!");
 
