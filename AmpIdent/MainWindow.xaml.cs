@@ -44,9 +44,9 @@ namespace AmpIdent
         private DenseMatrix _rightChannel2;
         private DenseMatrix _outputChannel;
         private Ploter _ploter;
-        byte[] _wav1;
-        byte[] _wav2;
-        int _samples;
+        private byte[] _wav1;
+        private byte[] _wav2;
+        private int _samples;
 
 
         public MainWindow()
@@ -125,12 +125,10 @@ namespace AmpIdent
 
             _1loaded = true;
 
-            if ((Boolean)Graph.IsChecked)
-            {
-                _ploter.PlottingResolution = 100;
-                _ploter.Plot(_rightChannel1, 1);
-                _ploter.Plot(_leftChannel1, 2);
-            }
+            _ploter.PlottingResolution = 100;
+            _ploter.Clear();
+            _ploter.Plot(_rightChannel1, 1);
+            _ploter.Plot(_leftChannel1, 2);
         }
 
         private void Load2(object sender, RoutedEventArgs e)
@@ -181,14 +179,15 @@ namespace AmpIdent
 
             _2loaded = true;
 
-            if ((Boolean)Graph.IsChecked)
-            {
-                _ploter.PlottingResolution = 100;
-                _ploter.Plot(_rightChannel2, 1);
-                _ploter.Plot(_leftChannel2, 2);
-            }
+            _ploter.PlottingResolution = 100;
+            _ploter.Clear();
+            _ploter.Plot(_rightChannel2, 1);
+            _ploter.Plot(_leftChannel2, 2);
 
-            if (!(Boolean)Graph.IsChecked && _1loaded) _compute = true;
+            if (!(Boolean)Graph.IsChecked && _1loaded)
+            {
+                _compute = true;
+            }
         }
 
         private void Play1(object sender, RoutedEventArgs e)
@@ -253,6 +252,7 @@ namespace AmpIdent
                 {
                     Loading.Content = "Loading: " + _loadingPercentage.ToString() + "%";
                 })));
+
                 System.Threading.Thread.Sleep(5);
             }
         }
@@ -263,39 +263,37 @@ namespace AmpIdent
             {
                 if (_compute)
                 {
-                    armax.NAParameter = 10;
-                    armax.NBParameter = 10;
+                    armax.NAParameter = 15;
+                    armax.NBParameter = 15;
                     armax.NDParameter = 1;
                     armax.NKParameter = 0;
                     armax.ModelShift = 0;
 
-                    armax.NumberOfIterations = 10;
-                    armax.Compute(_leftChannel1, _leftChannel2, 20000);
+                    armax.NumberOfIterations = 2;
+                    armax.Compute(_leftChannel1, _leftChannel2, 30000);
 
                     _ploter.PlottingResolution = 100;
+                    _ploter.Clear();
                     _ploter.Plot(armax.YK, 3);
 
                     _compute = false;
 
-                    Console.WriteLine("DONE!");
+                    Console.WriteLine("Model computation: DONE!");
                 }
-                System.Threading.Thread.Sleep(10);
+                System.Threading.Thread.Sleep(1000);
             }
         }
 
         private void Output(object sender, RoutedEventArgs e)
         {
-            var V0 = new DenseMatrix(_samples, 1, 0.0);
             _outputChannel = new DenseMatrix(_samples, 1, 0.0);
+            _outputChannel = armax.Model(_leftChannel1, _samples - armax.StartingPoint);
+            Console.WriteLine("Output computation: DONE!");
 
-            for (int i = armax.StartingPoint; i <= _samples - armax.StartingPoint - 1; i++)
-            {
-                var Fi_k_t = armax.CalculateFi_k(armax.NAParameter, armax.NBParameter, armax.NDParameter, armax.NKParameter, i, _leftChannel1, _outputChannel, V0);
-                var Theta = armax.Theta.Transpose();
-                var Theta_k_Y_1 = armax.Theta.Transpose() * Fi_k_t;
-                _outputChannel[i, 0] = Theta_k_Y_1[0, 0];
-            }
-            Console.WriteLine("DONE!");
+            _ploter.PlottingResolution = 100;
+            _ploter.Clear();
+            _ploter.Plot(_outputChannel, 4);
+            DataContext = _ploter.MainViewModel;
 
             byte[] wavOutput = _wav1;
 
@@ -315,8 +313,7 @@ namespace AmpIdent
             }
 
             File.WriteAllBytes("C:\\Output\\output.wav", wavOutput);
-
-            Console.WriteLine("DONE!");
+            Console.WriteLine("File creation: DONE!");
 
         }
     }

@@ -33,6 +33,13 @@ namespace AmpIdent
         {
             _mainViewModel = new MainViewModel();
             _plottingResolution = 1;
+
+            _mainViewModel.AddPoint(9, new DataPoint(0, 0));
+
+            _mainViewModel.Model.IsLegendVisible = false;
+            _mainViewModel.Model.TitleFontSize = 0;
+            _mainViewModel.Model.Title = "";
+            _mainViewModel.Model.SubtitleFontSize = 0;
         }
 
         public void Plot(DenseMatrix vector, int layer)
@@ -42,12 +49,13 @@ namespace AmpIdent
                 _mainViewModel.AddPoint(layer, new DataPoint(i, vector[i, 0]));
                 i += _plottingResolution - 1;
             }
+            _mainViewModel.Model.RefreshPlot(true);
+            
+        }
 
-            _mainViewModel.Model.IsLegendVisible = false;
-            _mainViewModel.Model.TitleFontSize = 0;
-            _mainViewModel.Model.Title = "";
-            _mainViewModel.Model.SubtitleFontSize = 0;
-
+        public void Clear()
+        {
+            _mainViewModel.Clear();
         }
     }
 }

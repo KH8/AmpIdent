@@ -191,7 +191,6 @@ namespace AmpIdent
             //Predefinition of results
             _Theta = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
             _YK = new DenseMatrix(X1.Values.Length, 1, 0.0);
-            _YK = Y1;
 
             for (int k = 1; k <= _numberOfIterations; k++)
             {
@@ -263,16 +262,10 @@ namespace AmpIdent
             }
 
             //END: Vk.................................................................................................................
-            _V0 = new DenseMatrix(X1.Values.Length, 1, 0.0);
-            for (int i = 0; i <= _estimationLength - 1; i++)
-            {
-                Fi_k_t = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _startingPoint, X1, _YK, _V0);
-                var Theta_k_Y_1 = Theta_k_1.Transpose() * Fi_k_t;
-                _YK[i + _startingPoint, 0] = Theta_k_Y_1[0, 0];
-            }
-            Console.WriteLine("Estimation: DONE");
-
             _Theta = Theta_k_1;
+            _YK = Model(X1, _estimationLength);
+            Console.WriteLine("Estimation: DONE");
+            
             _estimationDone = true;
         }
 
@@ -295,6 +288,22 @@ namespace AmpIdent
                 }
             }
             return t_Fi_k;
-        }    
+        }
+
+        public DenseMatrix Model(DenseMatrix t_X1, int t_estimationLength)
+        {
+            var t_V0 = new DenseMatrix(t_X1.Values.Length, 1, 0.0);
+            var t_YK = new DenseMatrix(t_X1.Values.Length, 1, 0.0);
+            t_YK = t_X1;
+
+            for (int i = 0; i <= t_estimationLength - 1; i++)
+            {
+                var t_Fi_k_t = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _startingPoint, t_X1, t_YK, t_V0);
+                var t_Theta_k_Y_1 = _Theta.Transpose() * t_Fi_k_t;
+                t_YK[i + _startingPoint, 0] = t_Theta_k_Y_1[0, 0];
+            }
+
+            return t_YK;
+        }
     }
 }

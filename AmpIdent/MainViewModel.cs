@@ -54,5 +54,13 @@ namespace AmpIdent
             // Set the Model property, the INotifyPropertyChanged event will make the WPF Plot control update its content
             Model = tmp;
         }
+
+        public void Clear()
+        {
+            for (int i = 1; i <= 9; i++)
+            {
+                series[i].Points.Clear();
+            }
+        }
     }
 }
