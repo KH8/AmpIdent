@@ -27,6 +27,7 @@ namespace AmpIdent
         private Boolean _estimationDone;
         private double _estimationError;
         private double _estimationDifference;
+        private int _modelShift;
 
         //matrixes
         private DenseMatrix _V0;
@@ -76,6 +77,11 @@ namespace AmpIdent
         {
             get { return _estimationLength; }
             set { _estimationLength = value; }
+        }
+        public int ModelShift
+        {
+            get { return _modelShift; }
+            set { _modelShift = value; }
         }
 
         //status
@@ -141,13 +147,14 @@ namespace AmpIdent
 
             _naParameter = 10;
             _nbParameter = 10;
-            _ndParameter = 1;
+            _ndParameter = 10;
             _nkParameter = 0;
 
             _numberOfIterations = 20;
             _startingPoint = 100;
             _acceptableError = 1.0E-12;
             _estimationLength = 500;
+            _modelShift = 0;
         }
 
         public void Compute(DenseMatrix X1, DenseMatrix Y1, int estimationLength)
@@ -280,7 +287,7 @@ namespace AmpIdent
                 }
                 if (i > t_na && i <= t_na + t_nb)
                 {
-                    t_Fi_k[i - 1, 0] = t_X[t_t - t_nk - i + t_na + 1, 0];
+                    t_Fi_k[i - 1, 0] = t_X[t_t - t_nk - i + t_na + _modelShift, 0];
                 }
                 if (i > t_na + t_nb && i <= t_na + t_nb + t_nd)
                 {

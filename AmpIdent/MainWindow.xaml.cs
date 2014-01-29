@@ -263,7 +263,13 @@ namespace AmpIdent
             {
                 if (_compute)
                 {
-                    armax.NumberOfIterations = 3;
+                    armax.NAParameter = 10;
+                    armax.NBParameter = 10;
+                    armax.NDParameter = 1;
+                    armax.NKParameter = 0;
+                    armax.ModelShift = 0;
+
+                    armax.NumberOfIterations = 10;
                     armax.Compute(_leftChannel1, _leftChannel2, 20000);
 
                     _ploter.PlottingResolution = 100;
