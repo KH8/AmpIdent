@@ -17,6 +17,6 @@
         <Button Content="Play" HorizontalAlignment="Left" Margin="371,37,0,0" VerticalAlignment="Top" Width="75" Click="Play2"/>
         <Button Content="Compute" HorizontalAlignment="Right" Margin="0,0,13,10" VerticalAlignment="Bottom" Width="75" Click="Output"/>
         <Label x:Name="Loading_2" Content="..." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="451,35,0,0" Width="36"/>
-        <TextBox x:Name="OutputBox" HorizontalAlignment="Left" Height="24" Margin="10,0,0,8" TextWrapping="Wrap" Text="..." VerticalAlignment="Bottom" Width="466" BorderBrush="{x:Null}" IsEnabled="False" IsManipulationEnabled="True" IsReadOnlyCaretVisible="True" IsInactiveSelectionHighlightEnabled="True"/>
+        <TextBox x:Name="OutputBox" HorizontalAlignment="Left" Height="24" Margin="10,0,0,8" TextWrapping="Wrap" Text="..." VerticalAlignment="Bottom" Width="466" BorderBrush="{x:Null}" IsEnabled="False" IsManipulationEnabled="True" IsReadOnlyCaretVisible="True" Background="{x:Null}" Foreground="Black"/>
     </Grid>
 </Window>

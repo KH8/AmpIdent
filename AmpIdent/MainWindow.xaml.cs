@@ -35,6 +35,7 @@ namespace AmpIdent
         private Boolean _playing2;
         private Boolean _1loaded;
         private Boolean _2loaded;
+        private string _status;
 
         private Boolean _compute;
         private SoundPlayer _sp;
@@ -75,6 +76,8 @@ namespace AmpIdent
             _thread2.SetApartmentState(ApartmentState.STA);
             _thread2.IsBackground = false;
             _thread2.Start();
+
+            _status = "Load files";
 
             DataContext = _ploter.MainViewModel;
         }
@@ -132,6 +135,7 @@ namespace AmpIdent
             _ploter.Clear();
             _ploter.Plot(_rightChannel1, 1);
             _ploter.Plot(_leftChannel1, 2);
+            _status = "File1 Loaded";
         }
 
         private void Load2(object sender, RoutedEventArgs e)
@@ -187,6 +191,7 @@ namespace AmpIdent
             _ploter.Clear();
             _ploter.Plot(_rightChannel2, 1);
             _ploter.Plot(_leftChannel2, 2);
+            _status = "File2 Loaded";
 
             if (!(Boolean)Graph.IsChecked && _1loaded)
             {
@@ -250,6 +255,7 @@ namespace AmpIdent
 
         private void Update()
         {
+            int _i = 0;
             while (true)
             {
                 Loading_1.Dispatcher.BeginInvoke((new Action(delegate()
@@ -262,9 +268,17 @@ namespace AmpIdent
                 })));
                 OutputBox.Dispatcher.BeginInvoke((new Action(delegate()
                 {
-                    OutputBox.Text = "...";
+                    if (_compute)
+                    {
+                        if (_i % 4 == 0) _status = "Model computation ";
+                        if (_i % 4 == 1) _status = "Model computation .";
+                        if (_i % 4 == 2) _status = "Model computation ..";
+                        if (_i % 4 == 3) _status = "Model computation ...";
+                    }
+                    _i++;
+                    OutputBox.Text = _status;
                 })));
-                System.Threading.Thread.Sleep(5);
+                System.Threading.Thread.Sleep(100);
             }
         }
 
@@ -274,9 +288,9 @@ namespace AmpIdent
             {
                 if (_compute)
                 {
-                    armax.NAParameter = 100;
-                    armax.NBParameter = 100;
-                    armax.NDParameter = 10;
+                    armax.NAParameter = 10;
+                    armax.NBParameter = 10;
+                    armax.NDParameter = 1;
                     armax.NKParameter = 0;
                     armax.ModelShift = 1;
                     armax.StartingPoint = 200;
@@ -291,6 +305,7 @@ namespace AmpIdent
                     _compute = false;
 
                     Console.WriteLine("Model computation: DONE!");
+                    _status = "Model computation: DONE!";
                 }
                 System.Threading.Thread.Sleep(1000);
             }
@@ -301,6 +316,7 @@ namespace AmpIdent
             _outputChannel = new DenseMatrix(_samples, 1, 0.0);
             _outputChannel = armax.Model(_leftChannel1);
             Console.WriteLine("Output computation: DONE!");
+            _status = "Output computation: DONE!";
 
             _ploter.PlottingResolution = 100;
             _ploter.Clear();
@@ -323,10 +339,9 @@ namespace AmpIdent
 
                 pos2 += 4;
             }
-
             File.WriteAllBytes("C:\\Output\\output.wav", wavOutput);
             Console.WriteLine("File creation: DONE!");
-
+            _status = "File creation: DONE!";
         }
     }
 }
