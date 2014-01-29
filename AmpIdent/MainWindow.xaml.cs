@@ -263,13 +263,14 @@ namespace AmpIdent
             {
                 if (_compute)
                 {
-                    armax.NAParameter = 15;
-                    armax.NBParameter = 15;
-                    armax.NDParameter = 1;
+                    armax.NAParameter = 50;
+                    armax.NBParameter = 100;
+                    armax.NDParameter = 10;
                     armax.NKParameter = 0;
-                    armax.ModelShift = 0;
+                    armax.ModelShift = 1;
+                    armax.StartingPoint = 100;
 
-                    armax.NumberOfIterations = 2;
+                    armax.NumberOfIterations = 1;
                     armax.Compute(_leftChannel1, _leftChannel2, 30000);
 
                     _ploter.PlottingResolution = 100;
@@ -287,7 +288,7 @@ namespace AmpIdent
         private void Output(object sender, RoutedEventArgs e)
         {
             _outputChannel = new DenseMatrix(_samples, 1, 0.0);
-            _outputChannel = armax.Model(_leftChannel1, _samples - armax.StartingPoint);
+            _outputChannel = armax.Model(_leftChannel1);
             Console.WriteLine("Output computation: DONE!");
 
             _ploter.PlottingResolution = 100;

@@ -30,6 +30,7 @@ namespace AmpIdent
         private int _modelShift;
 
         //matrixes
+        private DenseMatrix _Y1;
         private DenseMatrix _V0;
         private DenseMatrix _Theta;
         private DenseMatrix _YK;
@@ -160,6 +161,7 @@ namespace AmpIdent
         public void Compute(DenseMatrix X1, DenseMatrix Y1, int estimationLength)
         {
             Random random = new Random();
+            _Y1 = Y1;
 
             //Setting preparation.....................................................................................................
             _estimationError = 0.0;
@@ -176,7 +178,7 @@ namespace AmpIdent
             //II Step: V0.............................................................................................................
 
             _V0 = new DenseMatrix(X1.Values.Length, 1, 1.0); //
-            for (int i = 0; i <= X1.Values.Length - 1; i++) { _V0[i, 0] = random.Next(-10, 10); }
+            for (int i = 0; i <= X1.Values.Length - 1; i++) { _V0[i, 0] = random.Next(-100, 100); }
             Console.WriteLine("Step II: DONE");
 
             //Definition of temporary matrixes
@@ -263,7 +265,7 @@ namespace AmpIdent
 
             //END: Vk.................................................................................................................
             _Theta = Theta_k_1;
-            _YK = Model(X1, _estimationLength);
+            _YK = Model(X1);
             Console.WriteLine("Estimation: DONE");
             
             _estimationDone = true;
@@ -290,13 +292,12 @@ namespace AmpIdent
             return t_Fi_k;
         }
 
-        public DenseMatrix Model(DenseMatrix t_X1, int t_estimationLength)
+        public DenseMatrix Model(DenseMatrix t_X1)
         {
             var t_V0 = new DenseMatrix(t_X1.Values.Length, 1, 0.0);
             var t_YK = new DenseMatrix(t_X1.Values.Length, 1, 0.0);
-            t_YK = t_X1;
 
-            for (int i = 0; i <= t_estimationLength - 1; i++)
+            for (int i = 0; i <= t_X1.Values.Length - _startingPoint - 1; i++)
             {
                 var t_Fi_k_t = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _startingPoint, t_X1, t_YK, t_V0);
                 var t_Theta_k_Y_1 = _Theta.Transpose() * t_Fi_k_t;
