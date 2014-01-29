@@ -29,7 +29,8 @@ namespace AmpIdent
     {
         private string _path1;
         private string _path2;
-        private int _loadingPercentage;
+        private int _loadingPercentage1;
+        private int _loadingPercentage2;
         private Boolean _playing1;
         private Boolean _playing2;
         private Boolean _1loaded;
@@ -61,7 +62,8 @@ namespace AmpIdent
             
             _path1 = "";
             _path2 = "";
-            _loadingPercentage = 0;
+            _loadingPercentage1 = 0;
+            _loadingPercentage2 = 0;
             armax = new ARMAX();
 
             Thread _thread1 = new Thread(new ThreadStart(Update));
@@ -93,7 +95,7 @@ namespace AmpIdent
             if (NumChannels == 2) _samples /= 2;
 
             int pos = 44; // start of data chunk
-            _loadingPercentage = 0;
+            _loadingPercentage1 = 0;
 
             _leftChannel1 = new DenseMatrix(_samples, 1, 0.0);
             _rightChannel1 = new DenseMatrix(_samples, 1, 0.0);
@@ -106,11 +108,12 @@ namespace AmpIdent
 
                 pos += 2 * NumChannels;
 
-                _loadingPercentage = i * 100 / _samples;
+                _loadingPercentage1 = i * 50 / _samples;
             }
             if (NumChannels == 2)
             {
                 pos = 44;
+                _loadingPercentage1 = 50;
                 for (int i = 0; i < _samples - 3; i++)
                 {
                     int number = _wav1[pos + 2] + 256 * _wav1[pos + 3];
@@ -119,7 +122,7 @@ namespace AmpIdent
 
                     pos += 2 * NumChannels;
 
-                    _loadingPercentage = i * 100 / _samples;
+                    _loadingPercentage1 = 50 + (i * 50 / _samples);
                 }
             }
 
@@ -147,7 +150,7 @@ namespace AmpIdent
             if (NumChannels == 2) _samples /= 2;
 
             int pos = 44; // start of data chunk
-            _loadingPercentage = 0;
+            _loadingPercentage2 = 0;
 
             _leftChannel2 = new DenseMatrix(_samples, 1, 0.0);
             _rightChannel2 = new DenseMatrix(_samples, 1, 0.0);
@@ -160,11 +163,12 @@ namespace AmpIdent
 
                 pos += 2 * NumChannels;
 
-                _loadingPercentage = i * 100 / _samples;
+                _loadingPercentage2 = i * 50 / _samples;
             }
             if (NumChannels == 2)
             {
                 pos = 44;
+                _loadingPercentage2 = 50;
                 for (int i = 0; i < _samples - 3; i++)
                 {
                     int number = _wav2[pos + 2] + 256 * _wav2[pos + 3];
@@ -173,7 +177,7 @@ namespace AmpIdent
 
                     pos += 2 * NumChannels;
 
-                    _loadingPercentage = i * 100 / _samples;
+                    _loadingPercentage2 = 50 + (i * 50 / _samples);
                 }
             }
 
@@ -248,11 +252,18 @@ namespace AmpIdent
         {
             while (true)
             {
-                Loading.Dispatcher.BeginInvoke((new Action(delegate()
+                Loading_1.Dispatcher.BeginInvoke((new Action(delegate()
                 {
-                    Loading.Content = "Loading: " + _loadingPercentage.ToString() + "%";
+                    Loading_1.Content = _loadingPercentage1.ToString() + "%";
                 })));
-
+                Loading_2.Dispatcher.BeginInvoke((new Action(delegate()
+                {
+                    Loading_2.Content = _loadingPercentage2.ToString() + "%";
+                })));
+                OutputBox.Dispatcher.BeginInvoke((new Action(delegate()
+                {
+                    OutputBox.Text = "...";
+                })));
                 System.Threading.Thread.Sleep(5);
             }
         }
@@ -263,15 +274,15 @@ namespace AmpIdent
             {
                 if (_compute)
                 {
-                    armax.NAParameter = 50;
+                    armax.NAParameter = 100;
                     armax.NBParameter = 100;
                     armax.NDParameter = 10;
                     armax.NKParameter = 0;
                     armax.ModelShift = 1;
-                    armax.StartingPoint = 100;
+                    armax.StartingPoint = 200;
 
                     armax.NumberOfIterations = 1;
-                    armax.Compute(_leftChannel1, _leftChannel2, 30000);
+                    armax.Compute(_leftChannel1, _leftChannel2, 3000);
 
                     _ploter.PlottingResolution = 100;
                     _ploter.Clear();

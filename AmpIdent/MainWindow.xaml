@@ -7,14 +7,16 @@
         <oxy:Plot Model="{Binding Model}" Margin="10,67,10,37" BorderBrush="Black" Background="White" BorderThickness="1"/>
         <TextBox Name="PathBox1" HorizontalAlignment="Left" Height="22" Margin="83,10,0,0" TextWrapping="Wrap" Text="c:\avril_clean.wav" VerticalAlignment="Top" Width="203" TextChanged="PathBox_TextChanged_1"/>
         <Label Content="WAV1 path:" HorizontalAlignment="Left" Height="26" Margin="6,9,0,0" VerticalAlignment="Top" Width="76"/>
-        <Label Name="Loading" Content="..." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="499,10,0,0" Width="83"/>
+        <Label Name="Loading_1" Content="..." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="451,8,0,0" Width="36"/>
         <Button Content="Load" HorizontalAlignment="Left" Margin="291,10,0,0" VerticalAlignment="Top" Width="75" Click="Load1"/>
         <Button Content="Play" HorizontalAlignment="Left" Margin="371,10,0,0" VerticalAlignment="Top" Width="75" Click="Play1"/>
-        <CheckBox Name="Graph" Content="Graph only" HorizontalAlignment="Left" Margin="499,41,0,0" VerticalAlignment="Top"/>
+        <CheckBox Name="Graph" Content="Graph only" HorizontalAlignment="Left" Margin="499,9,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="PathBox2" HorizontalAlignment="Left" Height="22" Margin="83,37,0,0" TextWrapping="Wrap" Text="c:\avril_scolpture.wav" VerticalAlignment="Top" Width="203" TextChanged="PathBox_TextChanged_2"/>
         <Label Content="WAV2 path:" HorizontalAlignment="Left" Height="26" Margin="6,36,0,0" VerticalAlignment="Top" Width="76"/>
         <Button Content="Load" HorizontalAlignment="Left" Margin="291,37,0,0" VerticalAlignment="Top" Width="75" Click="Load2"/>
         <Button Content="Play" HorizontalAlignment="Left" Margin="371,37,0,0" VerticalAlignment="Top" Width="75" Click="Play2"/>
         <Button Content="Compute" HorizontalAlignment="Right" Margin="0,0,13,10" VerticalAlignment="Bottom" Width="75" Click="Output"/>
+        <Label x:Name="Loading_2" Content="..." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="451,35,0,0" Width="36"/>
+        <TextBox x:Name="OutputBox" HorizontalAlignment="Left" Height="24" Margin="10,0,0,8" TextWrapping="Wrap" Text="..." VerticalAlignment="Bottom" Width="466" BorderBrush="{x:Null}" IsEnabled="False" IsManipulationEnabled="True" IsReadOnlyCaretVisible="True" IsInactiveSelectionHighlightEnabled="True"/>
     </Grid>
 </Window>
