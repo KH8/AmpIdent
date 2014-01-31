@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace AmpIdent
@@ -28,6 +29,11 @@ namespace AmpIdent
         private double _estimationError;
         private double _estimationDifference;
         private int _modelShift;
+
+        private Boolean _compute;
+        private DenseMatrix _M1;
+        private DenseMatrix _M2;
+        private DenseMatrix _M;
 
         //matrixes
         private DenseMatrix _Y1;
@@ -156,6 +162,12 @@ namespace AmpIdent
             _acceptableError = 1.0E-12;
             _estimationLength = 500;
             _modelShift = 0;
+
+            Thread _thread = new Thread(new ThreadStart(Compute));
+
+            _thread.SetApartmentState(ApartmentState.STA);
+            _thread.IsBackground = false;
+            _thread.Start();
         }
 
         public void Compute(DenseMatrix X1, DenseMatrix Y1, int estimationLength)
@@ -212,11 +224,11 @@ namespace AmpIdent
 
                 var Fi_k_LT = Fi_k_L.Transpose();
                 Console.WriteLine("Step IV: 1/5 DONE");
-                var FiFiT = Fi_k_L.Multiply(Fi_k_LT);
+                var FiFiT = Multiply((DenseMatrix)Fi_k_L, (DenseMatrix)Fi_k_LT);
                 Console.WriteLine("Step IV: 2/5 DONE");
                 var FiFiTI = FiFiT.Inverse();
                 Console.WriteLine("Step IV: 3/5 DONE");
-                var FiFiTIFi_k_L = FiFiTI.Multiply(Fi_k_L);
+                var FiFiTIFi_k_L = Multiply((DenseMatrix)FiFiTI, (DenseMatrix)Fi_k_L);
                 Console.WriteLine("Step IV: 4/5 DONE");
                 var Theta_k = FiFiTIFi_k_L * YL;
                 Console.WriteLine("Step IV: 5/5 DONE");
@@ -310,6 +322,40 @@ namespace AmpIdent
             }
 
             return t_YK;
+        }
+
+        public DenseMatrix Multiply(DenseMatrix M1, DenseMatrix M2)
+        {
+            _M1 = M1;
+            _M2 = M2;
+            _compute = true;
+
+            while (_compute)
+            {
+                System.Threading.Thread.Sleep(1000);
+            }
+
+            return _M;
+        }
+
+        public void Compute()
+        {
+            while (true)
+            {
+                if (_compute)
+                {
+                    _M = new DenseMatrix(_M1.RowCount, _M2.ColumnCount, 0.0);
+
+                    Parallel.For(0, _M1.RowCount, i =>
+                    {
+                        for (int j = 0; j < _M2.ColumnCount; ++j) // each col of B
+                            for (int k = 0; k < _M1.ColumnCount; ++k) // could use k < bRows
+                                _M[i,j] += _M1[i,k] * _M2[k,j];
+                    });
+                    _compute = false;
+                }
+                System.Threading.Thread.Sleep(100);
+            }
         }
     }
 }

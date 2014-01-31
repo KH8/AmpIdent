@@ -296,7 +296,7 @@ namespace AmpIdent
                     armax.StartingPoint = 200;
 
                     armax.NumberOfIterations = 1;
-                    armax.Compute(_leftChannel1, _leftChannel2, 30000);
+                    armax.Compute(_leftChannel1, _leftChannel2, 0);
 
                     _ploter.PlottingResolution = 100;
                     _ploter.Clear();
