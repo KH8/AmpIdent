@@ -211,10 +211,15 @@ namespace AmpIdent
                 //IV Step: Theta(k)...................................................................................................
 
                 var Fi_k_LT = Fi_k_L.Transpose();
-                var FiFiT = Fi_k_L * Fi_k_LT;
+                Console.WriteLine("Step IV: 1/5 DONE");
+                var FiFiT = Fi_k_L.Multiply(Fi_k_LT);
+                Console.WriteLine("Step IV: 2/5 DONE");
                 var FiFiTI = FiFiT.Inverse();
-                var Theta_k = FiFiTI * Fi_k_L * YL;
-                Console.WriteLine("Step IV: DONE");
+                Console.WriteLine("Step IV: 3/5 DONE");
+                var FiFiTIFi_k_L = FiFiTI.Multiply(Fi_k_L);
+                Console.WriteLine("Step IV: 4/5 DONE");
+                var Theta_k = FiFiTIFi_k_L * YL;
+                Console.WriteLine("Step IV: 5/5 DONE");
 
                 //V Step: Vk_t........................................................................................................
 

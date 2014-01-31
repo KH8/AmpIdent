@@ -278,7 +278,7 @@ namespace AmpIdent
                     _i++;
                     OutputBox.Text = _status;
                 })));
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(1000);
             }
         }
 
@@ -296,7 +296,7 @@ namespace AmpIdent
                     armax.StartingPoint = 200;
 
                     armax.NumberOfIterations = 1;
-                    armax.Compute(_leftChannel1, _leftChannel2, 3000);
+                    armax.Compute(_leftChannel1, _leftChannel2, 30000);
 
                     _ploter.PlottingResolution = 100;
                     _ploter.Clear();
