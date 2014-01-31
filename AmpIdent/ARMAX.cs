@@ -332,7 +332,7 @@ namespace AmpIdent
 
             while (_compute)
             {
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(2000);
             }
 
             return _M;
