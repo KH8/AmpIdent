@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace AmpIdent
@@ -36,7 +31,7 @@ namespace AmpIdent
                 {
                     return _output;
                 }
-                else return null;
+                return null;
             }
         }
 
@@ -55,9 +50,9 @@ namespace AmpIdent
             
             //Creation of a Z matrix..................................................................................................
             var Z = new DenseMatrix(_estimationLength, size, 1.0);
-            for (int i = 0; i <= _estimationLength - 1; i++)
+            for (var i = 0; i <= _estimationLength - 1; i++)
             {
-                for (int j = 0; j <= size - 1; j++)
+                for (var j = 0; j <= size - 1; j++)
                 {
                     Z[i, j] = Math.Pow(i,j);
                 }
@@ -72,9 +67,9 @@ namespace AmpIdent
             _output = new DenseMatrix(_estimationLength, 1, 1.0);
 
             //Output creation.........................................................................................................
-            for (int i = 0; i <= _estimationLength - 1; i++)
+            for (var i = 0; i <= _estimationLength - 1; i++)
             {
-               for (int j = 0; j <= size - 1; j++)
+               for (var j = 0; j <= size - 1; j++)
                {
                    _output[i, 0] += Theta[j,0]*Math.Pow(i,j);
                }

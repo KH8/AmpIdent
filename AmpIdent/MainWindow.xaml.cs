@@ -1,31 +1,17 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
 using System.Media;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using MathNet.Numerics.LinearAlgebra.Double;
-using OxyPlot;
-using OxyPlot.Axes;
-using OxyPlot.Series;
 
 namespace AmpIdent
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         private string _path1;
         private string _path2;
@@ -33,13 +19,13 @@ namespace AmpIdent
         private int _loadingPercentage2;
         private Boolean _playing1;
         private Boolean _playing2;
-        private Boolean _1loaded;
-        private Boolean _2loaded;
+        private Boolean _1Loaded;
+        private Boolean _2Loaded;
         private string _status;
 
         private Boolean _compute;
         private SoundPlayer _sp;
-        private ARMAX armax;
+        private Armax armax;
         private DenseMatrix _leftChannel1;
         private DenseMatrix _rightChannel1;
         private DenseMatrix _leftChannel2;
@@ -50,12 +36,14 @@ namespace AmpIdent
         private byte[] _wav2;
         private int _samples;
 
+        private Thread _thread1;
+        private Thread _thread2;
 
         public MainWindow()
         {
             InitializeComponent();
-            string newLine = Environment.NewLine;
-            Random random = new Random();
+            var newLine = Environment.NewLine;
+            var random = new Random();
             _sp = new SoundPlayer();
             _ploter = new Ploter();
 
@@ -65,10 +53,10 @@ namespace AmpIdent
             _path2 = "";
             _loadingPercentage1 = 0;
             _loadingPercentage2 = 0;
-            armax = new ARMAX();
+            armax = new Armax();
 
-            Thread _thread1 = new Thread(new ThreadStart(Update));
-            Thread _thread2 = new Thread(new ThreadStart(Compute));
+            _thread1 = new Thread(new ThreadStart(Update));
+            _thread2 = new Thread(new ThreadStart(Compute));
 
             _thread1.SetApartmentState(ApartmentState.STA);
             _thread1.IsBackground = false;
@@ -88,48 +76,48 @@ namespace AmpIdent
             _wav1 = File.ReadAllBytes(_path1);
 
             // then we are going to get our file's info
-            var NumChannels = _wav1[22];
-            var SampleRate = _wav1[24] + 256 * _wav1[25];
+            var numChannels = _wav1[22];
+            var sampleRate = _wav1[24] + 256 * _wav1[25];
 
             // nr of samples is the length - the 44 bytes that where needed for the offset
             _samples = (_wav1.Length - 44) / 2;
 
             // if there are 2 channels, we need to devide the nr of sample in 2
-            if (NumChannels == 2) _samples /= 2;
+            if (numChannels == 2) _samples /= 2;
 
-            int pos = 44; // start of data chunk
+            var pos = 44; // start of data chunk
             _loadingPercentage1 = 0;
 
             _leftChannel1 = new DenseMatrix(_samples, 1, 0.0);
             _rightChannel1 = new DenseMatrix(_samples, 1, 0.0);
 
-            for (int i = 0; i < _samples - 1; i++)
+            for (var i = 0; i < _samples - 1; i++)
             {
-                int number = _wav1[pos] + 256 * _wav1[pos + 1];
+                var number = _wav1[pos] + 256 * _wav1[pos + 1];
                 if (number > 32767) number -= 65534;
                 _leftChannel1[i, 0] = number;
 
-                pos += 2 * NumChannels;
+                pos += 2 * numChannels;
 
                 _loadingPercentage1 = i * 50 / _samples;
             }
-            if (NumChannels == 2)
+            if (numChannels == 2)
             {
                 pos = 44;
                 _loadingPercentage1 = 50;
-                for (int i = 0; i < _samples - 3; i++)
+                for (var i = 0; i < _samples - 3; i++)
                 {
-                    int number = _wav1[pos + 2] + 256 * _wav1[pos + 3];
+                    var number = _wav1[pos + 2] + 256 * _wav1[pos + 3];
                     if (number > 32767) number -= 65534;
                     _rightChannel1[i, 0] = number;
 
-                    pos += 2 * NumChannels;
+                    pos += 2 * numChannels;
 
                     _loadingPercentage1 = 50 + (i * 50 / _samples);
                 }
             }
 
-            _1loaded = true;
+            _1Loaded = true;
 
             _ploter.PlottingResolution = 100;
             _ploter.Clear();
@@ -144,48 +132,48 @@ namespace AmpIdent
             _wav2 = File.ReadAllBytes(_path2);
 
             // then we are going to get our file's info
-            var NumChannels = _wav2[22];
-            var SampleRate = _wav2[24] + 256 * _wav2[25];
+            var numChannels = _wav2[22];
+            var sampleRate = _wav2[24] + 256 * _wav2[25];
 
             // nr of samples is the length - the 44 bytes that where needed for the offset
             _samples = (_wav2.Length - 44) / 2;
 
             // if there are 2 channels, we need to devide the nr of sample in 2
-            if (NumChannels == 2) _samples /= 2;
+            if (numChannels == 2) _samples /= 2;
 
-            int pos = 44; // start of data chunk
+            var pos = 44; // start of data chunk
             _loadingPercentage2 = 0;
 
             _leftChannel2 = new DenseMatrix(_samples, 1, 0.0);
             _rightChannel2 = new DenseMatrix(_samples, 1, 0.0);
 
-            for (int i = 0; i < _samples - 1; i++)
+            for (var i = 0; i < _samples - 1; i++)
             {
-                int number = _wav2[pos] + 256 * _wav2[pos + 1];
+                var number = _wav2[pos] + 256 * _wav2[pos + 1];
                 if (number > 32767) number -= 65534;
                 _leftChannel2[i, 0] = number;
 
-                pos += 2 * NumChannels;
+                pos += 2 * numChannels;
 
                 _loadingPercentage2 = i * 50 / _samples;
             }
-            if (NumChannels == 2)
+            if (numChannels == 2)
             {
                 pos = 44;
                 _loadingPercentage2 = 50;
-                for (int i = 0; i < _samples - 3; i++)
+                for (var i = 0; i < _samples - 3; i++)
                 {
-                    int number = _wav2[pos + 2] + 256 * _wav2[pos + 3];
+                    var number = _wav2[pos + 2] + 256 * _wav2[pos + 3];
                     if (number > 32767) number -= 65534;
                     _rightChannel2[i, 0] = number;
 
-                    pos += 2 * NumChannels;
+                    pos += 2 * numChannels;
 
                     _loadingPercentage2 = 50 + (i * 50 / _samples);
                 }
             }
 
-            _2loaded = true;
+            _2Loaded = true;
 
             _ploter.PlottingResolution = 100;
             _ploter.Clear();
@@ -193,7 +181,7 @@ namespace AmpIdent
             _ploter.Plot(_leftChannel2, 2);
             _status = "File2 Loaded";
 
-            if (!(Boolean)Graph.IsChecked && _1loaded)
+            if (!(Boolean)Graph.IsChecked && _1Loaded)
             {
                 _compute = true;
             }
@@ -201,7 +189,7 @@ namespace AmpIdent
 
         private void Play1(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
+            var button = (Button)sender;
 
             if (!_playing1)
             {
@@ -222,7 +210,7 @@ namespace AmpIdent
 
         private void Play2(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
+            var button = (Button)sender;
 
             if (!_playing2)
             {
@@ -243,19 +231,19 @@ namespace AmpIdent
 
         private void PathBox_TextChanged_1(object sender, TextChangedEventArgs e)
         {
-            TextBox _pathBox = (TextBox)sender;
-            _path1 = _pathBox.Text.ToString();
+            var pathBox = (TextBox)sender;
+            _path1 = pathBox.Text.ToString();
         }
 
         private void PathBox_TextChanged_2(object sender, TextChangedEventArgs e)
         {
-            TextBox _pathBox = (TextBox)sender;
-            _path2 = _pathBox.Text.ToString();
+            var pathBox = (TextBox)sender;
+            _path2 = pathBox.Text.ToString();
         }
 
         private void Update()
         {
-            int _i = 0;
+            var i = 0;
             while (true)
             {
                 Loading_1.Dispatcher.BeginInvoke((new Action(delegate()
@@ -270,15 +258,15 @@ namespace AmpIdent
                 {
                     if (_compute)
                     {
-                        if (_i % 4 == 0) _status = "Model computation ";
-                        if (_i % 4 == 1) _status = "Model computation .";
-                        if (_i % 4 == 2) _status = "Model computation ..";
-                        if (_i % 4 == 3) _status = "Model computation ...";
+                        if (i % 4 == 0) _status = "Model computation ";
+                        if (i % 4 == 1) _status = "Model computation .";
+                        if (i % 4 == 2) _status = "Model computation ..";
+                        if (i % 4 == 3) _status = "Model computation ...";
                     }
-                    _i++;
+                    i++;
                     OutputBox.Text = _status;
                 })));
-                System.Threading.Thread.Sleep(1000);
+                Thread.Sleep(1000);
             }
         }
 
@@ -304,10 +292,10 @@ namespace AmpIdent
 
                     _compute = false;
 
-                    Console.WriteLine("Model computation: DONE!");
+                    Console.WriteLine(@"Model computation: DONE!");
                     _status = "Model computation: DONE!";
                 }
-                System.Threading.Thread.Sleep(1000);
+                Thread.Sleep(1000);
             }
         }
 
@@ -315,7 +303,7 @@ namespace AmpIdent
         {
             _outputChannel = new DenseMatrix(_samples, 1, 0.0);
             _outputChannel = armax.Model(_leftChannel1);
-            Console.WriteLine("Output computation: DONE!");
+            Console.WriteLine(@"Output computation: DONE!");
             _status = "Output computation: DONE!";
 
             _ploter.PlottingResolution = 100;
@@ -323,14 +311,14 @@ namespace AmpIdent
             _ploter.Plot(_outputChannel, 4);
             DataContext = _ploter.MainViewModel;
 
-            byte[] wavOutput = _wav1;
+            var wavOutput = _wav1;
 
-            int pos2 = 44;
-            for (int i = 0; i < _samples - 10; i++)
+            var pos2 = 44;
+            for (var i = 0; i < _samples - 10; i++)
             {
-                double value1 = _outputChannel[i, 0];
-                int value2 = (int)value1;
-                byte[] value = BitConverter.GetBytes(value2);
+                var value1 = _outputChannel[i, 0];
+                var value2 = (int)value1;
+                var value = BitConverter.GetBytes(value2);
 
                 wavOutput[pos2] = value[0];
                 wavOutput[pos2 + 1] = value[1];
@@ -340,7 +328,7 @@ namespace AmpIdent
                 pos2 += 4;
             }
             File.WriteAllBytes("C:\\Output\\output.wav", wavOutput);
-            Console.WriteLine("File creation: DONE!");
+            Console.WriteLine(@"File creation: DONE!");
             _status = "File creation: DONE!";
         }
     }

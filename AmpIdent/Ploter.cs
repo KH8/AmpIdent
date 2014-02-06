@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MathNet.Numerics.LinearAlgebra.Double;
+﻿using MathNet.Numerics.LinearAlgebra.Double;
 using OxyPlot;
-using OxyPlot.Axes;
-using OxyPlot.Series;
 
 namespace AmpIdent
 {
@@ -44,7 +37,7 @@ namespace AmpIdent
 
         public void Plot(DenseMatrix vector, int layer)
         {
-            for (int i = 0; i < vector.Values.Length - 1 / _plottingResolution; i++)
+            for (var i = 0; i < vector.Values.Length - 1 / _plottingResolution; i++)
             {
                 _mainViewModel.AddPoint(layer, new DataPoint(i, vector[i, 0]));
                 i += _plottingResolution - 1;

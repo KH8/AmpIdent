@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace AmpIdent
 {
-    class ARMAX
+    class Armax
     {
         //private
         //model size parameters
@@ -31,15 +28,15 @@ namespace AmpIdent
         private int _modelShift;
 
         private Boolean _compute;
-        private DenseMatrix _M1;
-        private DenseMatrix _M2;
-        private DenseMatrix _M;
+        private DenseMatrix _m1;
+        private DenseMatrix _m2;
+        private DenseMatrix _m;
 
         //matrixes
-        private DenseMatrix _Y1;
-        private DenseMatrix _V0;
-        private DenseMatrix _Theta;
-        private DenseMatrix _YK;
+        private DenseMatrix _y1;
+        private DenseMatrix _v0;
+        private DenseMatrix _theta;
+        private DenseMatrix _yk;
 
         //public
         //model size parameters
@@ -116,9 +113,9 @@ namespace AmpIdent
             get {
                 if (_estimationDone)
                 {
-                    return _V0;
+                    if (_v0 != null) return _v0;
                 }
-                else return null;
+                return null;
             }
         }
         public DenseMatrix Theta
@@ -127,9 +124,9 @@ namespace AmpIdent
             {
                 if (_estimationDone)
                 {
-                    return _Theta;
+                    return _theta;
                 }
-                else return null;
+                return null;
             }
         }
         public DenseMatrix YK
@@ -138,16 +135,16 @@ namespace AmpIdent
             {
                 if (_estimationDone)
                 {
-                    return _YK;
+                    return _yk;
                 }
-                else return null;
+                return null;
             }
         }
         ///
 
         //Methods
         //Constructor
-        public ARMAX()
+        public Armax()
         {
             _estimationStatusPercentage = 0;
             _estimationDone = false;
@@ -163,17 +160,17 @@ namespace AmpIdent
             _estimationLength = 500;
             _modelShift = 0;
 
-            Thread _thread = new Thread(new ThreadStart(Compute));
+            var thread = new Thread(new ThreadStart(Compute));
 
-            _thread.SetApartmentState(ApartmentState.STA);
-            _thread.IsBackground = false;
-            _thread.Start();
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.IsBackground = false;
+            thread.Start();
         }
 
         public void Compute(DenseMatrix X1, DenseMatrix Y1, int estimationLength)
         {
-            Random random = new Random();
-            _Y1 = Y1;
+            var random = new Random();
+            _y1 = Y1;
 
             //Setting preparation.....................................................................................................
             _estimationError = 0.0;
@@ -184,18 +181,18 @@ namespace AmpIdent
             //I Step: Y(L)............................................................................................................
 
             var YL = new DenseMatrix(_estimationLength, 1, 0.0);
-            for (int i = 0; i <= _estimationLength - 1; i++) { YL[i, 0] = Y1[i + _startingPoint, 0]; }
-            Console.WriteLine("Step I: DONE");
+            for (var i = 0; i <= _estimationLength - 1; i++) { YL[i, 0] = Y1[i + _startingPoint, 0]; }
+            Console.WriteLine(@"Step I: DONE");
 
             //II Step: V0.............................................................................................................
 
-            _V0 = new DenseMatrix(X1.Values.Length, 1, 1.0); //
-            for (int i = 0; i <= X1.Values.Length - 1; i++) { _V0[i, 0] = random.Next(-100, 100); }
-            Console.WriteLine("Step II: DONE");
+            _v0 = new DenseMatrix(X1.Values.Length, 1, 1.0); //
+            for (var i = 0; i <= X1.Values.Length - 1; i++) { _v0[i, 0] = random.Next(-100, 100); }
+            Console.WriteLine(@"Step II: DONE");
 
             //Definition of temporary matrixes
-            var Theta_k_1 = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
-            for (int i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++) { Theta_k_1[i, 0] = 0.0; }
+            var thetaK1 = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
+            for (var i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++) { thetaK1[i, 0] = 0.0; }
             var Fi_k = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
             var Fi_k_L = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, _estimationLength, 0.0);
             var Fi_k_t = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
@@ -203,87 +200,87 @@ namespace AmpIdent
             var ThetaDiff = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
 
             //Predefinition of results
-            _Theta = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
-            _YK = new DenseMatrix(X1.Values.Length, 1, 0.0);
+            _theta = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
+            _yk = new DenseMatrix(X1.Values.Length, 1, 0.0);
 
-            for (int k = 1; k <= _numberOfIterations; k++)
+            for (var k = 1; k <= _numberOfIterations; k++)
             {
                 //III Step: Fi_k(_estimationLength)...................................................................................
 
-                for (int t = _startingPoint; t <= _startingPoint + _estimationLength - 1; t++)
+                for (var t = _startingPoint; t <= _startingPoint + _estimationLength - 1; t++)
                 {
-                    Fi_k = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, t, X1, Y1, _V0);
-                    for (int i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++)
+                    Fi_k = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, t, X1, Y1, _v0);
+                    for (var i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++)
                     {
                         Fi_k_L[i, t - _startingPoint] = Fi_k[i, 0];
                     }
                 }
-                Console.WriteLine("Step III: DONE");
+                Console.WriteLine(@"Step III: DONE");
 
                 //IV Step: Theta(k)...................................................................................................
 
                 var Fi_k_LT = Fi_k_L.Transpose();
-                Console.WriteLine("Step IV: 1/5 DONE");
+                Console.WriteLine(@"Step IV: 1/5 DONE");
                 var FiFiT = Multiply((DenseMatrix)Fi_k_L, (DenseMatrix)Fi_k_LT);
-                Console.WriteLine("Step IV: 2/5 DONE");
+                Console.WriteLine(@"Step IV: 2/5 DONE");
                 var FiFiTI = FiFiT.Inverse();
-                Console.WriteLine("Step IV: 3/5 DONE");
+                Console.WriteLine(@"Step IV: 3/5 DONE");
                 var FiFiTIFi_k_L = Multiply((DenseMatrix)FiFiTI, (DenseMatrix)Fi_k_L);
-                Console.WriteLine("Step IV: 4/5 DONE");
+                Console.WriteLine(@"Step IV: 4/5 DONE");
                 var Theta_k = FiFiTIFi_k_L * YL;
-                Console.WriteLine("Step IV: 5/5 DONE");
+                Console.WriteLine(@"Step IV: 5/5 DONE");
 
                 //V Step: Vk_t........................................................................................................
 
-                for (int i = 0; i <=_estimationLength - 1; i++)
+                for (var i = 0; i <=_estimationLength - 1; i++)
                 {
-                    Fi_k_t = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _startingPoint, X1, Y1, _V0);
+                    Fi_k_t = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _startingPoint, X1, Y1, _v0);
                     var Theta_k_Y_1 = Theta_k.Transpose() * Fi_k_t;
                     Vk_t[i, 0] = Y1[i + _startingPoint, 0] - Theta_k_Y_1[0, 0];
                 }
-                Console.WriteLine("Step V: DONE");
+                Console.WriteLine(@"Step V: DONE");
 
                 //VI Step: Average Error..............................................................................................
 
-                for (int i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++)
+                for (var i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++)
                 {
-                    ThetaDiff[i, 0] = Math.Abs(Theta_k[i, 0] - Theta_k_1[i, 0]);
+                    ThetaDiff[i, 0] = Math.Abs(Theta_k[i, 0] - thetaK1[i, 0]);
                 }
                 _estimationError = 0.0;
-                for (int i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++)
+                for (var i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++)
                 {
                     _estimationError = _estimationError + ThetaDiff[i, 0];
                 }
                 _estimationDifference = 0.0;
-                for (int i = 0; i <= _estimationLength - 1; i++)
+                for (var i = 0; i <= _estimationLength - 1; i++)
                 {
                     _estimationDifference += Vk_t[i, 0];
                 }
                 _estimationDifference = _estimationDifference / _estimationLength;
                 _estimationError = _estimationError / (_naParameter + _nbParameter + _ndParameter);
                 Console.WriteLine(k.ToString() + " iteration: VI Step: Estimation Error " + " : " + _estimationError.ToString() + "; Estimation Difference : " + _estimationDifference.ToString());
-                Console.WriteLine("Step VI: DONE");
+                Console.WriteLine(@"Step VI: DONE");
 
                 //VII Step: Decision..................................................................................................
 
                 if (_estimationError != _estimationError) k = _numberOfIterations;
                 else
                 {
-                    _V0 = Vk_t;
-                    for (int i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++)
+                    _v0 = Vk_t;
+                    for (var i = 0; i <= _naParameter + _nbParameter + _ndParameter - 1; i++)
                     {
-                        Theta_k_1[i, 0] = Theta_k[i, 0];
+                        thetaK1[i, 0] = Theta_k[i, 0];
                         _estimationStatusPercentage = k * 100 / _numberOfIterations;
                     }
                     if (_estimationError < _acceptableError) k = _numberOfIterations;
                 }
-                Console.WriteLine("Step VII: DONE");
+                Console.WriteLine(@"Step VII: DONE");
             }
 
             //END: Vk.................................................................................................................
-            _Theta = Theta_k_1;
-            _YK = Model(X1);
-            Console.WriteLine("Estimation: DONE");
+            _theta = thetaK1;
+            _yk = Model(X1);
+            Console.WriteLine(@"Estimation: DONE");
             
             _estimationDone = true;
         }
@@ -291,7 +288,7 @@ namespace AmpIdent
         public DenseMatrix CalculateFi_k(int t_na, int t_nb, int t_nd, int t_nk, int t_t, DenseMatrix t_X, DenseMatrix t_Y, DenseMatrix t_V)
         {
             var t_Fi_k = new DenseMatrix(t_na + t_nb + t_nd, 1, 0.0);
-            for (int i = 1; i <= t_na + t_nb + t_nd; i++)
+            for (var i = 1; i <= t_na + t_nb + t_nd; i++)
             {
                 if (i <= t_na)
                 {
@@ -314,10 +311,10 @@ namespace AmpIdent
             var t_V0 = new DenseMatrix(t_X1.Values.Length, 1, 0.0);
             var t_YK = new DenseMatrix(t_X1.Values.Length, 1, 0.0);
 
-            for (int i = 0; i <= t_X1.Values.Length - _startingPoint - 1; i++)
+            for (var i = 0; i <= t_X1.Values.Length - _startingPoint - 1; i++)
             {
                 var t_Fi_k_t = CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _startingPoint, t_X1, t_YK, t_V0);
-                var t_Theta_k_Y_1 = _Theta.Transpose() * t_Fi_k_t;
+                var t_Theta_k_Y_1 = _theta.Transpose() * t_Fi_k_t;
                 t_YK[i + _startingPoint, 0] = t_Theta_k_Y_1[0, 0];
             }
 
@@ -326,8 +323,8 @@ namespace AmpIdent
 
         public DenseMatrix Multiply(DenseMatrix M1, DenseMatrix M2)
         {
-            _M1 = M1;
-            _M2 = M2;
+            _m1 = M1;
+            _m2 = M2;
             _compute = true;
 
             while (_compute)
@@ -335,7 +332,7 @@ namespace AmpIdent
                 System.Threading.Thread.Sleep(2000);
             }
 
-            return _M;
+            return _m;
         }
 
         public void Compute()
@@ -344,13 +341,13 @@ namespace AmpIdent
             {
                 if (_compute)
                 {
-                    _M = new DenseMatrix(_M1.RowCount, _M2.ColumnCount, 0.0);
+                    _m = new DenseMatrix(_m1.RowCount, _m2.ColumnCount, 0.0);
 
-                    Parallel.For(0, _M1.RowCount, i =>
+                    Parallel.For(0, _m1.RowCount, i =>
                     {
-                        for (int j = 0; j < _M2.ColumnCount; ++j) // each col of B
-                            for (int k = 0; k < _M1.ColumnCount; ++k) // could use k < bRows
-                                _M[i,j] += _M1[i,k] * _M2[k,j];
+                        for (var j = 0; j < _m2.ColumnCount; ++j) // each col of B
+                            for (var k = 0; k < _m1.ColumnCount; ++k) // could use k < bRows
+                                _m[i,j] += _m1[i,k] * _m2[k,j];
                     });
                     _compute = false;
                 }

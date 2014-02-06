@@ -23,7 +23,7 @@ namespace AmpIdent
 
             series = new LineSeries[10];
 
-            for (int i = 1; i <= 9; i++)
+            for (var i = 1; i <= 9; i++)
             {
                 series[i] = new LineSeries("Series " +i.ToString()) { MarkerType = MarkerType.Circle };
                 series[i].MarkerSize = 1;
@@ -57,7 +57,7 @@ namespace AmpIdent
 
         public void Clear()
         {
-            for (int i = 1; i <= 9; i++)
+            for (var i = 1; i <= 9; i++)
             {
                 series[i].Points.Clear();
             }

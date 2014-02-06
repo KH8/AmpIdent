@@ -21,7 +21,7 @@ namespace AmpIdent
 
         protected void RaisePropertyChanged(string property)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(property));
