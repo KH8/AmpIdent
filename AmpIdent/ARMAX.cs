@@ -258,7 +258,7 @@ namespace AmpIdent
                 }
                 _estimationDifference = _estimationDifference / _estimationLength;
                 _estimationError = _estimationError / (_naParameter + _nbParameter + _ndParameter);
-                Console.WriteLine(k.ToString() + " iteration: VI Step: Estimation Error " + " : " + _estimationError.ToString() + "; Estimation Difference : " + _estimationDifference.ToString());
+                Console.WriteLine(k.ToString() + @" iteration: VI Step: Estimation Error " + @" : " + _estimationError.ToString() + @"; Estimation Difference : " + _estimationDifference.ToString());
                 Console.WriteLine(@"Step VI: DONE");
 
                 //VII Step: Decision..................................................................................................
