@@ -7,9 +7,9 @@ namespace AmpIdent
     {
         //Fields
         //Private
-        private MainViewModel _mainViewModel;
+        private readonly MainViewModel _mainViewModel;
         private int _plottingResolution;
-        private int _precentageOfPlotting;
+        private readonly int _precentageOfPlotting;
 
         //Public
         public MainViewModel MainViewModel { get { return _mainViewModel; } }
@@ -24,6 +24,7 @@ namespace AmpIdent
         //Constructor
         public Ploter()
         {
+            _precentageOfPlotting = 0;
             _mainViewModel = new MainViewModel();
             _plottingResolution = 1;
 

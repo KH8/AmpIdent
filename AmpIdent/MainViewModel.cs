@@ -12,24 +12,22 @@ namespace AmpIdent
     public class MainViewModel : Observable
     {
         private PlotModel _model;
-        LineSeries[] series;
-        PlotModel tmp;
+        readonly LineSeries[] _series;
+        readonly PlotModel _tmp;
 
         public MainViewModel()
         {
             // Create the plot model
-            tmp = new PlotModel("Simple example", "using OxyPlot");
+            _tmp = new PlotModel("Simple example", "using OxyPlot");
             // Create two line series (markers are hidden by default)
 
-            series = new LineSeries[10];
+            _series = new LineSeries[10];
 
             for (var i = 1; i <= 9; i++)
             {
-                series[i] = new LineSeries("Series " +i) { MarkerType = MarkerType.Circle };
-                series[i].MarkerSize = 1;
-
+                _series[i] = new LineSeries("Series " +i) {MarkerType = MarkerType.Circle, MarkerSize = 1};
                 // Add the series to the plot model
-                tmp.Series.Add(series[i]);
+                _tmp.Series.Add(_series[i]);
             }
         }
 
@@ -48,18 +46,18 @@ namespace AmpIdent
 
         public void AddPoint(int i, DataPoint dataPoint)
         {
-            series[i].Points.Add(dataPoint);
+            _series[i].Points.Add(dataPoint);
 
             // Axes are created automatically if they are not defined
             // Set the Model property, the INotifyPropertyChanged event will make the WPF Plot control update its content
-            Model = tmp;
+            Model = _tmp;
         }
 
         public void Clear()
         {
             for (var i = 1; i <= 9; i++)
             {
-                series[i].Points.Clear();
+                _series[i].Points.Clear();
             }
         }
     }

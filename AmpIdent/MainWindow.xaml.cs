@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Media;
@@ -21,18 +20,17 @@ namespace AmpIdent
         private Boolean _playing1;
         private Boolean _playing2;
         private Boolean _1Loaded;
-        private Boolean _2Loaded;
         private string _status;
 
         private Boolean _compute;
-        private SoundPlayer _sp;
-        private Armax armax;
+        private readonly SoundPlayer _sp;
+        private readonly Armax _armax;
         private DenseMatrix _leftChannel1;
         private DenseMatrix _rightChannel1;
         private DenseMatrix _leftChannel2;
         private DenseMatrix _rightChannel2;
         private DenseMatrix _outputChannel;
-        private Ploter _ploter;
+        private readonly Ploter _ploter;
         private byte[] _wav1;
         private byte[] _wav2;
         private int _samples;
@@ -49,10 +47,10 @@ namespace AmpIdent
             _path2 = "";
             _loadingPercentage1 = 0;
             _loadingPercentage2 = 0;
-            armax = new Armax();
+            _armax = new Armax();
 
-            Thread thread1 = new Thread(Update);
-            Thread thread2 = new Thread(Compute);
+            var thread1 = new Thread(Update);
+            var thread2 = new Thread(Compute);
 
             thread1.SetApartmentState(ApartmentState.STA);
             thread1.IsBackground = false;
@@ -73,7 +71,8 @@ namespace AmpIdent
 
             // then we are going to get our file's info
             var numChannels = _wav1[22];
-            var sampleRate = _wav1[24] + 256 * _wav1[25];
+            //optional
+            //var sampleRate = _wav1[24] + 256 * _wav1[25];
 
             // nr of samples is the length - the 44 bytes that where needed for the offset
             _samples = (_wav1.Length - 44) / 2;
@@ -129,7 +128,8 @@ namespace AmpIdent
 
             // then we are going to get our file's info
             var numChannels = _wav2[22];
-            var sampleRate = _wav2[24] + 256 * _wav2[25];
+            //optional
+            //var sampleRate = _wav2[24] + 256 * _wav2[25];
 
             // nr of samples is the length - the 44 bytes that where needed for the offset
             _samples = (_wav2.Length - 44) / 2;
@@ -169,15 +169,13 @@ namespace AmpIdent
                 }
             }
 
-            _2Loaded = true;
-
             _ploter.PlottingResolution = 100;
             _ploter.Clear();
             _ploter.Plot(_rightChannel2, 1);
             _ploter.Plot(_leftChannel2, 2);
             _status = "File2 Loaded";
 
-            if (!(Boolean)Graph.IsChecked && _1Loaded)
+            if (Graph.IsChecked == false && _1Loaded)
             {
                 _compute = true;
             }
@@ -270,26 +268,26 @@ namespace AmpIdent
             {
                 if (_compute)
                 {
-                    armax.NAParameter = 5;
-                    armax.NBParameter = 5;
-                    armax.NDParameter = 5;
-                    armax.NKParameter = 5;
-                    armax.ModelShift = 0;
-                    armax.StartingPoint = 400;
+                    _armax.NaParameter = 5;
+                    _armax.NbParameter = 5;
+                    _armax.NdParameter = 5;
+                    _armax.NkParameter = 5;
+                    _armax.ModelShift = 0;
+                    _armax.StartingPoint = 400;
 
-                    armax.NumberOfIterations = 1;
-                    armax.Compute(_leftChannel1, _leftChannel2, 200000);
+                    _armax.NumberOfIterations = 1;
+                    _armax.Compute(_leftChannel1, _leftChannel2, 200000);
 
                     _ploter.PlottingResolution = 100;
                     _ploter.Clear();
-                    _ploter.Plot(armax.YK, 3);
+                    _ploter.Plot(_armax.Yk, 3);
 
                     _compute = false;
 
                     Console.WriteLine(@"Model computation: DONE!");
                     _status = "Model computation: DONE!";
 
-                    UpdateModel(armax);
+                    UpdateModel(_armax);
                 }
                 Thread.Sleep(1000);
             }
@@ -298,7 +296,7 @@ namespace AmpIdent
         private void Output(object sender, RoutedEventArgs e)
         {
             _outputChannel = new DenseMatrix(_samples, 1, 0.0);
-            _outputChannel = armax.Model(_leftChannel1);
+            _outputChannel = _armax.Model(_leftChannel1);
             Console.WriteLine(@"Output computation: DONE!");
             _status = "Output computation: DONE!";
 
@@ -334,19 +332,19 @@ namespace AmpIdent
             {
                 ModeListBox.Items.Clear();
                 ModeListBox.Items.Add(@"NA parameters: ");
-                for (int i = 0; i < modelArmax.NAParameter; i++)
+                for (int i = 0; i < modelArmax.NaParameter; i++)
                 {
                     ModeListBox.Items.Add(@"NA parameter " + i + ": \t" + modelArmax.Theta[i,0]);
                 }
                 ModeListBox.Items.Add("\nNB parameters: ");
-                for (int i = 0; i < modelArmax.NBParameter; i++)
+                for (int i = 0; i < modelArmax.NbParameter; i++)
                 {
-                    ModeListBox.Items.Add(@"NB parameter " + i + ": \t" + modelArmax.Theta[modelArmax.NAParameter + i, 0]);
+                    ModeListBox.Items.Add(@"NB parameter " + i + ": \t" + modelArmax.Theta[modelArmax.NaParameter + i, 0]);
                 }
                 ModeListBox.Items.Add("\nNC parameters: ");
-                for (int i = 0; i < modelArmax.NDParameter; i++)
+                for (int i = 0; i < modelArmax.NdParameter; i++)
                 {
-                    ModeListBox.Items.Add(@"ND parameter " + i + ": \t" + modelArmax.Theta[modelArmax.NAParameter + modelArmax.NBParameter + i, 0]);
+                    ModeListBox.Items.Add(@"ND parameter " + i + ": \t" + modelArmax.Theta[modelArmax.NaParameter + modelArmax.NbParameter + i, 0]);
                 }
             })));
         }
