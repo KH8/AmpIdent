@@ -11,7 +11,7 @@ namespace AmpIdent
 {
     public class MainViewModel : Observable
     {
-        private PlotModel model;
+        private PlotModel _model;
         LineSeries[] series;
         PlotModel tmp;
 
@@ -25,7 +25,7 @@ namespace AmpIdent
 
             for (var i = 1; i <= 9; i++)
             {
-                series[i] = new LineSeries("Series " +i.ToString()) { MarkerType = MarkerType.Circle };
+                series[i] = new LineSeries("Series " +i) { MarkerType = MarkerType.Circle };
                 series[i].MarkerSize = 1;
 
                 // Add the series to the plot model
@@ -35,12 +35,12 @@ namespace AmpIdent
 
         public PlotModel Model
         {
-            get { return model; }
+            get { return _model; }
             set
             {
-                if (model != value)
+                if (_model != value)
                 {
-                    model = value;
+                    _model = value;
                     RaisePropertyChanged(() => Model);
                 }
             }

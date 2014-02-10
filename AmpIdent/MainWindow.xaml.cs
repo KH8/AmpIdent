@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Media;
@@ -36,14 +37,9 @@ namespace AmpIdent
         private byte[] _wav2;
         private int _samples;
 
-        private Thread _thread1;
-        private Thread _thread2;
-
         public MainWindow()
         {
             InitializeComponent();
-            var newLine = Environment.NewLine;
-            var random = new Random();
             _sp = new SoundPlayer();
             _ploter = new Ploter();
 
@@ -55,15 +51,15 @@ namespace AmpIdent
             _loadingPercentage2 = 0;
             armax = new Armax();
 
-            _thread1 = new Thread(new ThreadStart(Update));
-            _thread2 = new Thread(new ThreadStart(Compute));
+            Thread thread1 = new Thread(Update);
+            Thread thread2 = new Thread(Compute);
 
-            _thread1.SetApartmentState(ApartmentState.STA);
-            _thread1.IsBackground = false;
-            _thread1.Start();
-            _thread2.SetApartmentState(ApartmentState.STA);
-            _thread2.IsBackground = false;
-            _thread2.Start();
+            thread1.SetApartmentState(ApartmentState.STA);
+            thread1.IsBackground = false;
+            thread1.Start();
+            thread2.SetApartmentState(ApartmentState.STA);
+            thread2.IsBackground = false;
+            thread2.Start();
 
             _status = "Load files";
 
@@ -232,13 +228,13 @@ namespace AmpIdent
         private void PathBox_TextChanged_1(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
-            _path1 = pathBox.Text.ToString();
+            _path1 = pathBox.Text;
         }
 
         private void PathBox_TextChanged_2(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
-            _path2 = pathBox.Text.ToString();
+            _path2 = pathBox.Text;
         }
 
         private void Update()
@@ -246,15 +242,13 @@ namespace AmpIdent
             var i = 0;
             while (true)
             {
-                Loading_1.Dispatcher.BeginInvoke((new Action(delegate()
-                {
-                    Loading_1.Content = _loadingPercentage1.ToString() + "%";
+                Loading_1.Dispatcher.BeginInvoke((new Action(delegate {
+                    Loading_1.Content = _loadingPercentage1 + "%";
                 })));
-                Loading_2.Dispatcher.BeginInvoke((new Action(delegate()
-                {
-                    Loading_2.Content = _loadingPercentage2.ToString() + "%";
+                Loading_2.Dispatcher.BeginInvoke((new Action(delegate {
+                    Loading_2.Content = _loadingPercentage2 + "%";
                 })));
-                OutputBox.Dispatcher.BeginInvoke((new Action(delegate()
+                OutputBox.Dispatcher.BeginInvoke((new Action(delegate
                 {
                     if (_compute)
                     {
@@ -276,15 +270,15 @@ namespace AmpIdent
             {
                 if (_compute)
                 {
-                    armax.NAParameter = 10;
-                    armax.NBParameter = 10;
-                    armax.NDParameter = 1;
-                    armax.NKParameter = 0;
-                    armax.ModelShift = 1;
-                    armax.StartingPoint = 200;
+                    armax.NAParameter = 5;
+                    armax.NBParameter = 5;
+                    armax.NDParameter = 5;
+                    armax.NKParameter = 5;
+                    armax.ModelShift = 0;
+                    armax.StartingPoint = 400;
 
                     armax.NumberOfIterations = 1;
-                    armax.Compute(_leftChannel1, _leftChannel2, 0);
+                    armax.Compute(_leftChannel1, _leftChannel2, 200000);
 
                     _ploter.PlottingResolution = 100;
                     _ploter.Clear();
@@ -294,6 +288,8 @@ namespace AmpIdent
 
                     Console.WriteLine(@"Model computation: DONE!");
                     _status = "Model computation: DONE!";
+
+                    UpdateModel(armax);
                 }
                 Thread.Sleep(1000);
             }
@@ -330,6 +326,29 @@ namespace AmpIdent
             File.WriteAllBytes("C:\\Output\\output.wav", wavOutput);
             Console.WriteLine(@"File creation: DONE!");
             _status = "File creation: DONE!";
+        }
+
+        public void UpdateModel(Armax modelArmax)
+        {
+            ModeListBox.Dispatcher.BeginInvoke((new Action(delegate
+            {
+                ModeListBox.Items.Clear();
+                ModeListBox.Items.Add(@"NA parameters: ");
+                for (int i = 0; i < modelArmax.NAParameter; i++)
+                {
+                    ModeListBox.Items.Add(@"NA parameter " + i + ": \t" + modelArmax.Theta[i,0]);
+                }
+                ModeListBox.Items.Add("\nNB parameters: ");
+                for (int i = 0; i < modelArmax.NBParameter; i++)
+                {
+                    ModeListBox.Items.Add(@"NB parameter " + i + ": \t" + modelArmax.Theta[modelArmax.NAParameter + i, 0]);
+                }
+                ModeListBox.Items.Add("\nNC parameters: ");
+                for (int i = 0; i < modelArmax.NDParameter; i++)
+                {
+                    ModeListBox.Items.Add(@"ND parameter " + i + ": \t" + modelArmax.Theta[modelArmax.NAParameter + modelArmax.NBParameter + i, 0]);
+                }
+            })));
         }
     }
 }

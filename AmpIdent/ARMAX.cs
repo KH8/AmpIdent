@@ -5,7 +5,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace AmpIdent
 {
-    class Armax
+    public class Armax
     {
         //private
         //model size parameters
@@ -140,6 +140,7 @@ namespace AmpIdent
                 return null;
             }
         }
+
         ///
 
         //Methods
@@ -170,7 +171,7 @@ namespace AmpIdent
         public void Compute(DenseMatrix X1, DenseMatrix Y1, int estimationLength)
         {
             var random = new Random();
-            _y1 = Y1;
+            //this._y1 = Y1;
 
             //Setting preparation.....................................................................................................
             _estimationError = 0.0;
@@ -258,7 +259,7 @@ namespace AmpIdent
                 }
                 _estimationDifference = _estimationDifference / _estimationLength;
                 _estimationError = _estimationError / (_naParameter + _nbParameter + _ndParameter);
-                Console.WriteLine(k.ToString() + @" iteration: VI Step: Estimation Error " + @" : " + _estimationError.ToString() + @"; Estimation Difference : " + _estimationDifference.ToString());
+                Console.WriteLine(k + @" iteration: VI Step: Estimation Error " + @" : " + _estimationError + @"; Estimation Difference : " + _estimationDifference);
                 Console.WriteLine(@"Step VI: DONE");
 
                 //VII Step: Decision..................................................................................................
