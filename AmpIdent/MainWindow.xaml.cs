@@ -250,12 +250,8 @@ namespace AmpIdent
                 {
                     if (_compute)
                     {
-                        if (i % 4 == 0) _status = "Model computation ";
-                        if (i % 4 == 1) _status = "Model computation .";
-                        if (i % 4 == 2) _status = "Model computation ..";
-                        if (i % 4 == 3) _status = "Model computation ...";
+                        _status = _armax.StarusString;
                     }
-                    i++;
                     OutputBox.Text = _status;
                 })));
                 Thread.Sleep(1000);
@@ -283,10 +279,7 @@ namespace AmpIdent
                     _ploter.Plot(_armax.Yk, 3);
 
                     _compute = false;
-
-                    Console.WriteLine(@"Model computation: DONE!");
                     _status = "Model computation: DONE!";
-
                     UpdateModel(_armax);
                 }
                 Thread.Sleep(1000);
@@ -297,7 +290,6 @@ namespace AmpIdent
         {
             _outputChannel = new DenseMatrix(_samples, 1, 0.0);
             _outputChannel = _armax.Model(_leftChannel1);
-            Console.WriteLine(@"Output computation: DONE!");
             _status = "Output computation: DONE!";
 
             _ploter.PlottingResolution = 100;
@@ -322,7 +314,6 @@ namespace AmpIdent
                 pos2 += 4;
             }
             File.WriteAllBytes("C:\\Output\\output.wav", wavOutput);
-            Console.WriteLine(@"File creation: DONE!");
             _status = "File creation: DONE!";
         }
 

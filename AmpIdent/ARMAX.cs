@@ -32,6 +32,8 @@ namespace AmpIdent
         private DenseMatrix _m2;
         private DenseMatrix _m;
 
+        private string _starusString;
+
         //matrixes
         private DenseMatrix _v0;
         private DenseMatrix _theta;
@@ -104,6 +106,10 @@ namespace AmpIdent
         {
             get { return _estimationDifference; }
         }
+        public string StarusString
+        {
+            get { return _starusString; }
+        }
 
         //matrixes
         public DenseMatrix V0
@@ -145,6 +151,7 @@ namespace AmpIdent
         {
             _estimationStatusPercentage = 0;
             _estimationDone = false;
+            _starusString = "Initialized";
 
             _naParameter = 10;
             _nbParameter = 10;
@@ -179,13 +186,13 @@ namespace AmpIdent
 
             var yl = new DenseMatrix(_estimationLength, 1, 0.0);
             for (var i = 0; i <= _estimationLength - 1; i++) { yl[i, 0] = y1[i + _startingPoint, 0]; }
-            Console.WriteLine(@"Step I: DONE");
+            _starusString = "Step I: DONE";
 
             //II Step: V0.............................................................................................................
 
             _v0 = new DenseMatrix(x1.Values.Length, 1, 1.0); //
             for (var i = 0; i <= x1.Values.Length - 1; i++) { _v0[i, 0] = random.Next(-100, 100); }
-            Console.WriteLine(@"Step II: DONE");
+            _starusString = "Step II: DONE";
 
             //Definition of temporary matrixes
             var thetaK1 = new DenseMatrix(_naParameter + _nbParameter + _ndParameter, 1, 0.0);
@@ -212,20 +219,20 @@ namespace AmpIdent
                         Fi_k_L[i, t - _startingPoint] = Fi_k[i, 0];
                     }
                 }
-                Console.WriteLine(@"Step III: DONE");
+                _starusString = "Step III: DONE";
 
                 //IV Step: Theta(k)...................................................................................................
 
                 var fiKLt = Fi_k_L.Transpose();
-                Console.WriteLine(@"Step IV: 1/5 DONE");
+                _starusString = "Step IV: 1/5 DONE";
                 var fiFiT = Multiply(Fi_k_L, (DenseMatrix)fiKLt);
-                Console.WriteLine(@"Step IV: 2/5 DONE");
+                _starusString = "Step IV: 2/5 DONE";
                 var fiFiTi = fiFiT.Inverse();
-                Console.WriteLine(@"Step IV: 3/5 DONE");
+                _starusString = "Step IV: 3/5 DONE";
                 var fiFiTiFiKl = Multiply((DenseMatrix)fiFiTi, Fi_k_L);
-                Console.WriteLine(@"Step IV: 4/5 DONE");
+                _starusString = "Step IV: 4/5 DONE";
                 var thetaK = fiFiTiFiKl * yl;
-                Console.WriteLine(@"Step IV: 5/5 DONE");
+                _starusString = "Step IV: 5/5 DONE";
 
                 //V Step: Vk_t........................................................................................................
 
@@ -235,7 +242,7 @@ namespace AmpIdent
                     var thetaKy1 = thetaK.Transpose() * Fi_k_t;
                     Vk_t[i, 0] = y1[i + _startingPoint, 0] - thetaKy1[0, 0];
                 }
-                Console.WriteLine(@"Step V: DONE");
+                _starusString = "Step V: DONE";
 
                 //VI Step: Average Error..............................................................................................
 
@@ -255,8 +262,9 @@ namespace AmpIdent
                 }
                 _estimationDifference = _estimationDifference / _estimationLength;
                 _estimationError = _estimationError / (_naParameter + _nbParameter + _ndParameter);
-                Console.WriteLine(k + @" iteration: VI Step: Estimation Error " + @" : " + _estimationError + @"; Estimation Difference : " + _estimationDifference);
-                Console.WriteLine(@"Step VI: DONE");
+                _starusString = k + @" iteration: VI Step: Estimation Error " + @" : " + _estimationError +
+                                @"; Estimation Difference : " + _estimationDifference;
+                _starusString = "Step VI: DONE";
 
                 //VII Step: Decision..................................................................................................
 
@@ -271,13 +279,13 @@ namespace AmpIdent
                     }
                     if (_estimationError < _acceptableError) k = _numberOfIterations;
                 }
-                Console.WriteLine(@"Step VII: DONE");
+                _starusString = "Step VII: DONE";
             }
 
             //END: Vk.................................................................................................................
             _theta = thetaK1;
             _yk = Model(x1);
-            Console.WriteLine(@"Estimation: DONE");
+            _starusString = "Estimation: DONE";
             
             _estimationDone = true;
         }
@@ -314,6 +322,7 @@ namespace AmpIdent
                 var tThetaKy1 = _theta.Transpose() * tFiKt;
                 tYk[i + _startingPoint, 0] = tThetaKy1[0, 0];
             }
+            _starusString = "Output Creation: DONE";
 
             return tYk;
         }
