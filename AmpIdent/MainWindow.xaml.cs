@@ -25,6 +25,7 @@ namespace AmpIdent
         private Boolean _compute;
         private readonly SoundPlayer _sp;
         private readonly Ilms _ilms;
+        private readonly Armax _armax;
         private DenseMatrix _leftChannel1;
         private DenseMatrix _rightChannel1;
         private DenseMatrix _leftChannel2;
@@ -47,7 +48,9 @@ namespace AmpIdent
             _path2 = "";
             _loadingPercentage1 = 0;
             _loadingPercentage2 = 0;
-            _ilms = new Ilms();
+            
+            _armax = new Armax();
+            _ilms = new Ilms(_armax);
 
             var thread1 = new Thread(Update);
             var thread2 = new Thread(Compute);
@@ -250,7 +253,7 @@ namespace AmpIdent
                 {
                     if (_compute)
                     {
-                        _status = _ilms.StarusString;
+                        _status = _ilms.StatusString;
                     }
                     OutputBox.Text = _status;
                 })));
@@ -264,23 +267,23 @@ namespace AmpIdent
             {
                 if (_compute)
                 {
-                    _ilms.NaParameter = 5;
-                    _ilms.NbParameter = 5;
-                    _ilms.NdParameter = 5;
-                    _ilms.NkParameter = 5;
-                    _ilms.ModelShift = 0;
-                    _ilms.StartingPoint = 400;
+                    _armax.NaParameter = 5;
+                    _armax.NbParameter = 5;
+                    _armax.NdParameter = 5;
+                    _armax.NkParameter = 5;
+                    _armax.ModelShift = 0;
+                    _armax.StartingPoint = 400;
 
                     _ilms.NumberOfIterations = 1;
                     _ilms.Compute(_leftChannel1, _leftChannel2, 200000);
 
                     _ploter.PlottingResolution = 100;
                     _ploter.Clear();
-                    _ploter.Plot(_ilms.Yk, 3);
+                    _ploter.Plot(_armax.Yk, 3);
 
                     _compute = false;
                     _status = "Model computation: DONE!";
-                    UpdateModel(_ilms);
+                    UpdateModel(_armax);
                 }
                 Thread.Sleep(1000);
             }
@@ -289,7 +292,7 @@ namespace AmpIdent
         private void Output(object sender, RoutedEventArgs e)
         {
             _outputChannel = new DenseMatrix(_samples, 1, 0.0);
-            _outputChannel = _ilms.Model(_leftChannel1);
+            _outputChannel = _armax.Model(_leftChannel1);
             _status = "Output computation: DONE!";
 
             _ploter.PlottingResolution = 100;
@@ -317,7 +320,7 @@ namespace AmpIdent
             _status = "File creation: DONE!";
         }
 
-        public void UpdateModel(Ilms modelArmax)
+        public void UpdateModel(Armax modelArmax)
         {
             ModeListBox.Dispatcher.BeginInvoke((new Action(delegate
             {
