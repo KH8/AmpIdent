@@ -85,6 +85,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Multiplicator.cs" />
     <Compile Include="Observable.cs" />
     <Compile Include="Ploter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
