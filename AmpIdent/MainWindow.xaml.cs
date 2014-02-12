@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using System.Media;
@@ -21,6 +22,9 @@ namespace AmpIdent
         private Boolean _playing2;
         private Boolean _1Loaded;
         private string _status;
+
+        private readonly Thread _thread1;
+        private readonly Thread _thread2;
 
         private Boolean _compute;
         private readonly SoundPlayer _sp;
@@ -52,15 +56,15 @@ namespace AmpIdent
             _armax = new Armax();
             _ilms = new Ilms(_armax);
 
-            var thread1 = new Thread(Update);
-            var thread2 = new Thread(Compute);
+            _thread1 = new Thread(Update);
+            _thread2 = new Thread(Compute);
 
-            thread1.SetApartmentState(ApartmentState.STA);
-            thread1.IsBackground = false;
-            thread1.Start();
-            thread2.SetApartmentState(ApartmentState.STA);
-            thread2.IsBackground = false;
-            thread2.Start();
+            _thread1.SetApartmentState(ApartmentState.STA);
+            _thread1.IsBackground = false;
+            _thread1.Start();
+            _thread2.SetApartmentState(ApartmentState.STA);
+            _thread2.IsBackground = false;
+            _thread2.Start();
 
             _status = "Load files";
 
@@ -241,13 +245,13 @@ namespace AmpIdent
         private void Update()
         {
             var i = 0;
-            while (true)
+            while (_thread1.IsAlive)
             {
-                Loading_1.Dispatcher.BeginInvoke((new Action(delegate {
-                    Loading_1.Content = _loadingPercentage1 + "%";
+                Loading1.Dispatcher.BeginInvoke((new Action(delegate {
+                    Loading1.Content = _loadingPercentage1 + "%";
                 })));
-                Loading_2.Dispatcher.BeginInvoke((new Action(delegate {
-                    Loading_2.Content = _loadingPercentage2 + "%";
+                Loading2.Dispatcher.BeginInvoke((new Action(delegate {
+                    Loading2.Content = _loadingPercentage2 + "%";
                 })));
                 OutputBox.Dispatcher.BeginInvoke((new Action(delegate
                 {
@@ -263,7 +267,7 @@ namespace AmpIdent
 
         private void Compute()
         {
-            while (true)
+            while (_thread2.IsAlive)
             {
                 if (_compute)
                 {
@@ -341,6 +345,11 @@ namespace AmpIdent
                     ModeListBox.Items.Add(@"ND parameter " + i + ": \t" + modelArmax.Theta[modelArmax.NaParameter + modelArmax.NbParameter + i, 0]);
                 }
             })));
+        }
+
+        private void ClosingHanler(object sender, CancelEventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }

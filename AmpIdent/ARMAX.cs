@@ -6,9 +6,7 @@ namespace AmpIdent
     {
         //private
         //matrixes
-        private DenseMatrix _v0;
         private DenseMatrix _theta;
-        private DenseMatrix _yk;
 
         //parameters
         private int _naParameter;
@@ -72,11 +70,7 @@ namespace AmpIdent
         }
 
         //matrixes
-        public DenseMatrix V0
-        {
-            get { return _v0; }
-            set { _v0 = value; }
-        }
+        public DenseMatrix V0 { get; set; }
 
         public DenseMatrix Theta
         {
@@ -84,11 +78,7 @@ namespace AmpIdent
             set { _theta = value; }
         }
 
-        public DenseMatrix Yk
-        {
-            get { return _yk; }
-            set { _yk = value; }
-        }
+        public DenseMatrix Yk { get; set; }
 
         //status
         public string StatusString

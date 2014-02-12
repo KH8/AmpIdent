@@ -12,13 +12,15 @@ namespace AmpIdent
         private DenseMatrix _m2;
         private DenseMatrix _m;
 
+        private readonly Thread _thread;
+
         public Multiplicator()
         {
-            var thread = new Thread(Compute);
+            _thread = new Thread(Compute);
 
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.IsBackground = false;
-            thread.Start();
+            _thread.SetApartmentState(ApartmentState.STA);
+            _thread.IsBackground = false;
+            _thread.Start();
         }
 
         public DenseMatrix Multiply(DenseMatrix m1, DenseMatrix m2)
@@ -37,7 +39,7 @@ namespace AmpIdent
 
         public void Compute()
         {
-            while (true)
+            while (_thread.IsAlive)
             {
                 if (_compute)
                 {

@@ -110,11 +110,9 @@ namespace AmpIdent
             //Definition of temporary matrixes
             var thetaK1 = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, 1, 0.0);
             for (var i = 0; i <= _modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter - 1; i++) { thetaK1[i, 0] = 0.0; }
-            var Fi_k = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, 1, 0.0);
-            var Fi_k_L = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, _estimationLength, 0.0);
-            var Fi_k_t = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, 1, 0.0);
-            var Vk_t = new DenseMatrix(_estimationLength + (_numberOfIterations + 1) * _modelArmax.StartingPoint, 1, 1.0);
-            var ThetaDiff = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, 1, 0.0);
+            var fiKl = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, _estimationLength, 0.0);
+            var vkT = new DenseMatrix(_estimationLength + (_numberOfIterations + 1) * _modelArmax.StartingPoint, 1, 1.0);
+            var thetaDiff = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, 1, 0.0);
 
             //Predefinition of results
             _modelArmax.Theta = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, 1, 0.0);
@@ -126,23 +124,23 @@ namespace AmpIdent
 
                 for (var t = _modelArmax.StartingPoint; t <= _modelArmax.StartingPoint + _estimationLength - 1; t++)
                 {
-                    Fi_k = _fiCalculator.CalculateFi_k(_modelArmax.NaParameter, _modelArmax.NbParameter, _modelArmax.NdParameter, _modelArmax.NkParameter, t, _modelArmax.ModelShift, x1, y1, _modelArmax.V0);
+                    var fik = _fiCalculator.CalculateFi_k(_modelArmax.NaParameter, _modelArmax.NbParameter, _modelArmax.NdParameter, _modelArmax.NkParameter, t, _modelArmax.ModelShift, x1, y1, _modelArmax.V0);
                     for (var i = 0; i <= _modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter - 1; i++)
                     {
-                        Fi_k_L[i, t - _modelArmax.StartingPoint] = Fi_k[i, 0];
+                        fiKl[i, t - _modelArmax.StartingPoint] = fik[i, 0];
                     }
                 }
                 _statusString = "Step III: DONE";
 
                 //IV Step: Theta(k)...................................................................................................
 
-                var fiKLt = Fi_k_L.Transpose();
+                var fiKLt = fiKl.Transpose();
                 _statusString = "Step IV: 1/5 DONE";
-                var fiFiT = _multiplicator.Multiply(Fi_k_L, (DenseMatrix)fiKLt);
+                var fiFiT = _multiplicator.Multiply(fiKl, (DenseMatrix)fiKLt);
                 _statusString = "Step IV: 2/5 DONE";
                 var fiFiTi = fiFiT.Inverse();
                 _statusString = "Step IV: 3/5 DONE";
-                var fiFiTiFiKl = _multiplicator.Multiply((DenseMatrix)fiFiTi, Fi_k_L);
+                var fiFiTiFiKl = _multiplicator.Multiply((DenseMatrix)fiFiTi, fiKl);
                 _statusString = "Step IV: 4/5 DONE";
                 var thetaK = fiFiTiFiKl * yl;
                 _statusString = "Step IV: 5/5 DONE";
@@ -151,9 +149,9 @@ namespace AmpIdent
 
                 for (var i = 0; i <=_estimationLength - 1; i++)
                 {
-                    Fi_k_t = _fiCalculator.CalculateFi_k(_modelArmax.NaParameter, _modelArmax.NbParameter, _modelArmax.NdParameter, _modelArmax.NkParameter, i + _modelArmax.StartingPoint, _modelArmax.ModelShift, x1, y1, _modelArmax.V0);
-                    var thetaKy1 = thetaK.Transpose() * Fi_k_t;
-                    Vk_t[i, 0] = y1[i + _modelArmax.StartingPoint, 0] - thetaKy1[0, 0];
+                    var fikt = _fiCalculator.CalculateFi_k(_modelArmax.NaParameter, _modelArmax.NbParameter, _modelArmax.NdParameter, _modelArmax.NkParameter, i + _modelArmax.StartingPoint, _modelArmax.ModelShift, x1, y1, _modelArmax.V0);
+                    var thetaKy1 = thetaK.Transpose() * fikt;
+                    vkT[i, 0] = y1[i + _modelArmax.StartingPoint, 0] - thetaKy1[0, 0];
                 }
                 _statusString = "Step V: DONE";
 
@@ -161,17 +159,17 @@ namespace AmpIdent
 
                 for (var i = 0; i <= _modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter - 1; i++)
                 {
-                    ThetaDiff[i, 0] = Math.Abs(thetaK[i, 0] - thetaK1[i, 0]);
+                    thetaDiff[i, 0] = Math.Abs(thetaK[i, 0] - thetaK1[i, 0]);
                 }
                 _estimationError = 0.0;
                 for (var i = 0; i <= _modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter - 1; i++)
                 {
-                    _estimationError = _estimationError + ThetaDiff[i, 0];
+                    _estimationError = _estimationError + thetaDiff[i, 0];
                 }
                 _estimationDifference = 0.0;
                 for (var i = 0; i <= _estimationLength - 1; i++)
                 {
-                    _estimationDifference += Vk_t[i, 0];
+                    _estimationDifference += vkT[i, 0];
                 }
                 _estimationDifference = _estimationDifference / _estimationLength;
                 _estimationError = _estimationError / (_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter);
@@ -184,7 +182,7 @@ namespace AmpIdent
                 if (_estimationError != _estimationError) k = _numberOfIterations;
                 else
                 {
-                    _modelArmax.V0 = Vk_t;
+                    _modelArmax.V0 = vkT;
                     for (var i = 0; i <= _modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter - 1; i++)
                     {
                         thetaK1[i, 0] = thetaK[i, 0];
