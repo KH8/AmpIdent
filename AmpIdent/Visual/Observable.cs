@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace AmpIdent
+namespace AmpIdent.Visual
 {
     public class Observable : INotifyPropertyChanged
     {

@@ -1,7 +1,7 @@
 ﻿using MathNet.Numerics.LinearAlgebra.Double;
 using OxyPlot;
 
-namespace AmpIdent
+namespace AmpIdent.Visual
 {
     class Ploter
     {

@@ -7,7 +7,7 @@
 using OxyPlot;
 using OxyPlot.Series;
 
-namespace AmpIdent
+namespace AmpIdent.Visual
 {
     public class MainViewModel : Observable
     {

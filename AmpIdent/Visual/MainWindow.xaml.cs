@@ -1,13 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Threading;
 using System.Media;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using AmpIdent.Estimation;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace AmpIdent
+namespace AmpIdent.Visual
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

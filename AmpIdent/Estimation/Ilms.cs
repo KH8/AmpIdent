@@ -1,7 +1,7 @@
 ﻿using System;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace AmpIdent
+namespace AmpIdent.Estimation
 {
     public class Ilms
     {

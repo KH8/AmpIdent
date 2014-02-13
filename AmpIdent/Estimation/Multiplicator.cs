@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace AmpIdent
+namespace AmpIdent.Estimation
 {
     public class Multiplicator
     {

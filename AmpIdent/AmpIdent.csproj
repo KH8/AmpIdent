@@ -68,28 +68,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Armax.cs" />
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Compile Include="Visual\MainViewModel.cs" />
+    <Compile Include="Visual\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Visual\Observable.cs" />
+    <Compile Include="Visual\Ploter.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FiCalculator.cs" />
-    <Compile Include="Ilms.cs" />
-    <Compile Include="Interpolation.cs" />
-    <Compile Include="MainViewModel.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Estimation\Armax.cs" />
+    <Compile Include="Estimation\FiCalculator.cs" />
+    <Compile Include="Estimation\Ilms.cs" />
+    <Compile Include="Estimation\Interpolation.cs" />
+    <Compile Include="Estimation\Multiplicator.cs" />
+    <Page Include="Visual\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Multiplicator.cs" />
-    <Compile Include="Observable.cs" />
-    <Compile Include="Ploter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
