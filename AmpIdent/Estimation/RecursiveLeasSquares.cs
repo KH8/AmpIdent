@@ -75,7 +75,7 @@ namespace AmpIdent.Estimation
             _statusString = "RLS: Initialized";
 
             _lambda = 0.5;
-            _delta = 10000;
+            _delta = 1000000000.0;
             _modelArmax = armax;
             _estimationLength = 500;
             RecurenceLength = 1000;
