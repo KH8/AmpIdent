@@ -68,6 +68,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Estimation\RecursiveLeasSquares.cs" />
     <Compile Include="Visual\MainViewModel.cs" />
     <Compile Include="Visual\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -80,7 +81,7 @@
     </Compile>
     <Compile Include="Estimation\Armax.cs" />
     <Compile Include="Estimation\FiCalculator.cs" />
-    <Compile Include="Estimation\Ilms.cs" />
+    <Compile Include="Estimation\LeasSquares.cs" />
     <Compile Include="Estimation\Interpolation.cs" />
     <Compile Include="Estimation\Multiplicator.cs" />
     <Page Include="Visual\MainWindow.xaml">

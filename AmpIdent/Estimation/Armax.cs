@@ -29,6 +29,7 @@ namespace AmpIdent.Estimation
             _nbParameter = 10;
             _ndParameter = 0;
             _nkParameter = 0;
+            _modelShift = 0;
             _fiCalculator = new FiCalculator();
         }
 
