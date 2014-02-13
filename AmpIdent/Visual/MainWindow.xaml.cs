@@ -260,7 +260,7 @@ namespace AmpIdent.Visual
                 {
                     if (_compute)
                     {
-                        _status = _ils.StatusString;
+                        _status = _rls.StatusString;
                     }
                     OutputBox.Text = _status;
                 })));
@@ -276,14 +276,14 @@ namespace AmpIdent.Visual
                 {
                     _armax.NaParameter = 5;
                     _armax.NbParameter = 5;
-                    _armax.NdParameter = 5;
-                    _armax.NkParameter = 5;
+                    _armax.NdParameter = 1;
+                    _armax.NkParameter = 0;
                     _armax.ModelShift = 0;
                     _armax.StartingPoint = 400;
 
                     _ils.NumberOfIterations = 3;
-                    //_rls.Compute(_leftChannel1, _leftChannel2, 200000, 100);
-                    _ils.Compute(_leftChannel1, _leftChannel2, 300000);
+                    _rls.Compute(_leftChannel1, _leftChannel2, 300000, 500);
+                    //_ils.Compute(_leftChannel1, _leftChannel2, 300000);
 
                     _ploter.PlottingResolution = 100;
                     _ploter.Clear();
