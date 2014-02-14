@@ -155,12 +155,12 @@ namespace AmpIdent.Estimation
                 var yn = thetaN1.Transpose() * fiN;
                 double alphaN = y1[i, 0] - yn[0, 0];
 
-                /*
+                ///*
                 //calculation of P(n)
                 var fiNt = fiN.Transpose();
                 var fiNtFiN = fiN*fiNt;
                 var pN1I = pN1.Inverse();
-                var pN = pN1I - fiNtFiN;
+                var pN = pN1I * fiNtFiN;
                 pN.Inverse();
                 pN = pN * _lambda;
 
@@ -172,6 +172,7 @@ namespace AmpIdent.Estimation
                 var thetaN = thetaN1 + alphaNkN;
                 //*/
 
+                /*
                 //calculation of g(n)
                 var fiNt = fiN.Transpose();
                 var fiNtPn1 = fiNt * pN1;
@@ -188,8 +189,9 @@ namespace AmpIdent.Estimation
                  
                 //calculation of thetaN
                 var alphaNgN = alphaN * gN;
-                var thetaN = thetaN1 - alphaNgN;
-
+                var thetaN = thetaN1 + alphaNgN;
+                //*/
+                 
                 //memory
                 pN1 = (DenseMatrix) pN;
                 thetaN1 = (DenseMatrix) thetaN;
