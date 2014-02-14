@@ -146,7 +146,6 @@ namespace AmpIdent.Estimation
 
             DenseMatrix pN1 = DenseMatrix.Identity(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter);
             pN1 = _delta*pN1;
-            var fiN1 = _fiCalculator.CalculateFi_k(_modelArmax.NaParameter, _modelArmax.NbParameter, _modelArmax.NdParameter, _modelArmax.NkParameter, _modelArmax.StartingPoint - 1, _modelArmax.ModelShift, x1, y1, _modelArmax.V0);
             _statusString = "RLS: Step V: DONE";
 
             //VI Step: computation....................................................................................................
@@ -157,45 +156,25 @@ namespace AmpIdent.Estimation
                 var yn = thetaN1.Transpose() * fiN;
                 alphaN[i, 0] = y1[i + _modelArmax.StartingPoint, 0] - yn[0, 0];
 
-                /* 1st
-                //calculation of g(n)
-                var fiNt = fiN.Transpose();
-                var fiNtPn1 = fiNt*pN1;
-                var fiNtPn1FiN = fiNtPn1*fiN;
-                var lambdaFiNtPn1FiN = _lambda * fiNtPn1FiN;
-                var lambdaFiNtPn1FiN1 = lambdaFiNtPn1FiN.Inverse();
-                var pN1FiN = pN1*fiN;
-                var gN = pN1FiN * lambdaFiNtPn1FiN1;
-
                 //calculation of P(n)
-                var gNfiNtlambda1pN1 = gN * (1 / _lambda) * fiNtPn1;
-                var pN = (1/_lambda)*pN1 - gNfiNtlambda1pN1;
+                var fiNt = fiN.Transpose();
+                var fiNtFiN = fiN*fiNt;
+                var pN1I = pN1.Inverse();
+                var pN = pN1I + fiNtFiN;
+                pN.Inverse();
+                pN = pN * (1/_lambda);
+
+                //calculation of K(n)
+                var kN = pN*fiN;
 
                 //calculation of thetaN
-                var alphaNgN = alphaN[i, 0] * gN;
+                var alphaNgN = alphaN[i, 0] * kN;
                 var thetaN = thetaN1 + alphaNgN;
                 //*/
 
-                ///* 2nd
-                //calculation of k(n)
-                var kN = pN1 * fiN1;
-
-                //calculation of P(n)
-                var fiN1T = fiN1.Transpose();
-                var fiN1tFiN1 = fiN1T*fiN1;
-                var pN1I = pN1.Inverse();
-                var pNi = _lambda * pN1I * (1 + fiN1tFiN1[0,0]);
-                var pN = pNi.Inverse();
-
-                //calculation of thetaN
-                var alphaNkN = alphaN[i, 0] * kN;
-                var thetaN = thetaN1 + alphaNkN;
-                //*/
-
                 //memory
-                fiN1 = fiN;
                 pN1 = (DenseMatrix) pN;
-                thetaN1 = thetaN;
+                thetaN1 = (DenseMatrix) thetaN;
 
                 _estimationStatusPercentage = i*100/_recurenceLength;
                 _statusString = "RLS: Step VI: " + _estimationStatusPercentage +"%";
