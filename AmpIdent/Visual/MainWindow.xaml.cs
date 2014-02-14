@@ -282,7 +282,7 @@ namespace AmpIdent.Visual
                     _armax.StartingPoint = 400;
 
                     _ils.NumberOfIterations = 3;
-                    _rls.Compute(_leftChannel1, _leftChannel2, 300000, 500);
+                    _rls.Compute(_leftChannel1, _leftChannel2, 300000, 401);
                     //_ils.Compute(_leftChannel1, _leftChannel2, 300000);
 
                     _ploter.PlottingResolution = 100;

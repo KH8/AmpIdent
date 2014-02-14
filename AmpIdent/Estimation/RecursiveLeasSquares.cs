@@ -111,7 +111,6 @@ namespace AmpIdent.Estimation
 
             //Definition of temporary matrixes
             var fiKl = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, _estimationLength, 0.0);
-            var alphaN = new DenseMatrix(_recurenceLength + _modelArmax.StartingPoint, 1, 1.0);
 
             //Predefinition of results
             _modelArmax.Theta = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, 1, 0.0);
@@ -154,13 +153,13 @@ namespace AmpIdent.Estimation
             {
                 var fiN = _fiCalculator.CalculateFi_k(_modelArmax.NaParameter, _modelArmax.NbParameter, _modelArmax.NdParameter, _modelArmax.NkParameter, i, _modelArmax.ModelShift, x1, y1, _modelArmax.V0);
                 var yn = thetaN1.Transpose() * fiN;
-                alphaN[i, 0] = y1[i + _modelArmax.StartingPoint, 0] - yn[0, 0];
+                double alphaN = y1[i, 0] - yn[0, 0];
 
                 //calculation of P(n)
                 var fiNt = fiN.Transpose();
                 var fiNtFiN = fiN*fiNt;
                 var pN1I = pN1.Inverse();
-                var pN = pN1I + fiNtFiN;
+                var pN = pN1I - fiNtFiN;
                 pN.Inverse();
                 pN = pN * (1/_lambda);
 
@@ -168,8 +167,8 @@ namespace AmpIdent.Estimation
                 var kN = pN*fiN;
 
                 //calculation of thetaN
-                var alphaNgN = alphaN[i, 0] * kN;
-                var thetaN = thetaN1 + alphaNgN;
+                var alphaNkN = alphaN * kN;
+                var thetaN = thetaN1 + alphaNkN;
                 //*/
 
                 //memory
