@@ -279,7 +279,7 @@ namespace AmpIdent.Visual
                     _armax.NdParameter = 1;
                     _armax.NkParameter = 0;
                     _armax.ModelShift = 0;
-                    _armax.StartingPoint = 400;
+                    _armax.StartingPoint = 200;
 
                     _ils.NumberOfIterations = 3;
                     _rls.Compute(_leftChannel1, _leftChannel2, 300000, 0);

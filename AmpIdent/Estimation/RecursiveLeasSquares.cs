@@ -74,7 +74,7 @@ namespace AmpIdent.Estimation
             _estimationDone = false;
             _statusString = "RLS: Initialized";
 
-            _lambda = 0.01;
+            _lambda = 1.0E-20;
             _delta = 1.0E+30;
             _modelArmax = armax;
             _estimationLength = 500;
@@ -158,10 +158,8 @@ namespace AmpIdent.Estimation
                 //calculation of P(n)
                 var fiNt = fiN.Transpose();
                 var fiNtFiN = fiN*fiNt;
-                var fiI = DenseMatrix.Identity(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter);
-                fiI.Inverse();
                 var pN1I = pN1.Inverse();
-                var pN = pN1I * (fiI - fiNtFiN);
+                var pN = pN1I * fiNtFiN;
                 pN.Inverse();
                 pN = pN * _lambda;
 
