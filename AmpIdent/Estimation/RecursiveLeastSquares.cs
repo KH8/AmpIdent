@@ -3,7 +3,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace AmpIdent.Estimation
 {
-    public class RecursiveLeasSquares : LeastSquares
+    public class RecursiveLeastSquares : LeastSquares
     {
         //private
         //estimation parameters
@@ -40,7 +40,7 @@ namespace AmpIdent.Estimation
 
         //Methods
         //Constructor
-        public RecursiveLeasSquares(Armax armax) : base(armax)
+        public RecursiveLeastSquares(Armax armax) : base(armax)
         {
             _estimationStatusPercentage = 0;
 

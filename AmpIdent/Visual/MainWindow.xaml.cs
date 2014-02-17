@@ -29,7 +29,7 @@ namespace AmpIdent.Visual
 
         private Boolean _compute;
         private readonly SoundPlayer _sp;
-        private readonly RecursiveLeasSquares _rls;
+        private readonly RecursiveLeastSquares _rls;
         private readonly Armax _armax;
         private DenseMatrix _leftChannel1;
         private DenseMatrix _rightChannel1;
@@ -55,7 +55,7 @@ namespace AmpIdent.Visual
             _loadingPercentage2 = 0;
             
             _armax = new Armax();
-            _rls = new RecursiveLeasSquares(_armax);
+            _rls = new RecursiveLeastSquares(_armax);
 
             _thread1 = new Thread(Update);
             _thread2 = new Thread(Compute);
