@@ -120,6 +120,7 @@ namespace AmpIdent.Visual
                 }
             }
 
+            _loadingPercentage1 = 100;
             _1Loaded = true;
 
             _ploter.PlottingResolution = _samples / 10000;
@@ -176,6 +177,8 @@ namespace AmpIdent.Visual
                     _loadingPercentage2 = 50 + (i * 50 / _samples);
                 }
             }
+
+            _loadingPercentage2 = 100;
 
             _ploter.PlottingResolution = _samples / 10000;
             _ploter.Clear();
@@ -249,10 +252,10 @@ namespace AmpIdent.Visual
             while (_thread1.IsAlive)
             {
                 Loading1.Dispatcher.BeginInvoke((new Action(delegate {
-                    Loading1.Content = _loadingPercentage1 + "%";
+                    Loading1.Content = "File Loaded: " +_loadingPercentage1 + "%";
                 })));
                 Loading2.Dispatcher.BeginInvoke((new Action(delegate {
-                    Loading2.Content = _loadingPercentage2 + "%";
+                    Loading2.Content = "File Loaded: " + _loadingPercentage2 + "%";
                 })));
                 OutputBox.Dispatcher.BeginInvoke((new Action(delegate
                 {
@@ -274,13 +277,13 @@ namespace AmpIdent.Visual
                 {
                     _armax.NaParameter = 5;
                     _armax.NbParameter = 5;
-                    _armax.NdParameter = 1;
+                    _armax.NdParameter = 5;
                     _armax.NkParameter = 0;
                     _armax.ModelShift = 0;
                     _armax.StartingPoint = 200;
 
-                    _rls.NumberOfIterations = 5;
-                    _rls.ComputeRls(_leftChannel1, _leftChannel2, 300000, 215);
+                    _rls.NumberOfIterations = 2;
+                    _rls.ComputeRls(_leftChannel1, _leftChannel2, 300000, 205);
 
                     _ploter.PlottingResolution = 100;
                     _ploter.Clear();

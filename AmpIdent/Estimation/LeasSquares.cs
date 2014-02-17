@@ -128,20 +128,20 @@ namespace AmpIdent.Estimation
                         fiKl[i, t - _modelArmax.StartingPoint] = fik[i, 0];
                     }
                 }
-                _statusString = "Iterative LS: Step III: DONE";
+                _statusString = "Iteration " + k + " LS: Step III: DONE";
 
                 //IV Step: Theta(k)...................................................................................................
 
                 var fiKLt = fiKl.Transpose();
-                _statusString = "Iterative LS: Step IV: 1/5 DONE";
+                _statusString = "Iteration " + k +" LS: Step IV: 1/5 DONE";
                 var fiFiT = _multiplicator.Multiply(fiKl, (DenseMatrix)fiKLt);
-                _statusString = "Iterative LS: Step IV: 2/5 DONE";
+                _statusString = "Iteration " + k + " LS: Step IV: 2/5 DONE";
                 var fiFiTi = fiFiT.Inverse();
-                _statusString = "Iterative LS: Step IV: 3/5 DONE";
+                _statusString = "Iteration " + k + " LS: Step IV: 3/5 DONE";
                 var fiFiTiFiKl = _multiplicator.Multiply((DenseMatrix)fiFiTi, fiKl);
-                _statusString = "Iterative LS: Step IV: 4/5 DONE";
+                _statusString = "Iteration " + k + " LS: Step IV: 4/5 DONE";
                 var thetaK = fiFiTiFiKl * yl;
-                _statusString = "Iterative LS: Step IV: 5/5 DONE";
+                _statusString = "Iteration " + k + " LS: Step IV: 5/5 DONE";
 
                 //V Step: Vk_t........................................................................................................
 
@@ -151,7 +151,7 @@ namespace AmpIdent.Estimation
                     var thetaKy1 = thetaK.Transpose() * fikt;
                     vkT[i, 0] = y1[i + _modelArmax.StartingPoint, 0] - thetaKy1[0, 0];
                 }
-                _statusString = "Iterative LS: Step V: DONE";
+                _statusString = "Iteration " + k + " LS: Step V: DONE";
 
                 //VI Step: Average Error..............................................................................................
 
@@ -171,9 +171,8 @@ namespace AmpIdent.Estimation
                 }
                 _estimationDifference = _estimationDifference / _estimationLength;
                 _estimationError = _estimationError / (_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter);
-                _statusString = k + @" iteration: VI Step: Estimation Error " + @" : " + _estimationError +
-                                @"; Estimation Difference : " + _estimationDifference;
-                _statusString = "Iterative LS: Step VI: DONE";
+                _statusString = "Iteration " + k + " LS: Step VI: Error: " + _estimationError +
+                                @"; Diff: " + _estimationDifference;
 
                 //VII Step: Decision..................................................................................................
 
@@ -188,7 +187,7 @@ namespace AmpIdent.Estimation
                     }
                     if (_estimationError < _acceptableError) k = _numberOfIterations;
                 }
-                _statusString = "Iterative LS: Step VII: DONE";
+                _statusString = "Iteration " + k + " LS: Step VII: DONE";
             }
 
             //END: Vk.................................................................................................................

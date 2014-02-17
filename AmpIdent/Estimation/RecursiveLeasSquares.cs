@@ -56,7 +56,7 @@ namespace AmpIdent.Estimation
         {
             Compute(x1, y1, estimationLength);
             _estimationStatusPercentage = 0;
-            if (recurenceLength == 0) _recurenceLength = x1.Values.Length - _modelArmax.StartingPoint;
+            if (recurenceLength == 0) _recurenceLength = _modelArmax.V0.Values.Length - _modelArmax.StartingPoint;
             else _recurenceLength = recurenceLength;
 
             //V Step: RLS preparation.................................................................................................
