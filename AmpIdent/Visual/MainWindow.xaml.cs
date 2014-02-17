@@ -29,7 +29,6 @@ namespace AmpIdent.Visual
 
         private Boolean _compute;
         private readonly SoundPlayer _sp;
-        private readonly LeastSquares _ils;
         private readonly RecursiveLeasSquares _rls;
         private readonly Armax _armax;
         private DenseMatrix _leftChannel1;
@@ -56,7 +55,6 @@ namespace AmpIdent.Visual
             _loadingPercentage2 = 0;
             
             _armax = new Armax();
-            _ils = new LeastSquares(_armax);
             _rls = new RecursiveLeasSquares(_armax);
 
             _thread1 = new Thread(Update);
@@ -281,9 +279,8 @@ namespace AmpIdent.Visual
                     _armax.ModelShift = 0;
                     _armax.StartingPoint = 200;
 
-                    _ils.NumberOfIterations = 3;
-                    _rls.Compute(_leftChannel1, _leftChannel2, 300000, 0);
-                    //_ils.Compute(_leftChannel1, _leftChannel2, 300000);
+                    _rls.NumberOfIterations = 5;
+                    _rls.ComputeRls(_leftChannel1, _leftChannel2, 300000, 215);
 
                     _ploter.PlottingResolution = 100;
                     _ploter.Clear();

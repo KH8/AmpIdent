@@ -13,10 +13,10 @@ namespace AmpIdent.Estimation
 
         //status
         private int _estimationStatusPercentage;
-        private Boolean _estimationDone;
+        internal Boolean _estimationDone;
         private double _estimationError;
         private double _estimationDifference;
-        private string _statusString;
+        internal string _statusString;
 
         //matrixes
         private readonly Multiplicator _multiplicator;
