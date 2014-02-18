@@ -68,7 +68,7 @@ namespace AmpIdent.Estimation
 
             //VI Step: computation....................................................................................................
 
-            for (var r = _modelArmax.StartingPoint; r <= _recurenceLength - 1; r++)
+            for (var r = _modelArmax.StartingPoint; r <= _modelArmax.StartingPoint + _recurenceLength - 1; r++)
             {
                 var fiN = _fiCalculator.CalculateFi_k(_modelArmax.NaParameter, _modelArmax.NbParameter, _modelArmax.NdParameter, _modelArmax.NkParameter, r, _modelArmax.ModelShift, x1, y1, _modelArmax.V0);
                 var yn = fiN.Transpose() * thetaN1;

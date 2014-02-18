@@ -11,7 +11,7 @@ namespace AmpIdent.Estimation
             {
                 if (i <= tNa)
                 {
-                    tFiK[i - 1, 0] = -1 * tY[tT - i, 0];
+                    tFiK[i - 1, 0] = -1.0 * tY[tT - i, 0];
                 }
                 else if (i > tNa && i <= tNa + tNb)
                 {

@@ -18,6 +18,17 @@ namespace AmpIdent.Visual
         private string _path1;
         private string _path2;
         private string _outputPath;
+
+        private int _na;
+        private int _nb;
+        private int _nd;
+        private int _nk;
+
+        private int _startPoint;
+        private int _iterations;
+        private int _estimationLength;
+        private int _recurenceLength;
+
         private int _loadingPercentage1;
         private int _loadingPercentage2;
         private Boolean _playing1;
@@ -49,9 +60,21 @@ namespace AmpIdent.Visual
             _ploter = new Ploter();
 
             //Loading.Content = "Loading: " + _loadingPercentage.ToString() + "%";
-            
-            _path1 = "";
-            _path2 = "";
+
+            _path1 = "c:\\avril_clean.wav";
+            _path2 = "c:\\avril_scolpture.wav";
+            _outputPath = "c:\\Output\\output.wav";
+
+            _na = 5;
+            _nb = 5;
+            _nd = 1;
+            _nk = 0;
+
+            _startPoint = 200;
+            _iterations = 1;
+            _estimationLength = 250000;
+            _recurenceLength = 5;
+
             _loadingPercentage1 = 0;
             _loadingPercentage2 = 0;
             
@@ -235,23 +258,6 @@ namespace AmpIdent.Visual
             }
         }
 
-        private void PathBox_TextChanged_1(object sender, TextChangedEventArgs e)
-        {
-            var pathBox = (TextBox)sender;
-            _path1 = pathBox.Text;
-        }
-
-        private void PathBox_TextChanged_2(object sender, TextChangedEventArgs e)
-        {
-            var pathBox = (TextBox)sender;
-            _path2 = pathBox.Text;
-        }
-        private void OutputBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var pathBox = (TextBox)sender;
-            _outputPath = pathBox.Text;
-        }
-
         private void Update()
         {
             var i = 0;
@@ -281,15 +287,23 @@ namespace AmpIdent.Visual
             {
                 if (_compute)
                 {
-                    _armax.NaParameter = 5;
-                    _armax.NbParameter = 5;
-                    _armax.NdParameter = 5;
-                    _armax.NkParameter = 0;
-                    _armax.ModelShift = 0;
-                    _armax.StartingPoint = 200;
+                    _armax.NaParameter = _na;
+                    _armax.NbParameter = _nb;
+                    _armax.NdParameter = _nd;
+                    _armax.NkParameter = _nk;
+                    _armax.StartingPoint = _startPoint;
 
-                    _rls.NumberOfIterations = 2;
-                    _rls.ComputeRls(_leftChannel1, _leftChannel2, 300000, 205);
+                    _armax.ModelShift = 0;
+                    ModelShifted.Dispatcher.BeginInvoke((new Action(delegate
+                    {
+                        if (ModelShifted.IsChecked == true)
+                        {
+                            _armax.ModelShift = 1;
+                        }
+                    })));
+
+                    _rls.NumberOfIterations = _iterations;
+                    _rls.ComputeRls(_leftChannel1, _leftChannel2, _estimationLength, _recurenceLength);
 
                     _ploter.PlottingResolution = 100;
                     _ploter.Clear();
@@ -360,6 +374,68 @@ namespace AmpIdent.Visual
         private void ClosingHanler(object sender, CancelEventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void PathBox_TextChanged_1(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            _path1 = pathBox.Text;
+        }
+
+        private void PathBox_TextChanged_2(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            _path2 = pathBox.Text;
+        }
+        private void OutputBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            _outputPath = pathBox.Text;
+        }
+
+        private void Na_TextChange(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            _na = Convert.ToInt32(pathBox.Text);
+        }
+        private void Nb_TextChange(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            _nb = Convert.ToInt32(pathBox.Text);
+        }
+        private void Nd_TextChange(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            _nd = Convert.ToInt32(pathBox.Text);
+        }
+        private void Nk_TextChange(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            _nk = Convert.ToInt32(pathBox.Text);
+        }
+
+        private void SpBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            _startPoint = Convert.ToInt32(pathBox.Text);
+        }
+
+        private void NiBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            _iterations = Convert.ToInt32(pathBox.Text);
+        }
+
+        private void RlBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            _recurenceLength = Convert.ToInt32(pathBox.Text);
+        }
+
+        private void EiBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            _estimationLength = Convert.ToInt32(pathBox.Text);
         }
     }
 }
