@@ -13,11 +13,11 @@ namespace AmpIdent.Estimation
                 {
                     tFiK[i - 1, 0] = -1 * tY[tT - i, 0];
                 }
-                if (i > tNa && i <= tNa + tNb)
+                else if (i > tNa && i <= tNa + tNb)
                 {
                     tFiK[i - 1, 0] = tX[tT - tNk - i + tNa + modelShift, 0];
                 }
-                if (i > tNa + tNb && i <= tNa + tNb + tNd)
+                else if (i > tNa + tNb && i <= tNa + tNb + tNd)
                 {
                     tFiK[i - 1, 0] = tV[tT - i + tNa + tNb, 0];
                 }
