@@ -17,6 +17,7 @@ namespace AmpIdent.Visual
     {
         private string _path1;
         private string _path2;
+        private string _outputPath;
         private int _loadingPercentage1;
         private int _loadingPercentage2;
         private Boolean _playing1;
@@ -245,6 +246,11 @@ namespace AmpIdent.Visual
             var pathBox = (TextBox)sender;
             _path2 = pathBox.Text;
         }
+        private void OutputBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            _outputPath = pathBox.Text;
+        }
 
         private void Update()
         {
@@ -324,7 +330,7 @@ namespace AmpIdent.Visual
 
                 pos2 += 4;
             }
-            File.WriteAllBytes("C:\\Output\\output.wav", wavOutput);
+            File.WriteAllBytes(_outputPath, wavOutput);
             _status = "File creation: DONE!";
         }
 
