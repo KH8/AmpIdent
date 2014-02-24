@@ -260,7 +260,6 @@ namespace AmpIdent.Visual
 
         private void Update()
         {
-            var i = 0;
             while (_thread1.IsAlive)
             {
                 Loading1.Dispatcher.BeginInvoke((new Action(delegate {
