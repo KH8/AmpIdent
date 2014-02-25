@@ -95,6 +95,7 @@ namespace AmpIdent.Visual
 
             MultiplicatorCuda mul = new MultiplicatorCuda();
             mul.InitKernels();
+            Console.WriteLine(mul.CudaAdd(3, 10));
 
             DataContext = _ploter.MainViewModel;
         }
