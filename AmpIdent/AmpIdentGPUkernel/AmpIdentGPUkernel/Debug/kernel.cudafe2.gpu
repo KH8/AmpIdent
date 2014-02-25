@@ -1,0 +1,24 @@
+#line 430 "C:\\Program Files\\Microsoft Visual Studio 11.0\\VC\\include\\crtdefs.h"
+typedef unsigned size_t;
+#include "crt/device_runtime.h"
+#line 4 "C:/Users/H8/Documents/Visual Studio 2012/Projects/AmpIdent/AmpIdentGPUkernel/AmpIdentGPUkernel/kernel.cu"
+__global__ __var_used__ extern void _Z6kerneliiPi(int, int, int *);
+#include "common_functions.h"
+#line 4 "C:/Users/H8/Documents/Visual Studio 2012/Projects/AmpIdent/AmpIdentGPUkernel/AmpIdentGPUkernel/kernel.cu"
+__global__ __var_used__ void _Z6kerneliiPi(
+#line 4 "C:/Users/H8/Documents/Visual Studio 2012/Projects/AmpIdent/AmpIdentGPUkernel/AmpIdentGPUkernel/kernel.cu"
+int a, 
+#line 4 "C:/Users/H8/Documents/Visual Studio 2012/Projects/AmpIdent/AmpIdentGPUkernel/AmpIdentGPUkernel/kernel.cu"
+int b, 
+#line 4 "C:/Users/H8/Documents/Visual Studio 2012/Projects/AmpIdent/AmpIdentGPUkernel/AmpIdentGPUkernel/kernel.cu"
+int *c){
+#line 4 "C:/Users/H8/Documents/Visual Studio 2012/Projects/AmpIdent/AmpIdentGPUkernel/AmpIdentGPUkernel/kernel.cu"
+{
+#line 5 "C:/Users/H8/Documents/Visual Studio 2012/Projects/AmpIdent/AmpIdentGPUkernel/AmpIdentGPUkernel/kernel.cu"
+{
+#line 6 "C:/Users/H8/Documents/Visual Studio 2012/Projects/AmpIdent/AmpIdentGPUkernel/AmpIdentGPUkernel/kernel.cu"
+(*c) = ((a + b) * (a + b));
+#line 7 "C:/Users/H8/Documents/Visual Studio 2012/Projects/AmpIdent/AmpIdentGPUkernel/AmpIdentGPUkernel/kernel.cu"
+} 
+#line 7 "C:/Users/H8/Documents/Visual Studio 2012/Projects/AmpIdent/AmpIdentGPUkernel/AmpIdentGPUkernel/kernel.cu"
+}}
