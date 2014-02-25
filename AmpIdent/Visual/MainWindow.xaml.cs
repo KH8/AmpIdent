@@ -93,6 +93,9 @@ namespace AmpIdent.Visual
 
             _status = "Load files";
 
+            MultiplicatorCuda mul = new MultiplicatorCuda();
+            mul.InitKernels();
+
             DataContext = _ploter.MainViewModel;
         }
 
