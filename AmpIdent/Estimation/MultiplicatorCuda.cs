@@ -8,8 +8,8 @@ namespace AmpIdent.Estimation
     {
         private const int VECTOR_SIZE = 5120;
         const int THREADS_PER_BLOCK = 256;
- 
-        static CudaKernel fillVectorWithCuda;
+
+        static CudaKernel addTwoVectorWithCuda;
 
         public int VectorSize
         {
@@ -20,20 +20,22 @@ namespace AmpIdent.Estimation
         {
              CudaContext cntxt = new CudaContext();
              CUmodule cumodule = cntxt.LoadModule(@"\Kernel\kernel.ptx");
-             fillVectorWithCuda = new CudaKernel("_Z6kernelPii", cumodule, cntxt);
-             fillVectorWithCuda.BlockDimensions = THREADS_PER_BLOCK;
-             fillVectorWithCuda.GridDimensions = VectorSize / THREADS_PER_BLOCK + 1;
+             addTwoVectorWithCuda = new CudaKernel("_Z6kernelPiS_S_i", cumodule, cntxt);
+             addTwoVectorWithCuda.BlockDimensions = THREADS_PER_BLOCK;
+             addTwoVectorWithCuda.GridDimensions = VECTOR_SIZE / THREADS_PER_BLOCK + 1;
         }
- 
-        public Func<int[], int, int[]> FillVector = (m, value) =>
+
+        public Func<int[], int[], int, int[]> AddVectors = (a, b, size) =>
         {
             // init parameters
-            CudaDeviceVariable<int> vector_host = m;
+            CudaDeviceVariable<int> vector_hostA = a;
+            CudaDeviceVariable<int> vector_hostB = b;
+            CudaDeviceVariable<int> vector_hostOut = new CudaDeviceVariable<int>(size);
             // run cuda method
-            fillVectorWithCuda.Run(vector_host.DevicePointer, value);
+            addTwoVectorWithCuda.Run(vector_hostA.DevicePointer, vector_hostB.DevicePointer, vector_hostOut.DevicePointer, size);
             // copy return to host
-            int[] output = new int[m.Length];
-            vector_host.CopyToHost(output);
+            int[] output = new int[size];
+            vector_hostOut.CopyToHost(output);
             return output;
         };
     }
