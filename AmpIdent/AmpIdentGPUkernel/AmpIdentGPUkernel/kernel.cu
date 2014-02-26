@@ -2,11 +2,20 @@
 #include <stdio.h>
 #include <device_launch_parameters.h>
  
-__global__ void kernel(int* a, int* b, int* out, int N)
+__global__ void kernel(double* a, double* b, double* out, int cola, int colb, int rowa)
 {
     int i = blockDim.x * blockIdx.x + threadIdx.x;
-    if (i < N)
-        out[i] = a[i] + b[i];
+
+	if (i < rowa)
+	{
+		for (int j = 0; j < colb; j++)
+		{
+			for (int k = 0; k < cola; k++)
+			{
+				out[i,j] += a[i,k] * b[k,j];
+			}
+		}
+	}
 }
  
 // Print device properties

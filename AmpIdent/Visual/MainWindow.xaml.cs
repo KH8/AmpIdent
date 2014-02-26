@@ -94,16 +94,6 @@ namespace AmpIdent.Visual
 
             _status = "Load files";
 
-            MultiplicatorCuda mul = new MultiplicatorCuda();
-            mul.InitKernels();
-            int[] vectorA = Enumerable.Range(1, mul.VectorSize).ToArray();
-            int[] vectorB = Enumerable.Range(1, mul.VectorSize).ToArray();
-            int[] vector = mul.AddVectors(vectorA, vectorB, mul.VectorSize);
-            for (int i = 0; i < mul.VectorSize; i++)
-            {
-                Console.WriteLine(String.Format("{0}+{1}={2}", vectorA[i], vectorB[i], vector[i]));
-            }
-
             DataContext = _ploter.MainViewModel;
         }
 

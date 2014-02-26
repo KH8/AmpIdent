@@ -1,42 +1,63 @@
 using System;
 using ManagedCuda;
 using ManagedCuda.BasicTypes;
+using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace AmpIdent.Estimation
 {
     public class MultiplicatorCuda
     {
-        private const int VECTOR_SIZE = 5120;
-        const int THREADS_PER_BLOCK = 256;
+        private int _matrixSize;
+        private readonly int _threadsPerBlock;
+        static CudaKernel _multiplyTwoVectorWithCuda;
 
-        static CudaKernel addTwoVectorWithCuda;
-
-        public int VectorSize
+        public MultiplicatorCuda()
         {
-            get { return VECTOR_SIZE; }
+            _matrixSize = 256;
+            _threadsPerBlock = 256;
         }
 
         public void InitKernels()
         {
-             CudaContext cntxt = new CudaContext();
+             var cntxt = new CudaContext();
              CUmodule cumodule = cntxt.LoadModule(@"\Kernel\kernel.ptx");
-             addTwoVectorWithCuda = new CudaKernel("_Z6kernelPiS_S_i", cumodule, cntxt);
-             addTwoVectorWithCuda.BlockDimensions = THREADS_PER_BLOCK;
-             addTwoVectorWithCuda.GridDimensions = VECTOR_SIZE / THREADS_PER_BLOCK + 1;
+             _multiplyTwoVectorWithCuda = new CudaKernel("_Z6kernelPiS_S_i", cumodule, cntxt)
+             {
+                 BlockDimensions = _threadsPerBlock,
+                 GridDimensions = _matrixSize/_threadsPerBlock + 1
+             };
         }
 
-        public Func<int[], int[], int, int[]> AddVectors = (a, b, size) =>
+        public double[] Multiply(DenseMatrix m1,DenseMatrix m2)
         {
+            _matrixSize = m1.RowCount*m2.ColumnCount;
+
             // init parameters
-            CudaDeviceVariable<int> vector_hostA = a;
-            CudaDeviceVariable<int> vector_hostB = b;
-            CudaDeviceVariable<int> vector_hostOut = new CudaDeviceVariable<int>(size);
+            CudaDeviceVariable<double> matrixM1 = DenseMatrix2Doubles(m1);
+            CudaDeviceVariable<double> matrixM2 = DenseMatrix2Doubles(m2);
+            var matrixM = new CudaDeviceVariable<double>(_matrixSize);
             // run cuda method
-            addTwoVectorWithCuda.Run(vector_hostA.DevicePointer, vector_hostB.DevicePointer, vector_hostOut.DevicePointer, size);
+            _multiplyTwoVectorWithCuda.Run(matrixM1.DevicePointer, matrixM2.DevicePointer, matrixM.DevicePointer, m1.ColumnCount, m2.ColumnCount, m1.RowCount);
             // copy return to host
-            int[] output = new int[size];
-            vector_hostOut.CopyToHost(output);
+            var output = new double[_matrixSize];
+            matrixM.CopyToHost(output);
+
             return output;
-        };
+        }
+
+        static double[] DenseMatrix2Doubles(DenseMatrix m)
+        {
+            var mDoubles = new double[m.RowCount * m.ColumnCount];
+
+            for (int i = 0; i < m.RowCount; i++)
+            {
+                for (int j = 0; j < m.ColumnCount; j++)
+                {
+                    mDoubles[m.RowCount * i + j] = m[i , j];
+                }
+            }
+
+            return mDoubles;
+        }
     }
 }

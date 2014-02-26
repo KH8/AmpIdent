@@ -4,7 +4,7 @@
 	// nvopencc 4.1 built on 2013-10-17
 
 	//-----------------------------------------------------------
-	// Compiling Debug/kernel.cpp3.i (C:/Users/H8/AppData/Local/Temp/ccBI#.a04900)
+	// Compiling Debug/kernel.cpp3.i (C:/Users/H8/AppData/Local/Temp/ccBI#.a04856)
 	//-----------------------------------------------------------
 
 	//-----------------------------------------------------------
@@ -52,16 +52,19 @@
 	.file	34	"c:\program files\nvidia gpu computing toolkit\cuda\v5.5\include\math_functions_dbl_ptx1.h"
 
 
-	.entry _Z6kernelPiS_S_i (
-		.param .u32 __cudaparm__Z6kernelPiS_S_i_a,
-		.param .u32 __cudaparm__Z6kernelPiS_S_i_b,
-		.param .u32 __cudaparm__Z6kernelPiS_S_i_out,
-		.param .s32 __cudaparm__Z6kernelPiS_S_i_N)
+	.entry _Z6kernelPdS_S_iii (
+		.param .u32 __cudaparm__Z6kernelPdS_S_iii_a,
+		.param .u32 __cudaparm__Z6kernelPdS_S_iii_b,
+		.param .u32 __cudaparm__Z6kernelPdS_S_iii_out,
+		.param .s32 __cudaparm__Z6kernelPdS_S_iii_cola,
+		.param .s32 __cudaparm__Z6kernelPdS_S_iii_colb,
+		.param .s32 __cudaparm__Z6kernelPdS_S_iii_rowa)
 	{
-	.reg .u32 %r<25>;
-	.reg .pred %p<3>;
+	.reg .u32 %r<42>;
+	.reg .f64 %fd<6>;
+	.reg .pred %p<7>;
 	.loc	15	5	0
-$LDWbegin__Z6kernelPiS_S_i:
+$LDWbegin__Z6kernelPdS_S_iii:
 $LDWbeginblock_240_1:
 	.loc	15	7	0
 	cvt.u32.u16 	%r1, %tid.x;
@@ -70,37 +73,82 @@ $LDWbeginblock_240_1:
 	mul.lo.u32 	%r4, %r2, %r3;
 	add.u32 	%r5, %r1, %r4;
 	mov.s32 	%r6, %r5;
-	.loc	15	8	0
-	ld.param.s32 	%r7, [__cudaparm__Z6kernelPiS_S_i_N];
+	.loc	15	9	0
+	ld.param.s32 	%r7, [__cudaparm__Z6kernelPdS_S_iii_rowa];
 	mov.s32 	%r8, %r6;
 	setp.le.s32 	%p1, %r7, %r8;
-	@%p1 bra 	$L_0_1282;
-	.loc	15	9	0
-	ld.param.u32 	%r9, [__cudaparm__Z6kernelPiS_S_i_a];
-	mov.s32 	%r10, %r6;
-	mul.lo.u32 	%r11, %r10, 4;
-	add.u32 	%r12, %r9, %r11;
-	ld.global.s32 	%r13, [%r12+0];
-	ld.param.u32 	%r14, [__cudaparm__Z6kernelPiS_S_i_b];
-	mov.s32 	%r15, %r6;
-	mul.lo.u32 	%r16, %r15, 4;
-	add.u32 	%r17, %r14, %r16;
-	ld.global.s32 	%r18, [%r17+0];
-	add.s32 	%r19, %r13, %r18;
-	ld.param.u32 	%r20, [__cudaparm__Z6kernelPiS_S_i_out];
-	mov.s32 	%r21, %r6;
-	mul.lo.u32 	%r22, %r21, 4;
-	add.u32 	%r23, %r20, %r22;
-	st.global.s32 	[%r23+0], %r19;
-$L_0_1282:
+	@%p1 bra 	$L_0_3842;
+$LDWbeginblock_240_3:
+	.loc	15	11	0
+	mov.s32 	%r9, 0;
+	mov.s32 	%r10, %r9;
+	ld.param.s32 	%r11, [__cudaparm__Z6kernelPdS_S_iii_colb];
+	mov.s32 	%r12, %r10;
+	setp.le.s32 	%p2, %r11, %r12;
+	@%p2 bra 	$L_0_4354;
+$L_0_4098:
+$LDWbeginblock_240_5:
+	.loc	15	13	0
+	mov.s32 	%r13, 0;
+	mov.s32 	%r14, %r13;
+	ld.param.s32 	%r15, [__cudaparm__Z6kernelPdS_S_iii_cola];
+	mov.s32 	%r16, %r14;
+	setp.le.s32 	%p3, %r15, %r16;
+	@%p3 bra 	$L_0_4866;
+$L_0_4610:
+	.loc	15	15	0
+	ld.param.u32 	%r17, [__cudaparm__Z6kernelPdS_S_iii_out];
+	mov.s32 	%r18, %r10;
+	mul.lo.u32 	%r19, %r18, 8;
+	add.u32 	%r20, %r17, %r19;
+	ld.global.f64 	%fd1, [%r20+0];
+	ld.param.u32 	%r21, [__cudaparm__Z6kernelPdS_S_iii_a];
+	mov.s32 	%r22, %r14;
+	mul.lo.u32 	%r23, %r22, 8;
+	add.u32 	%r24, %r21, %r23;
+	ld.global.f64 	%fd2, [%r24+0];
+	ld.param.u32 	%r25, [__cudaparm__Z6kernelPdS_S_iii_b];
+	mov.s32 	%r26, %r10;
+	mul.lo.u32 	%r27, %r26, 8;
+	add.u32 	%r28, %r25, %r27;
+	ld.global.f64 	%fd3, [%r28+0];
+	mad.rn.f64 	%fd4, %fd2, %fd3, %fd1;
+	ld.param.u32 	%r29, [__cudaparm__Z6kernelPdS_S_iii_out];
+	mov.s32 	%r30, %r10;
+	mul.lo.u32 	%r31, %r30, 8;
+	add.u32 	%r32, %r29, %r31;
+	st.global.f64 	[%r32+0], %fd4;
+	.loc	15	13	0
+	mov.s32 	%r33, %r14;
+	add.s32 	%r34, %r33, 1;
+	mov.s32 	%r14, %r34;
+$Lt_0_1794:
+	ld.param.s32 	%r35, [__cudaparm__Z6kernelPdS_S_iii_cola];
+	mov.s32 	%r36, %r14;
+	setp.gt.s32 	%p4, %r35, %r36;
+	@%p4 bra 	$L_0_4610;
+$L_0_4866:
+$LDWendblock_240_5:
+	.loc	15	11	0
+	mov.s32 	%r37, %r10;
+	add.s32 	%r38, %r37, 1;
+	mov.s32 	%r10, %r38;
+$Lt_0_2050:
+	ld.param.s32 	%r39, [__cudaparm__Z6kernelPdS_S_iii_colb];
+	mov.s32 	%r40, %r10;
+	setp.gt.s32 	%p5, %r39, %r40;
+	@%p5 bra 	$L_0_4098;
+$L_0_4354:
+$LDWendblock_240_3:
+$L_0_3842:
 $LDWendblock_240_1:
-	.loc	15	10	0
+	.loc	15	19	0
 	exit;
-$LDWend__Z6kernelPiS_S_i:
-	} // _Z6kernelPiS_S_i
+$LDWend__Z6kernelPdS_S_iii:
+	} // _Z6kernelPdS_S_iii
 
  	@@DWARF .section .debug_info, "",@progbits
-	@@DWARF .byte	0xe6, 0x02, 0x00, 0x00, 0x02, 0x00
+	@@DWARF .byte	0x47, 0x03, 0x00, 0x00, 0x02, 0x00
 	@@DWARF .4byte	.debug_abbrev
 	@@DWARF .4byte	0x65440104, 0x2f677562, 0x6e72656b, 0x632e6c65
 	@@DWARF .4byte	0x2e337070, 0x3a430069, 0x6573555c, 0x485c7372
@@ -143,34 +191,48 @@ $LDWend__Z6kernelPiS_S_i:
 	@@DWARF .4byte	0x04000001, 0x00990a05, 0x5b010000, 0x0b000002
 	@@DWARF .4byte	0x490d0006, 0x06000001, 0x00000149, 0x00015909
 	@@DWARF .4byte	0x0e050400, 0x5a5f050f, 0x72656b36, 0x506c656e
-	@@DWARF .byte	0x69, 0x53, 0x5f, 0x53, 0x5f, 0x69, 0x00, 0x01
-	@@DWARF .byte	0x01, 0x00
-	@@DWARF .4byte	$LDWbegin__Z6kernelPiS_S_i
-	@@DWARF .4byte	$LDWend__Z6kernelPiS_S_i
-	@@DWARF .byte	0x0f, 0x0f, 0x05, 0x61, 0x00, 0x47, 0x02, 0x00
+	@@DWARF .byte	0x64, 0x53, 0x5f, 0x53, 0x5f, 0x69, 0x69, 0x69
+	@@DWARF .byte	0x00, 0x01, 0x01, 0x00
+	@@DWARF .4byte	$LDWbegin__Z6kernelPdS_S_iii
+	@@DWARF .4byte	$LDWend__Z6kernelPdS_S_iii
+	@@DWARF .byte	0x0f, 0x0f, 0x05, 0x61, 0x00, 0x65, 0x02, 0x00
 	@@DWARF .byte	0x00, 0x05, 0x03
-	@@DWARF .4byte	__cudaparm__Z6kernelPiS_S_i_a
-	@@DWARF .byte	0x07, 0x0f, 0x0f, 0x05, 0x62, 0x00, 0x47, 0x02
+	@@DWARF .4byte	__cudaparm__Z6kernelPdS_S_iii_a
+	@@DWARF .byte	0x07, 0x0f, 0x0f, 0x05, 0x62, 0x00, 0x65, 0x02
 	@@DWARF .byte	0x00, 0x00, 0x05, 0x03
-	@@DWARF .4byte	__cudaparm__Z6kernelPiS_S_i_b
+	@@DWARF .4byte	__cudaparm__Z6kernelPdS_S_iii_b
 	@@DWARF .byte	0x07, 0x0f, 0x0f, 0x05, 0x6f, 0x75, 0x74, 0x00
-	@@DWARF .byte	0x47, 0x02, 0x00, 0x00, 0x05, 0x03
-	@@DWARF .4byte	__cudaparm__Z6kernelPiS_S_i_out
-	@@DWARF .byte	0x07, 0x0f, 0x0f, 0x05, 0x4e, 0x00, 0x3d, 0x01
-	@@DWARF .byte	0x00, 0x00, 0x05, 0x03
-	@@DWARF .4byte	__cudaparm__Z6kernelPiS_S_i_N
+	@@DWARF .byte	0x65, 0x02, 0x00, 0x00, 0x05, 0x03
+	@@DWARF .4byte	__cudaparm__Z6kernelPdS_S_iii_out
+	@@DWARF .byte	0x07, 0x0f, 0x0f, 0x05, 0x63, 0x6f, 0x6c, 0x61
+	@@DWARF .byte	0x00, 0x3d, 0x01, 0x00, 0x00, 0x05, 0x03
+	@@DWARF .4byte	__cudaparm__Z6kernelPdS_S_iii_cola
+	@@DWARF .byte	0x07, 0x0f, 0x0f, 0x05, 0x63, 0x6f, 0x6c, 0x62
+	@@DWARF .byte	0x00, 0x3d, 0x01, 0x00, 0x00, 0x05, 0x03
+	@@DWARF .4byte	__cudaparm__Z6kernelPdS_S_iii_colb
+	@@DWARF .byte	0x07, 0x0f, 0x0f, 0x05, 0x72, 0x6f, 0x77, 0x61
+	@@DWARF .byte	0x00, 0x3d, 0x01, 0x00, 0x00, 0x05, 0x03
+	@@DWARF .4byte	__cudaparm__Z6kernelPdS_S_iii_rowa
 	@@DWARF .byte	0x07, 0x10
 	@@DWARF .4byte	$LDWbeginblock_240_1
 	@@DWARF .4byte	$LDWendblock_240_1
 	@@DWARF .4byte	0x69070f11, 0x00013d00, 0xb6900500, 0x020195e4
-	@@DWARF .byte	0x00, 0x00, 0x00, 0x00
+	@@DWARF .byte	0x10
+	@@DWARF .4byte	$LDWbeginblock_240_3
+	@@DWARF .4byte	$LDWendblock_240_3
+	@@DWARF .4byte	0x6a0b0f11, 0x00013d00, 0xb0900600, 0x02abc8e2
+	@@DWARF .byte	0x02, 0x10
+	@@DWARF .4byte	$LDWbeginblock_240_5
+	@@DWARF .4byte	$LDWendblock_240_5
+	@@DWARF .4byte	0x6b0d0f11, 0x00013d00, 0xb4900600, 0x02abc8e2
+	@@DWARF .byte	0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 
  	@@DWARF .section .debug_pubnames, "",@progbits
-	@@DWARF .byte	0x23, 0x00, 0x00, 0x00, 0x02, 0x00
+	@@DWARF .byte	0x25, 0x00, 0x00, 0x00, 0x02, 0x00
 	@@DWARF .4byte	.debug_info
-	@@DWARF .4byte	0x000002ea, 0x0000026c, 0x6b365a5f, 0x656e7265
-	@@DWARF .byte	0x6c, 0x50, 0x69, 0x53, 0x5f, 0x53, 0x5f, 0x69
-	@@DWARF .byte	0x00, 0x00, 0x00, 0x00, 0x00
+	@@DWARF .4byte	0x0000034b, 0x0000026c, 0x6b365a5f, 0x656e7265
+	@@DWARF .byte	0x6c, 0x50, 0x64, 0x53, 0x5f, 0x53, 0x5f, 0x69
+	@@DWARF .byte	0x69, 0x69, 0x00, 0x00, 0x00, 0x00, 0x00
 
  	@@DWARF .section .debug_line, "",@progbits
 	@@DWARF .4byte	0x00000019, 0x00100002, 0x00040000, 0x000a04ff
