@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Media;
 using System.Threading;
 using System.Windows;
@@ -95,7 +96,9 @@ namespace AmpIdent.Visual
 
             MultiplicatorCuda mul = new MultiplicatorCuda();
             mul.InitKernels();
-            Console.WriteLine(mul.CudaAdd(3, 10));
+            int[] vector = Enumerable.Range(1, mul.VectorSize).ToArray();
+            vector = mul.FillVector(vector, 13);
+            foreach (int s in vector) { Console.WriteLine(s); }
 
             DataContext = _ploter.MainViewModel;
         }

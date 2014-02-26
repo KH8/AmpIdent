@@ -6,25 +6,35 @@ namespace AmpIdent.Estimation
 {
     public class MultiplicatorCuda
     {
-        static CudaKernel _addWithCuda;
+        private const int VECTOR_SIZE = 5120;
+        const int THREADS_PER_BLOCK = 256;
+ 
+        static CudaKernel fillVectorWithCuda;
+
+        public int VectorSize
+        {
+            get { return VECTOR_SIZE; }
+        }
 
         public void InitKernels()
         {
-            var cntxt = new CudaContext();
-            CUmodule cumodule = cntxt.LoadModule(@"Kernel\kernel.ptx");
-            _addWithCuda = new CudaKernel("_Z6kerneliiPi", cumodule, cntxt);
+             CudaContext cntxt = new CudaContext();
+             CUmodule cumodule = cntxt.LoadModule(@"\Kernel\kernel.ptx");
+             fillVectorWithCuda = new CudaKernel("_Z6kernelPii", cumodule, cntxt);
+             fillVectorWithCuda.BlockDimensions = THREADS_PER_BLOCK;
+             fillVectorWithCuda.GridDimensions = VectorSize / THREADS_PER_BLOCK + 1;
         }
-
-        public Func<int, int, int> CudaAdd = (a, b) =>
+ 
+        public Func<int[], int, int[]> FillVector = (m, value) =>
         {
-            // init output parameters
-            CudaDeviceVariable<int> resultDev = 0;
-            int resultHost = 0;
-            // run CUDA method
-            _addWithCuda.Run(a, b, resultDev.DevicePointer);
+            // init parameters
+            CudaDeviceVariable<int> vector_host = m;
+            // run cuda method
+            fillVectorWithCuda.Run(vector_host.DevicePointer, value);
             // copy return to host
-            resultDev.CopyToHost(ref resultHost);
-            return resultHost;
+            int[] output = new int[m.Length];
+            vector_host.CopyToHost(output);
+            return output;
         };
     }
 }
