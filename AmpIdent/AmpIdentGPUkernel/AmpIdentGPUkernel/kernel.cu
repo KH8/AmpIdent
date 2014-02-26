@@ -8,11 +8,11 @@ __global__ void kernel(double* a, double* b, double* out, int cola, int colb, in
 
 	if (i < rowa)
 	{
-		for (int j = 0; j < colb; j++)
+		for (int j = 0; j < cola; j++)
 		{
-			for (int k = 0; k < cola; k++)
+			for (int k = 0; k < colb; k++)
 			{
-				out[i,j] += a[i,k] * b[k,j];
+				out[i*rowa + k] += a[i*cola + j] * b[j*colb + k];
 			}
 		}
 	}

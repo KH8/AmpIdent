@@ -4,7 +4,7 @@
 	// nvopencc 4.1 built on 2013-10-17
 
 	//-----------------------------------------------------------
-	// Compiling Debug/kernel.cpp3.i (C:/Users/H8/AppData/Local/Temp/ccBI#.a04856)
+	// Compiling Debug/kernel.cpp3.i (C:/Users/H8/AppData/Local/Temp/ccBI#.a04716)
 	//-----------------------------------------------------------
 
 	//-----------------------------------------------------------
@@ -60,7 +60,7 @@
 		.param .s32 __cudaparm__Z6kernelPdS_S_iii_colb,
 		.param .s32 __cudaparm__Z6kernelPdS_S_iii_rowa)
 	{
-	.reg .u32 %r<42>;
+	.reg .u32 %r<58>;
 	.reg .f64 %fd<6>;
 	.reg .pred %p<7>;
 	.loc	15	5	0
@@ -82,7 +82,7 @@ $LDWbeginblock_240_3:
 	.loc	15	11	0
 	mov.s32 	%r9, 0;
 	mov.s32 	%r10, %r9;
-	ld.param.s32 	%r11, [__cudaparm__Z6kernelPdS_S_iii_colb];
+	ld.param.s32 	%r11, [__cudaparm__Z6kernelPdS_S_iii_cola];
 	mov.s32 	%r12, %r10;
 	setp.le.s32 	%p2, %r11, %r12;
 	@%p2 bra 	$L_0_4354;
@@ -91,52 +91,68 @@ $LDWbeginblock_240_5:
 	.loc	15	13	0
 	mov.s32 	%r13, 0;
 	mov.s32 	%r14, %r13;
-	ld.param.s32 	%r15, [__cudaparm__Z6kernelPdS_S_iii_cola];
+	ld.param.s32 	%r15, [__cudaparm__Z6kernelPdS_S_iii_colb];
 	mov.s32 	%r16, %r14;
 	setp.le.s32 	%p3, %r15, %r16;
 	@%p3 bra 	$L_0_4866;
 $L_0_4610:
 	.loc	15	15	0
 	ld.param.u32 	%r17, [__cudaparm__Z6kernelPdS_S_iii_out];
-	mov.s32 	%r18, %r10;
-	mul.lo.u32 	%r19, %r18, 8;
-	add.u32 	%r20, %r17, %r19;
-	ld.global.f64 	%fd1, [%r20+0];
-	ld.param.u32 	%r21, [__cudaparm__Z6kernelPdS_S_iii_a];
-	mov.s32 	%r22, %r14;
+	mov.s32 	%r18, %r14;
+	ld.param.s32 	%r19, [__cudaparm__Z6kernelPdS_S_iii_rowa];
+	mov.s32 	%r20, %r6;
+	mul.lo.s32 	%r21, %r19, %r20;
+	add.s32 	%r22, %r18, %r21;
 	mul.lo.u32 	%r23, %r22, 8;
-	add.u32 	%r24, %r21, %r23;
-	ld.global.f64 	%fd2, [%r24+0];
-	ld.param.u32 	%r25, [__cudaparm__Z6kernelPdS_S_iii_b];
+	add.u32 	%r24, %r17, %r23;
+	ld.global.f64 	%fd1, [%r24+0];
+	ld.param.u32 	%r25, [__cudaparm__Z6kernelPdS_S_iii_a];
 	mov.s32 	%r26, %r10;
-	mul.lo.u32 	%r27, %r26, 8;
-	add.u32 	%r28, %r25, %r27;
-	ld.global.f64 	%fd3, [%r28+0];
-	mad.rn.f64 	%fd4, %fd2, %fd3, %fd1;
-	ld.param.u32 	%r29, [__cudaparm__Z6kernelPdS_S_iii_out];
-	mov.s32 	%r30, %r10;
+	ld.param.s32 	%r27, [__cudaparm__Z6kernelPdS_S_iii_cola];
+	mov.s32 	%r28, %r6;
+	mul.lo.s32 	%r29, %r27, %r28;
+	add.s32 	%r30, %r26, %r29;
 	mul.lo.u32 	%r31, %r30, 8;
-	add.u32 	%r32, %r29, %r31;
-	st.global.f64 	[%r32+0], %fd4;
+	add.u32 	%r32, %r25, %r31;
+	ld.global.f64 	%fd2, [%r32+0];
+	ld.param.u32 	%r33, [__cudaparm__Z6kernelPdS_S_iii_b];
+	mov.s32 	%r34, %r14;
+	ld.param.s32 	%r35, [__cudaparm__Z6kernelPdS_S_iii_colb];
+	mov.s32 	%r36, %r10;
+	mul.lo.s32 	%r37, %r35, %r36;
+	add.s32 	%r38, %r34, %r37;
+	mul.lo.u32 	%r39, %r38, 8;
+	add.u32 	%r40, %r33, %r39;
+	ld.global.f64 	%fd3, [%r40+0];
+	mad.rn.f64 	%fd4, %fd2, %fd3, %fd1;
+	ld.param.u32 	%r41, [__cudaparm__Z6kernelPdS_S_iii_out];
+	mov.s32 	%r42, %r14;
+	ld.param.s32 	%r43, [__cudaparm__Z6kernelPdS_S_iii_rowa];
+	mov.s32 	%r44, %r6;
+	mul.lo.s32 	%r45, %r43, %r44;
+	add.s32 	%r46, %r42, %r45;
+	mul.lo.u32 	%r47, %r46, 8;
+	add.u32 	%r48, %r41, %r47;
+	st.global.f64 	[%r48+0], %fd4;
 	.loc	15	13	0
-	mov.s32 	%r33, %r14;
-	add.s32 	%r34, %r33, 1;
-	mov.s32 	%r14, %r34;
+	mov.s32 	%r49, %r14;
+	add.s32 	%r50, %r49, 1;
+	mov.s32 	%r14, %r50;
 $Lt_0_1794:
-	ld.param.s32 	%r35, [__cudaparm__Z6kernelPdS_S_iii_cola];
-	mov.s32 	%r36, %r14;
-	setp.gt.s32 	%p4, %r35, %r36;
+	ld.param.s32 	%r51, [__cudaparm__Z6kernelPdS_S_iii_colb];
+	mov.s32 	%r52, %r14;
+	setp.gt.s32 	%p4, %r51, %r52;
 	@%p4 bra 	$L_0_4610;
 $L_0_4866:
 $LDWendblock_240_5:
 	.loc	15	11	0
-	mov.s32 	%r37, %r10;
-	add.s32 	%r38, %r37, 1;
-	mov.s32 	%r10, %r38;
+	mov.s32 	%r53, %r10;
+	add.s32 	%r54, %r53, 1;
+	mov.s32 	%r10, %r54;
 $Lt_0_2050:
-	ld.param.s32 	%r39, [__cudaparm__Z6kernelPdS_S_iii_colb];
-	mov.s32 	%r40, %r10;
-	setp.gt.s32 	%p5, %r39, %r40;
+	ld.param.s32 	%r55, [__cudaparm__Z6kernelPdS_S_iii_cola];
+	mov.s32 	%r56, %r10;
+	setp.gt.s32 	%p5, %r55, %r56;
 	@%p5 bra 	$L_0_4098;
 $L_0_4354:
 $LDWendblock_240_3:

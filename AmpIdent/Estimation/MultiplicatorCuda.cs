@@ -7,30 +7,45 @@ namespace AmpIdent.Estimation
 {
     public class MultiplicatorCuda
     {
-        private int _matrixSize;
-        private readonly int _threadsPerBlock;
+        private static int _matrixSize;
+        private static int _threadsPerBlock;
         static CudaKernel _multiplyTwoVectorWithCuda;
 
         public MultiplicatorCuda()
         {
             _matrixSize = 256;
             _threadsPerBlock = 256;
+            InitKernels();
         }
 
-        public void InitKernels()
+        static void InitKernels()
         {
              var cntxt = new CudaContext();
              CUmodule cumodule = cntxt.LoadModule(@"\Kernel\kernel.ptx");
-             _multiplyTwoVectorWithCuda = new CudaKernel("_Z6kernelPiS_S_i", cumodule, cntxt)
-             {
-                 BlockDimensions = _threadsPerBlock,
-                 GridDimensions = _matrixSize/_threadsPerBlock + 1
-             };
+             _multiplyTwoVectorWithCuda = new CudaKernel("_Z6kernelPdS_S_iii", cumodule, cntxt);
+        }
+
+        static double[] DenseMatrix2Doubles(DenseMatrix m)
+        {
+            var mDoubles = new double[m.RowCount * m.ColumnCount];
+
+            for (int i = 0; i < m.RowCount; i++)
+            {
+                for (int j = 0; j < m.ColumnCount; j++)
+                {
+                    mDoubles[m.ColumnCount * i + j] = m[i, j];
+                }
+            }
+
+            return mDoubles;
         }
 
         public double[] Multiply(DenseMatrix m1,DenseMatrix m2)
         {
             _matrixSize = m1.RowCount*m2.ColumnCount;
+
+            _multiplyTwoVectorWithCuda.BlockDimensions = _threadsPerBlock;
+            _multiplyTwoVectorWithCuda.GridDimensions = _matrixSize / _threadsPerBlock + 1;
 
             // init parameters
             CudaDeviceVariable<double> matrixM1 = DenseMatrix2Doubles(m1);
@@ -43,21 +58,6 @@ namespace AmpIdent.Estimation
             matrixM.CopyToHost(output);
 
             return output;
-        }
-
-        static double[] DenseMatrix2Doubles(DenseMatrix m)
-        {
-            var mDoubles = new double[m.RowCount * m.ColumnCount];
-
-            for (int i = 0; i < m.RowCount; i++)
-            {
-                for (int j = 0; j < m.ColumnCount; j++)
-                {
-                    mDoubles[m.RowCount * i + j] = m[i , j];
-                }
-            }
-
-            return mDoubles;
         }
     }
 }
