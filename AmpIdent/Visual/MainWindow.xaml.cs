@@ -96,7 +96,7 @@ namespace AmpIdent.Visual
 
             var mul = new MultiplicatorCuda();
             var m1 = new DenseMatrix(2, 3, 0.0);
-            var m2 = new DenseMatrix(3, 1, 0.0);
+            var m2 = new DenseMatrix(3, 3, 0.0);
 
             m1[0, 0] = 1.0;
             m1[0, 1] = 2.0;
@@ -105,8 +105,14 @@ namespace AmpIdent.Visual
             m1[1, 1] = 1.0;
             m1[1, 2] = 2.0;
             m2[0, 0] = 1.0;
-            m2[1, 0] = 2.0;
-            m2[2, 0] = 2.0;
+            m2[0, 1] = 2.0;
+            m2[0, 2] = 2.0;
+            m2[1, 0] = 1.0;
+            m2[1, 1] = 2.0;
+            m2[1, 2] = 2.0;
+            m2[2, 0] = 1.0;
+            m2[2, 1] = 2.0;
+            m2[2, 2] = 2.0;
 
 
             mul.Multiply(m1, m2);

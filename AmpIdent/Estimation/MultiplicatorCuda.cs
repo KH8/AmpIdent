@@ -14,7 +14,7 @@ namespace AmpIdent.Estimation
         public MultiplicatorCuda()
         {
             _matrixSize = 256;
-            _threadsPerBlock = 256;
+            _threadsPerBlock = 1;
             InitKernels();
         }
 
@@ -22,7 +22,7 @@ namespace AmpIdent.Estimation
         {
              var cntxt = new CudaContext();
              CUmodule cumodule = cntxt.LoadModule(@"\Kernel\kernel.ptx");
-             _multiplyTwoVectorWithCuda = new CudaKernel("_Z6kernelPdS_S_iii", cumodule, cntxt);
+             _multiplyTwoVectorWithCuda = new CudaKernel("_Z6kernelPdS_S_iiii", cumodule, cntxt);
         }
 
         static double[] DenseMatrix2Doubles(DenseMatrix m)
@@ -40,24 +40,25 @@ namespace AmpIdent.Estimation
             return mDoubles;
         }
 
-        public double[] Multiply(DenseMatrix m1,DenseMatrix m2)
+        public Func<DenseMatrix, DenseMatrix, Double[]> Multiply = (m1, m2) =>
         {
             _matrixSize = m1.RowCount*m2.ColumnCount;
 
             _multiplyTwoVectorWithCuda.BlockDimensions = _threadsPerBlock;
-            _multiplyTwoVectorWithCuda.GridDimensions = _matrixSize / _threadsPerBlock + 1;
+            _multiplyTwoVectorWithCuda.GridDimensions = _matrixSize/_threadsPerBlock + 1;
 
             // init parameters
             CudaDeviceVariable<double> matrixM1 = DenseMatrix2Doubles(m1);
             CudaDeviceVariable<double> matrixM2 = DenseMatrix2Doubles(m2);
             var matrixM = new CudaDeviceVariable<double>(_matrixSize);
             // run cuda method
-            _multiplyTwoVectorWithCuda.Run(matrixM1.DevicePointer, matrixM2.DevicePointer, matrixM.DevicePointer, m1.ColumnCount, m2.ColumnCount, m1.RowCount);
+            _multiplyTwoVectorWithCuda.Run(matrixM1.DevicePointer, matrixM2.DevicePointer, matrixM.DevicePointer,
+                m1.ColumnCount, m2.ColumnCount, m1.RowCount, m2.RowCount);
             // copy return to host
             var output = new double[_matrixSize];
             matrixM.CopyToHost(output);
 
             return output;
-        }
+        };
     }
 }
