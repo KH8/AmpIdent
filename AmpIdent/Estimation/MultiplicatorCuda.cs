@@ -20,9 +20,10 @@ namespace AmpIdent.Estimation
 
         static void InitKernels()
         {
-             var cntxt = new CudaContext();
-             CUmodule cumodule = cntxt.LoadModule(@"\Kernel\kernel.ptx");
-             _multiplyTwoVectorWithCuda = new CudaKernel("_Z6kernel_", cumodule, cntxt);
+
+            var cntxt = new CudaContext();
+            CUmodule cumodule = cntxt.LoadModule(@"\Kernel\kernel.ptx");
+            _multiplyTwoVectorWithCuda = new CudaKernel("_Z6kernel_", cumodule, cntxt);
         }
 
         static float[] DenseMatrix2Floats(DenseMatrix m)

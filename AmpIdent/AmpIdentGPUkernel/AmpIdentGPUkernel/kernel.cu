@@ -1,16 +1,19 @@
 #include <cuda_runtime.h>
 #include <stdio.h>
 #include <device_launch_parameters.h>
+#include <math.h>
  
 __global__ void kernel(float* a, float* b, float* out, int cola, int colb, int rowa, int rowb)
 {
 	int i = blockDim.x * blockIdx.x + threadIdx.x;
-	int j = cola - (i % cola);
-	int k = (cola * colb) - (i % (cola * colb));
+
+	int z = (int)floor((float)(i / (cola * colb)));
+	int y = (int)floor((float)(i / cola)) - z*colb;
+	int x = i - (int)floor((float)(i / cola))*cola;
 
 	if (i < rowa * cola * colb)
 	{
-		out[k*cola + j] += a[k*cola + i] * b[i*colb + j];
+		out[z*cola + y] += a[z*cola + x] * b[x*colb + y];
 	}
 }
  
