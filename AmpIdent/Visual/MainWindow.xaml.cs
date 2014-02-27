@@ -95,7 +95,7 @@ namespace AmpIdent.Visual
             _status = "Load files";
 
             var mul = new MultiplicatorCuda();
-            var m1 = new DenseMatrix(2, 3, 0.0);
+            var m1 = new DenseMatrix(3, 3, 0.0);
             var m2 = new DenseMatrix(3, 3, 0.0);
 
             m1[0, 0] = 1.0;
