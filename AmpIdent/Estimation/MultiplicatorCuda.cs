@@ -23,10 +23,10 @@ namespace AmpIdent.Estimation
 
         public static Func<DenseMatrix, DenseMatrix, DenseMatrix> Multiply = (m1, m2) =>
         {
-            _matrixSize = m1.RowCount*m2.ColumnCount;
-
             // init parameters
             InitKernels();
+
+            _matrixSize = m1.RowCount * m2.ColumnCount;
             _multiplyTwoVectorWithCuda.BlockDimensions = _threadsPerBlock;
             _multiplyTwoVectorWithCuda.GridDimensions = m1.RowCount * m2.ColumnCount / _threadsPerBlock + 1;
 
@@ -40,8 +40,9 @@ namespace AmpIdent.Estimation
             var output = new float[_matrixSize];
             matrixM.CopyToHost(output);
 
-            var outputMatrix = MatrixConverter.Floats2DenseMatrix(output, m1.RowCount, m2.ColumnCount);
-            return outputMatrix;
+            var hhh = MatrixConverter.Floats2DenseMatrix(output, m2.ColumnCount, m1.RowCount);
+
+            return MatrixConverter.Floats2DenseMatrix(output, m2.ColumnCount, m1.RowCount);
         };
     }
 }

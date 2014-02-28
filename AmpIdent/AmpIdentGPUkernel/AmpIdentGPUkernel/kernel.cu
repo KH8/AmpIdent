@@ -7,8 +7,8 @@ __global__ void kernel(float* a, float* b, float* out, int cola, int colb, int r
 {
 	int i = blockDim.x * blockIdx.x + threadIdx.x;
 
-	int z = (int)floor((float)(i / (cola * colb)));
-	int y = (int)floor((float)(i / cola)) - z*colb;
+	int z = (int)floor((float)(i / (colb)));
+	int y = i - z*colb;
 	//int x = i - (int)floor((float)(i / cola))*cola;
 
 	if (i < rowa * colb)
