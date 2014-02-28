@@ -65,6 +65,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Estimation\MatrixConverter.cs" />
     <Compile Include="Estimation\MultiplicatorCuda.cs" />
     <Compile Include="Estimation\RecursiveLeastSquares.cs" />
     <Compile Include="Visual\MainViewModel.cs" />

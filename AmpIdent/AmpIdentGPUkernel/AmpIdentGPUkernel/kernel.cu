@@ -9,11 +9,14 @@ __global__ void kernel(float* a, float* b, float* out, int cola, int colb, int r
 
 	int z = (int)floor((float)(i / (cola * colb)));
 	int y = (int)floor((float)(i / cola)) - z*colb;
-	int x = i - (int)floor((float)(i / cola))*cola;
+	//int x = i - (int)floor((float)(i / cola))*cola;
 
 	if (i < rowa * cola * colb)
 	{
-		out[z*cola + y] += a[z*cola + x] * b[x*colb + y];
+		for (int x = 0; x < cola; x++)
+		{
+			out[z*cola + y] += a[z*cola + x] * b[x*colb + y];
+		}
 	}
 }
  
