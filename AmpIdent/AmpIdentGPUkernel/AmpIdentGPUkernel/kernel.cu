@@ -5,14 +5,14 @@
  
 __global__ void kernel(float* a, float* b, float* out, int cola, int colb, int rowa, int rowb)
 {
-	int i = blockDim.x * blockIdx.x + threadIdx.x;
-
-	int z = (int)floor((float)(i / (colb)));
-	int y = i - z*colb;
+	long i = blockDim.x * blockIdx.x + threadIdx.x;
+	
+	long z = (int)floor((float)(i / (colb)));
+	long y = i - z*colb;
 
 	if (i < rowa * colb)
 	{
-		for (int x = 0; x < cola; x++)
+		for (long x = 0; x < cola; x++)
 		{
 			out[z*cola + y] += a[z*cola + x] * b[x*colb + y];
 		}

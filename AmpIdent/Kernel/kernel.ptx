@@ -4,7 +4,7 @@
 	// nvopencc 4.1 built on 2013-10-17
 
 	//-----------------------------------------------------------
-	// Compiling Debug/kernel.cpp3.i (C:/Users/H8/AppData/Local/Temp/ccBI#.a05968)
+	// Compiling Debug/kernel.cpp3.i (C:/Users/H8/AppData/Local/Temp/ccBI#.a04860)
 	//-----------------------------------------------------------
 
 	//-----------------------------------------------------------
@@ -240,13 +240,13 @@ $LDWend__Z6kernel_:
 	@@DWARF .byte	0x07, 0x10
 	@@DWARF .4byte	$LDWbeginblock_241_1
 	@@DWARF .4byte	$LDWendblock_241_1
-	@@DWARF .4byte	0x69081011, 0x00013d00, 0xb6900500, 0x020195e4
-	@@DWARF .4byte	0x7a0a1011, 0x00013d00, 0xb1900600, 0x02abc8e2
-	@@DWARF .4byte	0x0b101102, 0x013d0079, 0x90060000, 0xabc8e2b7
+	@@DWARF .4byte	0x69081011, 0x00018e00, 0xb6900500, 0x020195e4
+	@@DWARF .4byte	0x7a0a1011, 0x00018e00, 0xb1900600, 0x02abc8e2
+	@@DWARF .4byte	0x0b101102, 0x018e0079, 0x90060000, 0xabc8e2b7
 	@@DWARF .byte	0x02, 0x02, 0x10
 	@@DWARF .4byte	$LDWbeginblock_241_3
 	@@DWARF .4byte	$LDWendblock_241_3
-	@@DWARF .4byte	0x780f1011, 0x00013d00, 0xb3900600, 0x02abc8e4
+	@@DWARF .4byte	0x780f1011, 0x00018e00, 0xb3900600, 0x02abc8e4
 	@@DWARF .byte	0x02, 0x00, 0x00, 0x12
 	@@DWARF .4byte	$LDWbegini__Z5floorf_241_7
 	@@DWARF .4byte	$LDWendi__Z5floorf_241_6
