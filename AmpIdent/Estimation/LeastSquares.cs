@@ -19,7 +19,6 @@ namespace AmpIdent.Estimation
         internal string _statusString;
 
         //matrixes
-        private readonly Multiplicator _multiplicator;
         private readonly Armax _modelArmax;
         private readonly FiCalculator _fiCalculator;
 
@@ -77,7 +76,6 @@ namespace AmpIdent.Estimation
             _acceptableError = 1.0E-12;
             _estimationLength = 500;
 
-            _multiplicator = new Multiplicator();
             _fiCalculator = new FiCalculator();
         }
 
@@ -134,11 +132,11 @@ namespace AmpIdent.Estimation
 
                 var fiKLt = fiKl.Transpose();
                 _statusString = "Iteration " + k +" LS: Step IV: 1/5 DONE";
-                var fiFiT = _multiplicator.Multiply(fiKl, (DenseMatrix)fiKLt);
+                var fiFiT = MultiplicatorCuda.Multiply(fiKl, (DenseMatrix)fiKLt);
                 _statusString = "Iteration " + k + " LS: Step IV: 2/5 DONE";
                 var fiFiTi = fiFiT.Inverse();
                 _statusString = "Iteration " + k + " LS: Step IV: 3/5 DONE";
-                var fiFiTiFiKl = _multiplicator.Multiply((DenseMatrix)fiFiTi, fiKl);
+                var fiFiTiFiKl = MultiplicatorCuda.Multiply((DenseMatrix)fiFiTi, fiKl);
                 _statusString = "Iteration " + k + " LS: Step IV: 4/5 DONE";
                 var thetaK = fiFiTiFiKl * yl;
                 _statusString = "Iteration " + k + " LS: Step IV: 5/5 DONE";

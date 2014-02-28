@@ -11,7 +11,7 @@ __global__ void kernel(float* a, float* b, float* out, int cola, int colb, int r
 	int y = (int)floor((float)(i / cola)) - z*colb;
 	//int x = i - (int)floor((float)(i / cola))*cola;
 
-	if (i < rowa * cola * colb)
+	if (i < rowa * colb)
 	{
 		for (int x = 0; x < cola; x++)
 		{

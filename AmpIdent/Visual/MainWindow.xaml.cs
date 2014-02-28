@@ -94,29 +94,6 @@ namespace AmpIdent.Visual
 
             _status = "Load files";
 
-            var mul = new MultiplicatorCuda();
-            var m1 = new DenseMatrix(3, 3, 0.0);
-            var m2 = new DenseMatrix(3, 3, 0.0);
-
-            m1[0, 0] = 1.0;
-            m1[0, 1] = 2.0;
-            m1[0, 2] = 7.0;
-            m1[1, 0] = 2.0;
-            m1[1, 1] = 1.0;
-            m1[1, 2] = 2.0;
-            m2[0, 0] = 1.0;
-            m2[0, 1] = 2.0;
-            m2[0, 2] = 2.0;
-            m2[1, 0] = 1.0;
-            m2[1, 1] = 2.0;
-            m2[1, 2] = 2.0;
-            m2[2, 0] = 1.0;
-            m2[2, 1] = 2.0;
-            m2[2, 2] = 2.0;
-
-
-            mul.Multiply(m1, m2);
-
             DataContext = _ploter.MainViewModel;
         }
 
@@ -376,20 +353,20 @@ namespace AmpIdent.Visual
             ModeListBox.Dispatcher.BeginInvoke((new Action(delegate
             {
                 ModeListBox.Items.Clear();
-                ModeListBox.Items.Add(@"NA parameters: ");
+                ModeListBox.Items.Add("\nNA parameters: ");
                 for (int i = 0; i < modelArmax.NaParameter; i++)
                 {
-                    ModeListBox.Items.Add(@"NA parameter " + i + ": \t" + modelArmax.Theta[i,0]);
+                    ModeListBox.Items.Add("\nNA parameter " + i + ": \t" + modelArmax.Theta[i,0]);
                 }
                 ModeListBox.Items.Add("\nNB parameters: ");
                 for (int i = 0; i < modelArmax.NbParameter; i++)
                 {
-                    ModeListBox.Items.Add(@"NB parameter " + i + ": \t" + modelArmax.Theta[modelArmax.NaParameter + i, 0]);
+                    ModeListBox.Items.Add("\nNB parameter " + i + ": \t" + modelArmax.Theta[modelArmax.NaParameter + i, 0]);
                 }
                 ModeListBox.Items.Add("\nNC parameters: ");
                 for (int i = 0; i < modelArmax.NdParameter; i++)
                 {
-                    ModeListBox.Items.Add(@"ND parameter " + i + ": \t" + modelArmax.Theta[modelArmax.NaParameter + modelArmax.NbParameter + i, 0]);
+                    ModeListBox.Items.Add("\nND parameter " + i + ": \t" + modelArmax.Theta[modelArmax.NaParameter + modelArmax.NbParameter + i, 0]);
                 }
             })));
         }

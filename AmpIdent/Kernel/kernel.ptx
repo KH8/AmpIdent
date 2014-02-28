@@ -4,7 +4,7 @@
 	// nvopencc 4.1 built on 2013-10-17
 
 	//-----------------------------------------------------------
-	// Compiling Debug/kernel.cpp3.i (C:/Users/H8/AppData/Local/Temp/ccBI#.a03640)
+	// Compiling Debug/kernel.cpp3.i (C:/Users/H8/AppData/Local/Temp/ccBI#.a03580)
 	//-----------------------------------------------------------
 
 	//-----------------------------------------------------------
@@ -62,7 +62,7 @@
 		.param .s32 __cudaparm__Z6kernel__rowa,
 		.param .s32 __cudaparm__Z6kernel__rowb)
 	{
-	.reg .u32 %r<70>;
+	.reg .u32 %r<68>;
 	.reg .f32 %f<14>;
 	.reg .pred %p<5>;
 	.loc	16	6	0
@@ -112,67 +112,65 @@ $LDWendi__Z5floorf_241_6:
 	.loc	16	14	0
 	mov.s32 	%r23, %r6;
 	ld.param.s32 	%r24, [__cudaparm__Z6kernel__colb];
-	ld.param.s32 	%r25, [__cudaparm__Z6kernel__cola];
-	ld.param.s32 	%r26, [__cudaparm__Z6kernel__rowa];
-	mul.lo.s32 	%r27, %r25, %r26;
-	mul.lo.s32 	%r28, %r24, %r27;
-	setp.ge.s32 	%p1, %r23, %r28;
+	ld.param.s32 	%r25, [__cudaparm__Z6kernel__rowa];
+	mul.lo.s32 	%r26, %r24, %r25;
+	setp.ge.s32 	%p1, %r23, %r26;
 	@%p1 bra 	$L_0_3586;
 $LDWbeginblock_241_3:
 	.loc	16	16	0
-	mov.s32 	%r29, 0;
-	mov.s32 	%r30, %r29;
-	ld.param.s32 	%r31, [__cudaparm__Z6kernel__cola];
-	mov.s32 	%r32, %r30;
-	setp.le.s32 	%p2, %r31, %r32;
+	mov.s32 	%r27, 0;
+	mov.s32 	%r28, %r27;
+	ld.param.s32 	%r29, [__cudaparm__Z6kernel__cola];
+	mov.s32 	%r30, %r28;
+	setp.le.s32 	%p2, %r29, %r30;
 	@%p2 bra 	$L_0_4098;
 $L_0_3842:
 	.loc	16	18	0
-	ld.param.u32 	%r33, [__cudaparm__Z6kernel__out];
-	mov.s32 	%r34, %r22;
-	ld.param.s32 	%r35, [__cudaparm__Z6kernel__cola];
-	mov.s32 	%r36, %r13;
-	mul.lo.s32 	%r37, %r35, %r36;
-	add.s32 	%r38, %r34, %r37;
-	mul.lo.u32 	%r39, %r38, 4;
-	add.u32 	%r40, %r33, %r39;
-	ld.global.f32 	%f9, [%r40+0];
-	ld.param.u32 	%r41, [__cudaparm__Z6kernel__a];
-	mov.s32 	%r42, %r30;
-	ld.param.s32 	%r43, [__cudaparm__Z6kernel__cola];
-	mov.s32 	%r44, %r13;
-	mul.lo.s32 	%r45, %r43, %r44;
-	add.s32 	%r46, %r42, %r45;
-	mul.lo.u32 	%r47, %r46, 4;
-	add.u32 	%r48, %r41, %r47;
-	ld.global.f32 	%f10, [%r48+0];
-	ld.param.u32 	%r49, [__cudaparm__Z6kernel__b];
-	mov.s32 	%r50, %r22;
-	ld.param.s32 	%r51, [__cudaparm__Z6kernel__colb];
-	mov.s32 	%r52, %r30;
-	mul.lo.s32 	%r53, %r51, %r52;
-	add.s32 	%r54, %r50, %r53;
-	mul.lo.u32 	%r55, %r54, 4;
-	add.u32 	%r56, %r49, %r55;
-	ld.global.f32 	%f11, [%r56+0];
+	ld.param.u32 	%r31, [__cudaparm__Z6kernel__out];
+	mov.s32 	%r32, %r22;
+	ld.param.s32 	%r33, [__cudaparm__Z6kernel__cola];
+	mov.s32 	%r34, %r13;
+	mul.lo.s32 	%r35, %r33, %r34;
+	add.s32 	%r36, %r32, %r35;
+	mul.lo.u32 	%r37, %r36, 4;
+	add.u32 	%r38, %r31, %r37;
+	ld.global.f32 	%f9, [%r38+0];
+	ld.param.u32 	%r39, [__cudaparm__Z6kernel__a];
+	mov.s32 	%r40, %r28;
+	ld.param.s32 	%r41, [__cudaparm__Z6kernel__cola];
+	mov.s32 	%r42, %r13;
+	mul.lo.s32 	%r43, %r41, %r42;
+	add.s32 	%r44, %r40, %r43;
+	mul.lo.u32 	%r45, %r44, 4;
+	add.u32 	%r46, %r39, %r45;
+	ld.global.f32 	%f10, [%r46+0];
+	ld.param.u32 	%r47, [__cudaparm__Z6kernel__b];
+	mov.s32 	%r48, %r22;
+	ld.param.s32 	%r49, [__cudaparm__Z6kernel__colb];
+	mov.s32 	%r50, %r28;
+	mul.lo.s32 	%r51, %r49, %r50;
+	add.s32 	%r52, %r48, %r51;
+	mul.lo.u32 	%r53, %r52, 4;
+	add.u32 	%r54, %r47, %r53;
+	ld.global.f32 	%f11, [%r54+0];
 	mad.f32 	%f12, %f10, %f11, %f9;
-	ld.param.u32 	%r57, [__cudaparm__Z6kernel__out];
-	mov.s32 	%r58, %r22;
-	ld.param.s32 	%r59, [__cudaparm__Z6kernel__cola];
-	mov.s32 	%r60, %r13;
-	mul.lo.s32 	%r61, %r59, %r60;
-	add.s32 	%r62, %r58, %r61;
-	mul.lo.u32 	%r63, %r62, 4;
-	add.u32 	%r64, %r57, %r63;
-	st.global.f32 	[%r64+0], %f12;
+	ld.param.u32 	%r55, [__cudaparm__Z6kernel__out];
+	mov.s32 	%r56, %r22;
+	ld.param.s32 	%r57, [__cudaparm__Z6kernel__cola];
+	mov.s32 	%r58, %r13;
+	mul.lo.s32 	%r59, %r57, %r58;
+	add.s32 	%r60, %r56, %r59;
+	mul.lo.u32 	%r61, %r60, 4;
+	add.u32 	%r62, %r55, %r61;
+	st.global.f32 	[%r62+0], %f12;
 	.loc	16	16	0
-	mov.s32 	%r65, %r30;
-	add.s32 	%r66, %r65, 1;
-	mov.s32 	%r30, %r66;
+	mov.s32 	%r63, %r28;
+	add.s32 	%r64, %r63, 1;
+	mov.s32 	%r28, %r64;
 $Lt_0_1282:
-	ld.param.s32 	%r67, [__cudaparm__Z6kernel__cola];
-	mov.s32 	%r68, %r30;
-	setp.gt.s32 	%p3, %r67, %r68;
+	ld.param.s32 	%r65, [__cudaparm__Z6kernel__cola];
+	mov.s32 	%r66, %r28;
+	setp.gt.s32 	%p3, %r65, %r66;
 	@%p3 bra 	$L_0_3842;
 $L_0_4098:
 $LDWendblock_241_3:
@@ -261,7 +259,7 @@ $LDWend__Z6kernel_:
 	@@DWARF .byte	0x02, 0x02, 0x10
 	@@DWARF .4byte	$LDWbeginblock_241_3
 	@@DWARF .4byte	$LDWendblock_241_3
-	@@DWARF .4byte	0x78101011, 0x00013d00, 0xb0900600, 0x02abc8e6
+	@@DWARF .4byte	0x78101011, 0x00013d00, 0xb8900600, 0x02abc8e4
 	@@DWARF .byte	0x02, 0x00, 0x00, 0x12
 	@@DWARF .4byte	$LDWbegini__Z5floorf_241_7
 	@@DWARF .4byte	$LDWendi__Z5floorf_241_6

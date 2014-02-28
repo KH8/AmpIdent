@@ -96,7 +96,8 @@ namespace AmpIdent.Estimation
             for (var i = 0; i <= tX1.Values.Length - _startingPoint - 1; i++)
             {
                 var tFiKt = _fiCalculator.CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _startingPoint, _modelShift, tX1, tYk, tV0);
-                var tThetaKy1 = _theta.Transpose() * tFiKt;
+                var thetaT = _theta.Transpose();
+                var tThetaKy1 = MultiplicatorCuda.Multiply((DenseMatrix)thetaT, tFiKt);
                 tYk[i + _startingPoint, 0] = tThetaKy1[0, 0];
             }
             _statusString = "Output Creation: DONE";
