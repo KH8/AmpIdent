@@ -43,7 +43,8 @@ namespace AmpIdent.Estimation
             var output = new float[_matrixSize];
             matrixM.CopyToHost(output);
 
-            return MatrixConverter.Floats2DenseMatrix(output, m1.RowCount, m2.ColumnCount);
+            var outputMatrix = MatrixConverter.Floats2DenseMatrix(output, m1.RowCount, m2.ColumnCount);
+            return outputMatrix;
         };
     }
 }
