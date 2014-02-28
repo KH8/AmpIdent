@@ -36,7 +36,7 @@ namespace AmpIdent.Estimation
 
             _matrixSize = m1.RowCount * m2.ColumnCount;
             _multiplyTwoVectorWithCuda.BlockDimensions = _threadsPerBlock;
-            _multiplyTwoVectorWithCuda.GridDimensions = m1.RowCount / _threadsPerBlock + 1;
+            _multiplyTwoVectorWithCuda.GridDimensions = m1.RowCount * m2.ColumnCount / _threadsPerBlock + 1;
 
             var matrixM1Float = MatrixConverter.DenseMatrix2Floats(m1);
             CudaDeviceVariable<float> matrixM1 = matrixM1Float;
