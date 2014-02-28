@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 using ManagedCuda;
 using ManagedCuda.BasicTypes;
 using MathNet.Numerics.LinearAlgebra.Double;
@@ -10,25 +11,29 @@ namespace AmpIdent.Estimation
         private static int _matrixSize;
         private static int _threadsPerBlock;
         static CudaKernel _multiplyTwoVectorWithCuda;
+        private static CudaContext _cnContext;
+        private static Boolean _initialized;
 
         static void InitKernels()
         {
             _matrixSize = 256;
-            _threadsPerBlock = 512;
+            _threadsPerBlock = 256;
 
-            var cntxt = new CudaContext();
-            CUmodule cumodule = cntxt.LoadModule(@"\Kernel\kernel.ptx");
-            _multiplyTwoVectorWithCuda = new CudaKernel("_Z6kernel_", cumodule, cntxt);
+            _cnContext = new CudaContext();
+            CUmodule cumodule = _cnContext.LoadModule(@"\Kernel\kernel.ptx");
+            _multiplyTwoVectorWithCuda = new CudaKernel("_Z6kernel_", cumodule, _cnContext);
+
+            _initialized = true;
         }
 
         public static Func<DenseMatrix, DenseMatrix, DenseMatrix> Multiply = (m1, m2) =>
         {
             // init parameters
-            InitKernels();
+            if (!_initialized) InitKernels();
 
             _matrixSize = m1.RowCount * m2.ColumnCount;
             _multiplyTwoVectorWithCuda.BlockDimensions = _threadsPerBlock;
-            _multiplyTwoVectorWithCuda.GridDimensions = m1.RowCount * m2.ColumnCount / _threadsPerBlock + 1;
+            _multiplyTwoVectorWithCuda.GridDimensions = m1.RowCount / _threadsPerBlock + 1;
 
             CudaDeviceVariable<float> matrixM1 = MatrixConverter.DenseMatrix2Floats(m1);
             CudaDeviceVariable<float> matrixM2 = MatrixConverter.DenseMatrix2Floats(m2);
@@ -39,8 +44,6 @@ namespace AmpIdent.Estimation
             // copy return to host
             var output = new float[_matrixSize];
             matrixM.CopyToHost(output);
-
-            var hhh = MatrixConverter.Floats2DenseMatrix(output, m2.ColumnCount, m1.RowCount);
 
             return MatrixConverter.Floats2DenseMatrix(output, m2.ColumnCount, m1.RowCount);
         };

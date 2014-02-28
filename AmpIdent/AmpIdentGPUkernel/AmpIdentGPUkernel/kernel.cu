@@ -7,9 +7,9 @@ __global__ void kernel(float* a, float* b, float* out, int cola, int colb, int r
 {
 	int i = blockDim.x * blockIdx.x + threadIdx.x;
 
+	/*
 	int z = (int)floor((float)(i / (colb)));
 	int y = i - z*colb;
-	//int x = i - (int)floor((float)(i / cola))*cola;
 
 	if (i < rowa * colb)
 	{
@@ -18,6 +18,20 @@ __global__ void kernel(float* a, float* b, float* out, int cola, int colb, int r
 			out[z*cola + y] += a[z*cola + x] * b[x*colb + y];
 		}
 	}
+	*/
+
+	if (i < rowa)
+	{
+		for (int y = 0; y < colb; y++)
+		{
+			for (int x = 0; x < cola; x++)
+			{
+				out[i*cola + y] += a[i*cola + x] * b[x*colb + y];
+			}
+		}
+		
+	}
+
 }
  
 // Print device properties
