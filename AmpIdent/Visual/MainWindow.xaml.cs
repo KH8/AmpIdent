@@ -95,6 +95,14 @@ namespace AmpIdent.Visual
 
             _status = "Load files";
 
+            const int len1 = 1000;
+            const int len2 = 100;
+            const int len3 = 700;
+
+            var a = new DenseMatrix(len1, len2, 1.0);
+            var b = new DenseMatrix(len2, len3, 1.0);
+            var c = MultiplicatorCuda.Multiply(a, b);
+
             DataContext = _ploter.MainViewModel;
         }
 
