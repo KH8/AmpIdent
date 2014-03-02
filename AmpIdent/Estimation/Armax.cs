@@ -90,8 +90,8 @@ namespace AmpIdent.Estimation
         //methods
         public DenseMatrix Model(DenseMatrix tX1)
         {
-            var tV0 = new DenseMatrix(tX1.Values.Length, 1, 1.0);
-            var tYk = new DenseMatrix(tX1.Values.Length, 1, 1.0);
+            var tV0 = new DenseMatrix(tX1.Values.Length, 1, 0.0);
+            var tYk = new DenseMatrix(tX1.Values.Length, 1, 0.0);
 
             for (var i = 0; i <= tX1.Values.Length - _startingPoint - 1; i++)
             {

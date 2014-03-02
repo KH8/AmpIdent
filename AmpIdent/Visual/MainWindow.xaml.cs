@@ -93,10 +93,10 @@ namespace AmpIdent.Visual
 
             _status = "Load files";
             
-            /* //CudaMultiplicator Test
+            ///* //CudaMultiplicator Test
             int len1 = 1000;
-            int len2 = 300;
-            int len3 = 2000;
+            int len2 = 6;
+            int len3 = 15000;
 
             var a = new DenseMatrix(len1, len2, 1.0);
             var b = new DenseMatrix(len2, len3, 1.0);
