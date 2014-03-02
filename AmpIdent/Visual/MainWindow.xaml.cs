@@ -1,11 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Media;
 using System.Threading;
 using System.Windows;
-using System.Windows.Annotations;
 using System.Windows.Controls;
 using AmpIdent.Estimation;
 using MathNet.Numerics.LinearAlgebra.Double;

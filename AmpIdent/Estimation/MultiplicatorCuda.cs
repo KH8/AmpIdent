@@ -1,8 +1,6 @@
 using System;
-using System.Security.Cryptography;
 using ManagedCuda;
 using ManagedCuda.BasicTypes;
-using ManagedCuda.VectorTypes;
 using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace AmpIdent.Estimation
