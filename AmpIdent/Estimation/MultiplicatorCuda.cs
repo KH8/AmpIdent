@@ -16,8 +16,9 @@ namespace AmpIdent.Estimation
 
         static void InitKernels()
         {
+            //max thread number - 65534x256=16776704
             _matrixSize = 256;
-            _threadsPerBlock = 512;
+            _threadsPerBlock = 256;
 
             _cnContext = new CudaContext(CudaContext.GetMaxGflopsDeviceId());
             CUmodule cumodule = _cnContext.LoadModule(@"\Kernel\kernel.ptx");
