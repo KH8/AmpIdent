@@ -3,7 +3,7 @@
 #include <device_launch_parameters.h>
 #include <math.h>
  
-__global__ void kernel(float* a, float* b, float* out, int cola, int colb, int rowa, int rowb)
+__global__ void kernel(float* a, float* b, float* out, int cola, int colb, int rowa)
 {
 	long i = blockDim.x * blockIdx.x + threadIdx.x;
 	
@@ -14,7 +14,7 @@ __global__ void kernel(float* a, float* b, float* out, int cola, int colb, int r
 	{
 		for (long x = 0; x < cola; x++)
 		{
-			out[z*cola + y] += a[z*cola + x] * b[x*colb + y];
+			out[z*colb + y] += a[z*cola + x] * b[x*colb + y];
 		}
 	}
 

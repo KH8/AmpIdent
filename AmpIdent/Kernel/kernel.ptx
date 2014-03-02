@@ -4,7 +4,7 @@
 	// nvopencc 4.1 built on 2013-10-17
 
 	//-----------------------------------------------------------
-	// Compiling Debug/kernel.cpp3.i (C:/Users/H8/AppData/Local/Temp/ccBI#.a04860)
+	// Compiling Debug/kernel.cpp3.i (C:/Users/H8/AppData/Local/Temp/ccBI#.a04144)
 	//-----------------------------------------------------------
 
 	//-----------------------------------------------------------
@@ -59,8 +59,7 @@
 		.param .u32 __cudaparm__Z6kernel__out,
 		.param .s32 __cudaparm__Z6kernel__cola,
 		.param .s32 __cudaparm__Z6kernel__colb,
-		.param .s32 __cudaparm__Z6kernel__rowa,
-		.param .s32 __cudaparm__Z6kernel__rowb)
+		.param .s32 __cudaparm__Z6kernel__rowa)
 	{
 	.reg .u32 %r<63>;
 	.reg .f32 %f<10>;
@@ -115,7 +114,7 @@ $L_0_3330:
 	.loc	16	17	0
 	ld.param.u32 	%r26, [__cudaparm__Z6kernel__out];
 	mov.s32 	%r27, %r17;
-	ld.param.s32 	%r28, [__cudaparm__Z6kernel__cola];
+	ld.param.s32 	%r28, [__cudaparm__Z6kernel__colb];
 	mov.s32 	%r29, %r11;
 	mul.lo.s32 	%r30, %r28, %r29;
 	add.s32 	%r31, %r27, %r30;
@@ -143,7 +142,7 @@ $L_0_3330:
 	mad.f32 	%f8, %f6, %f7, %f5;
 	ld.param.u32 	%r50, [__cudaparm__Z6kernel__out];
 	mov.s32 	%r51, %r17;
-	ld.param.s32 	%r52, [__cudaparm__Z6kernel__cola];
+	ld.param.s32 	%r52, [__cudaparm__Z6kernel__colb];
 	mov.s32 	%r53, %r11;
 	mul.lo.s32 	%r54, %r52, %r53;
 	add.s32 	%r55, %r51, %r54;
@@ -169,7 +168,7 @@ $LDWend__Z6kernel_:
 	} // _Z6kernel_
 
  	@@DWARF .section .debug_info, "",@progbits
-	@@DWARF .byte	0xac, 0x03, 0x00, 0x00, 0x02, 0x00
+	@@DWARF .byte	0x98, 0x03, 0x00, 0x00, 0x02, 0x00
 	@@DWARF .4byte	.debug_abbrev
 	@@DWARF .4byte	0x65440104, 0x2f677562, 0x6e72656b, 0x632e6c65
 	@@DWARF .4byte	0x2e337070, 0x3a430069, 0x6573555c, 0x485c7372
@@ -213,10 +212,10 @@ $LDWend__Z6kernel_:
 	@@DWARF .4byte	0x490d0006, 0x06000001, 0x00000149, 0x00015909
 	@@DWARF .4byte	0x0e050400, 0x5a5f0610, 0x72656b36, 0x506c656e
 	@@DWARF .byte	0x66, 0x53, 0x5f, 0x53, 0x5f, 0x69, 0x69, 0x69
-	@@DWARF .byte	0x69, 0x00, 0x01, 0x01, 0x01, 0x00
+	@@DWARF .byte	0x00, 0x01, 0x01, 0x01, 0x00
 	@@DWARF .4byte	$LDWbegin__Z6kernel_
 	@@DWARF .4byte	$LDWend__Z6kernel_
-	@@DWARF .byte	0x8d, 0x03, 0x00, 0x00, 0x0f, 0x10, 0x06, 0x61
+	@@DWARF .byte	0x79, 0x03, 0x00, 0x00, 0x0f, 0x10, 0x06, 0x61
 	@@DWARF .byte	0x00, 0x52, 0x01, 0x00, 0x00, 0x05, 0x03
 	@@DWARF .4byte	__cudaparm__Z6kernel__a
 	@@DWARF .byte	0x07, 0x0f, 0x10, 0x06, 0x62, 0x00, 0x52, 0x01
@@ -234,9 +233,6 @@ $LDWend__Z6kernel_:
 	@@DWARF .byte	0x07, 0x0f, 0x10, 0x06, 0x72, 0x6f, 0x77, 0x61
 	@@DWARF .byte	0x00, 0x3d, 0x01, 0x00, 0x00, 0x05, 0x03
 	@@DWARF .4byte	__cudaparm__Z6kernel__rowa
-	@@DWARF .byte	0x07, 0x0f, 0x10, 0x06, 0x72, 0x6f, 0x77, 0x62
-	@@DWARF .byte	0x00, 0x3d, 0x01, 0x00, 0x00, 0x05, 0x03
-	@@DWARF .4byte	__cudaparm__Z6kernel__rowb
 	@@DWARF .byte	0x07, 0x10
 	@@DWARF .4byte	$LDWbeginblock_241_1
 	@@DWARF .4byte	$LDWendblock_241_1
@@ -250,17 +246,18 @@ $LDWend__Z6kernel_:
 	@@DWARF .byte	0x02, 0x00, 0x00, 0x12
 	@@DWARF .4byte	$LDWbegini__Z5floorf_241_7
 	@@DWARF .4byte	$LDWendi__Z5floorf_241_6
-	@@DWARF .4byte	0x0000038d, 0x02060f13, 0x4900585f, 0x05000001
-	@@DWARF .4byte	0x95ccb290, 0x03a20201, 0x00000000, 0x02060f14
+	@@DWARF .4byte	0x00000379, 0x02060f13, 0x4900585f, 0x05000001
+	@@DWARF .4byte	0x95ccb290, 0x038e0201, 0x00000000, 0x02060f14
 	@@DWARF .4byte	0x66355a5f, 0x726f6f6c, 0x01490066, 0x01010000
 	@@DWARF .byte	0x01, 0x15, 0x0f, 0x06, 0x02, 0x5f, 0x58, 0x00
 	@@DWARF .byte	0x49, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00
 
  	@@DWARF .section .debug_pubnames, "",@progbits
-	@@DWARF .byte	0x26, 0x00, 0x00, 0x00, 0x02, 0x00
+	@@DWARF .byte	0x25, 0x00, 0x00, 0x00, 0x02, 0x00
 	@@DWARF .4byte	.debug_info
-	@@DWARF .4byte	0x000003b0, 0x0000026c, 0x6b365a5f, 0x656e7265
-	@@DWARF .4byte	0x5366506c, 0x695f535f, 0x00696969, 0x00000000
+	@@DWARF .4byte	0x0000039c, 0x0000026c, 0x6b365a5f, 0x656e7265
+	@@DWARF .byte	0x6c, 0x50, 0x66, 0x53, 0x5f, 0x53, 0x5f, 0x69
+	@@DWARF .byte	0x69, 0x69, 0x00, 0x00, 0x00, 0x00, 0x00
 
  	@@DWARF .section .debug_line, "",@progbits
 	@@DWARF .4byte	0x00000019, 0x00100002, 0x00040000, 0x000a04ff
