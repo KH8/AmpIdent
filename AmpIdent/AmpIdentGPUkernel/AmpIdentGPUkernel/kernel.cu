@@ -10,14 +10,13 @@ __global__ void kernel(float* a, float* b, float* out, int cola, int colb, int r
 	long z = (int)floor((float)(i / (colb)));
 	long y = i - z*colb;
 
-	if (i < rowa * colb)
+	for (int x = 0; x < cola; x++)
 	{
-		for (long x = 0; x < cola; x++)
+		if (i < rowa * colb)
 		{
 			out[z*colb + y] += a[z*cola + x] * b[x*colb + y];
 		}
 	}
-
 }
  
 // Print device properties
