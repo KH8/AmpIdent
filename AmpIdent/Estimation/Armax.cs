@@ -15,11 +15,16 @@ namespace AmpIdent.Estimation
         private int _nkParameter;
         private int _modelShift;
         private int _startingPoint;
+        private int _fixedLength;
 
         //auxiliaries
         private readonly FiCalculator _fiCalculator;
         //status
         private string _statusString;
+
+        //matrixes
+        private DenseMatrix _matrixX;
+        private DenseMatrix _matrixY;
 
         //public
         //constructor
@@ -81,6 +86,18 @@ namespace AmpIdent.Estimation
 
         public DenseMatrix Yk { get; set; }
 
+        public DenseMatrix MatrixX
+        {
+            get { return _matrixX; }
+            set { _matrixX = value; }
+        }
+
+        public DenseMatrix MatrixY
+        {
+            get { return _matrixY; }
+            set { _matrixY = value; }
+        }
+
         //status
         public string StatusString
         {
@@ -90,8 +107,10 @@ namespace AmpIdent.Estimation
         //methods
         public DenseMatrix Model(DenseMatrix tX1)
         {
-            var tV0 = new DenseMatrix(tX1.Values.Length, 1, 0.0);
-            var tYk = new DenseMatrix(tX1.Values.Length, 1, 0.0);
+            var tV0 = new DenseMatrix(tX1.Values.Length + _fixedLength, 1, 0.0);
+            var iYk = new DenseMatrix(tX1.Values.Length, 1, 0.0);
+            var tYk = VectorLinker.LinkMatrix(_matrixY, iYk);
+            var tXk = VectorLinker.LinkMatrix(_matrixX, tX1);
 
             for (var i = 0; i <= tX1.Values.Length - _startingPoint - 1; i++)
             {
@@ -102,6 +121,34 @@ namespace AmpIdent.Estimation
             }
             _statusString = "Output Creation: DONE";
             return tYk;
+        }
+
+        private DenseMatrix CreateStartMatrix(DenseMatrix matrix)
+        {
+            var startMatrix = new DenseMatrix(_fixedLength, 1, 0.0);
+
+            for (int i = 0; i < _fixedLength; i++)
+            {
+                startMatrix[i, 0] = matrix[i, 0];
+            }
+
+            return startMatrix;
+        }
+
+        public void CreateStartMatrixX(DenseMatrix matrix)
+        {
+            _fixedLength = 2 * _startingPoint;
+
+            _matrixX = new DenseMatrix(_fixedLength, 1, 0.0);
+            _matrixX = CreateStartMatrix(matrix);
+        }
+
+        public void CreateStartMatrixY(DenseMatrix matrix)
+        {
+            _fixedLength = 2 * _startingPoint;
+
+            _matrixY = new DenseMatrix(_fixedLength, 1, 0.0);
+            _matrixY = CreateStartMatrix(matrix);
         }
     }
 }

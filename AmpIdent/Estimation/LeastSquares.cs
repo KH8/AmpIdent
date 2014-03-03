@@ -189,6 +189,9 @@ namespace AmpIdent.Estimation
             }
 
             //END: Vk.................................................................................................................
+            _modelArmax.CreateStartMatrixX(x1);
+            _modelArmax.CreateStartMatrixY(yl);
+            
             _modelArmax.Theta = thetaK1;
             _modelArmax.Yk = _modelArmax.Model(x1);
             _statusString = "Iterative LS: Estimation: DONE";
