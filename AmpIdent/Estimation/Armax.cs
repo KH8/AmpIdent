@@ -16,6 +16,7 @@ namespace AmpIdent.Estimation
         private int _modelShift;
         private int _startingPoint;
         private int _fixedLength;
+        private int _offset;
 
         //auxiliaries
         private readonly FiCalculator _fiCalculator;
@@ -36,6 +37,7 @@ namespace AmpIdent.Estimation
             _nkParameter = 0;
             _modelShift = 0;
             _fiCalculator = new FiCalculator();
+            _offset = 10000;
         }
 
         //parameters
@@ -107,6 +109,8 @@ namespace AmpIdent.Estimation
         //methods
         public DenseMatrix Model(DenseMatrix tX1)
         {
+            _fixedLength = _offset + _startingPoint;
+
             var tV0 = new DenseMatrix(tX1.Values.Length + _fixedLength, 1, 0.0);
             var iYk = new DenseMatrix(tX1.Values.Length, 1, 0.0);
             var tYk = VectorLinker.LinkMatrix(_matrixY, iYk);
@@ -137,7 +141,7 @@ namespace AmpIdent.Estimation
 
         public void CreateStartMatrixX(DenseMatrix matrix)
         {
-            _fixedLength = 50000 + _startingPoint;
+            _fixedLength = _offset + _startingPoint;
 
             _matrixX = new DenseMatrix(_fixedLength, 1, 0.0);
             _matrixX = CreateStartMatrix(matrix);
@@ -145,7 +149,7 @@ namespace AmpIdent.Estimation
 
         public void CreateStartMatrixY(DenseMatrix matrix)
         {
-            _fixedLength = 50000 + _startingPoint;
+            _fixedLength = _offset + _startingPoint;
 
             _matrixY = new DenseMatrix(_fixedLength, 1, 0.0);
             _matrixY = CreateStartMatrix(matrix);
