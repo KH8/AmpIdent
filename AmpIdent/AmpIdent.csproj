@@ -68,7 +68,7 @@
     <Compile Include="Estimation\MatrixConverter.cs" />
     <Compile Include="Estimation\MultiplicatorCuda.cs" />
     <Compile Include="Estimation\RecursiveLeastSquares.cs" />
-    <Compile Include="Estimation\VectorLinker.cs" />
+    <Compile Include="Estimation\VectorMerger.cs" />
     <Compile Include="Visual\MainViewModel.cs" />
     <Compile Include="Visual\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

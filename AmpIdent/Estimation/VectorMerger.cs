@@ -2,7 +2,7 @@
 
 namespace AmpIdent.Estimation
 {
-    class VectorLinker
+    class VectorMerger
     {
         public static DenseMatrix LinkMatrix(DenseMatrix aMatrix, DenseMatrix bMatrix)
         {

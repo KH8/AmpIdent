@@ -113,12 +113,12 @@ namespace AmpIdent.Estimation
 
             var tV0 = new DenseMatrix(tX1.Values.Length + _fixedLength, 1, 0.0);
             var iYk = new DenseMatrix(tX1.Values.Length, 1, 0.0);
-            var tYk = VectorLinker.LinkMatrix(_matrixY, iYk);
-            var tXk = VectorLinker.LinkMatrix(_matrixX, tX1);
+            var tYk = VectorMerger.LinkMatrix(_matrixY, iYk);
+            var tXk = VectorMerger.LinkMatrix(_matrixX, tX1);
 
             for (var i = 0; i <= tX1.Values.Length - _startingPoint - 1; i++)
             {
-                var tFiKt = _fiCalculator.CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _startingPoint, _modelShift, tX1, tYk, tV0);
+                var tFiKt = _fiCalculator.CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _startingPoint, _modelShift, tXk, tYk, tV0);
                 var thetaT = _theta.Transpose();
                 var tThetaKy1 = thetaT*tFiKt;
                 tYk[i + _startingPoint, 0] = tThetaKy1[0, 0];

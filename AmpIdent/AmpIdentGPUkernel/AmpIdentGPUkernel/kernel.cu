@@ -10,11 +10,14 @@ __global__ void kernel(float* a, float* b, float* out, int cola, int colb, int r
 	long z = (int)floor((float)(i / (colb)));
 	long y = i - z*colb;
 
-	for (int x = 0; x < cola; x++)
+	int x = 0;
+
+	if (i < rowa * colb)
 	{
-		if (i < rowa * colb)
+		while(x < cola)
 		{
 			out[z*colb + y] += a[z*cola + x] * b[x*colb + y];
+			x++;
 		}
 	}
 }

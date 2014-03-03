@@ -54,7 +54,8 @@
         <GroupBox Header="Output" HorizontalAlignment="Center" Height="94" Margin="10,448,16,0" VerticalAlignment="Top" Width="868"/>
         <TextBox x:Name="OutputTextBox" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" Text="c:\Output\output.wav" VerticalAlignment="Bottom" Width="202" TextChanged="OutputBox_TextChanged" Margin="104,0,0,58"/>
         <TextBox x:Name="OutputBox" HorizontalAlignment="Center" Height="24" Width="844" Margin="22,0,28,25" TextWrapping="Wrap" Text="..." VerticalAlignment="Bottom" BorderBrush="{x:Null}" IsEnabled="False" IsManipulationEnabled="True" IsReadOnlyCaretVisible="True" Background="{x:Null}" Foreground="Black"/>
-        <Button Content="Create Output" HorizontalAlignment="Right" Margin="0,0,34,58" VerticalAlignment="Bottom" Width="100" Click="Output"/>
+        <Button Content="Create Output" HorizontalAlignment="Right" Margin="0,0,114,58" VerticalAlignment="Bottom" Width="100" Click="Output"/>
+        <Button Content="Play" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Click="Play3" Margin="0,0,34,58"/>
         <Label Content="Output path:" HorizontalAlignment="Left" Height="26" Margin="22,0,0,54" VerticalAlignment="Bottom" Width="76" RenderTransformOrigin="0.487,-0.346"/>
     </Grid>
 </Window>

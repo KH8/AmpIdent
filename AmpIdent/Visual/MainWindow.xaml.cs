@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq.Expressions;
 using System.Media;
 using System.Threading;
 using System.Windows;
@@ -33,6 +34,7 @@ namespace AmpIdent.Visual
         private int _loadingPercentage2;
         private Boolean _playing1;
         private Boolean _playing2;
+        private Boolean _playing3;
         private Boolean _1Loaded;
         private string _status;
 
@@ -269,6 +271,27 @@ namespace AmpIdent.Visual
             }
         }
 
+        private void Play3(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+
+            if (!_playing3)
+            {
+                _sp.Stop();
+                _sp.SoundLocation = _outputPath;
+                _sp.LoadAsync();
+                _sp.Play();
+                _playing3 = true;
+                button.Content = "Stop";
+            }
+            else
+            {
+                _sp.Stop();
+                _playing2 = false;
+                button.Content = "Play";
+            }
+        }
+
         private void Update()
         {
             while (_thread1.IsAlive)
@@ -406,46 +429,86 @@ namespace AmpIdent.Visual
         private void Na_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
-            _na = Convert.ToInt32(pathBox.Text);
+            try { _na = Convert.ToInt32(pathBox.Text); }
+            catch (System.FormatException)
+            {
+                _na = 0;
+                pathBox.Text = "0"; 
+            }
         }
         private void Nb_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
-            _nb = Convert.ToInt32(pathBox.Text);
+            try { _nb = Convert.ToInt32(pathBox.Text); }
+            catch (System.FormatException)
+            {
+                _nb = 0;
+                pathBox.Text = "0";
+            }
         }
         private void Nd_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
-            _nd = Convert.ToInt32(pathBox.Text);
+            try { _nd = Convert.ToInt32(pathBox.Text); }
+            catch (System.FormatException)
+            {
+                _nd = 0;
+                pathBox.Text = "0";
+            }
         }
         private void Nk_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
-            _nk = Convert.ToInt32(pathBox.Text);
+            try { _nk = Convert.ToInt32(pathBox.Text); }
+            catch (System.FormatException)
+            {
+                _nk = 0;
+                pathBox.Text = "0";
+            }
         }
 
         private void SpBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
-            _startPoint = Convert.ToInt32(pathBox.Text);
+            try { _startPoint = Convert.ToInt32(pathBox.Text); }
+            catch (System.FormatException)
+            {
+                _startPoint = 0;
+                pathBox.Text = "0";
+            }
         }
 
         private void NiBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
-            _iterations = Convert.ToInt32(pathBox.Text);
+            try { _iterations = Convert.ToInt32(pathBox.Text); }
+            catch (System.FormatException)
+            {
+                _iterations = 0;
+                pathBox.Text = "0";
+            }
         }
 
         private void RlBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
-            _recurenceLength = Convert.ToInt32(pathBox.Text);
+            try { _recurenceLength = Convert.ToInt32(pathBox.Text); }
+            catch (System.FormatException)
+            {
+                _recurenceLength = 0;
+                pathBox.Text = "0";
+            }
         }
 
         private void EiBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
-            _estimationLength = Convert.ToInt32(pathBox.Text);
+            try { _estimationLength = Convert.ToInt32(pathBox.Text); }
+            catch (System.FormatException)
+            {
+                _estimationLength = 0;
+                pathBox.Text = "0";
+            }
         }
     }
 }
