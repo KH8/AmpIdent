@@ -137,7 +137,7 @@ namespace AmpIdent.Estimation
 
         public void CreateStartMatrixX(DenseMatrix matrix)
         {
-            _fixedLength = 2 * _startingPoint;
+            _fixedLength = 10000 + _startingPoint;
 
             _matrixX = new DenseMatrix(_fixedLength, 1, 0.0);
             _matrixX = CreateStartMatrix(matrix);
@@ -145,7 +145,7 @@ namespace AmpIdent.Estimation
 
         public void CreateStartMatrixY(DenseMatrix matrix)
         {
-            _fixedLength = 2 * _startingPoint;
+            _fixedLength = 10000 + _startingPoint;
 
             _matrixY = new DenseMatrix(_fixedLength, 1, 0.0);
             _matrixY = CreateStartMatrix(matrix);
