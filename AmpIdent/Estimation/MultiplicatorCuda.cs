@@ -18,6 +18,7 @@ namespace AmpIdent.Estimation
             _matrixSize = 256;
             _threadsPerBlock = 256;
 
+            CleanUpResources();
             _cnContext = new CudaContext(CudaContext.GetMaxGflopsDeviceId());
             CUmodule cumodule = _cnContext.LoadModule(@"\Kernel\kernel.ptx");
             _multiplyTwoVectorWithCuda = new CudaKernel("_Z6kernel_", cumodule, _cnContext);
