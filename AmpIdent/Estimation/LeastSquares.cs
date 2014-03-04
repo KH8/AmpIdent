@@ -189,8 +189,12 @@ namespace AmpIdent.Estimation
             }
 
             //END: Vk.................................................................................................................
+            if (_estimationLength - _modelArmax.StartingPoint < 10000)
+            {
+                _modelArmax.Offset = _estimationLength - _modelArmax.StartingPoint;
+            }
             _modelArmax.CreateStartMatrixX(x1);
-            _modelArmax.CreateStartMatrixY(yl);
+            _modelArmax.CreateStartMatrixY(y1);
             
             _modelArmax.Theta = thetaK1;
             _modelArmax.Yk = _modelArmax.Model(x1);

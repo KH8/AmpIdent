@@ -38,6 +38,7 @@ namespace AmpIdent.Visual
 
         public void Plot(DenseMatrix vector, int layer)
         {
+            if (_plottingResolution < 1) _plottingResolution = 1;
             for (var i = 0; i < vector.Values.Length - 1 / _plottingResolution; i++)
             {
                 _mainViewModel.AddPoint(layer, new DataPoint(i, vector[i, 0]));

@@ -20,6 +20,8 @@ namespace AmpIdent.Visual
         private string _path2;
         private string _outputPath;
 
+        private int _sampleLength;
+
         private int _na;
         private int _nb;
         private int _nd;
@@ -67,6 +69,8 @@ namespace AmpIdent.Visual
             _path2 = "c:\\avril_scolpture.wav";
             _outputPath = "c:\\Output\\output.wav";
 
+            _sampleLength = 0;
+
             _na = 5;
             _nb = 5;
             _nd = 1;
@@ -95,7 +99,7 @@ namespace AmpIdent.Visual
 
             _status = "Load files";
             
-            ///* //CudaMultiplicator Test
+            /* //CudaMultiplicator Test
             int len1 = 1000;
             int len2 = 6;
             int len3 = 15000;
@@ -124,6 +128,10 @@ namespace AmpIdent.Visual
 
             // if there are 2 channels, we need to devide the nr of sample in 2
             if (numChannels == 2) _samples /= 2;
+            if (_sampleLength != 0)
+            {
+                _samples = numChannels * _sampleLength;
+            }
 
             var pos = 44; // start of data chunk
             _loadingPercentage1 = 0;
@@ -182,6 +190,10 @@ namespace AmpIdent.Visual
 
             // if there are 2 channels, we need to devide the nr of sample in 2
             if (numChannels == 2) _samples /= 2;
+            if (_sampleLength != 0)
+            {
+                _samples = numChannels * _sampleLength;
+            }
 
             var pos = 44; // start of data chunk
             _loadingPercentage2 = 0;
@@ -310,6 +322,26 @@ namespace AmpIdent.Visual
                     }
                     OutputBox.Text = _status;
                 })));
+
+                //values verification
+                if (_startPoint < _na + _nb + _nd + _nk)
+                {
+                    int sp = _na + _nb + _nd + _nk;
+
+                    _startPoint = sp;
+                    SpBox.Dispatcher.BeginInvoke((new Action(delegate
+                    {
+                        SpBox.Text = sp.ToString();
+                    })));
+                }
+                if (_sampleLength < _estimationLength && _sampleLength != 0)
+                {
+                    _estimationLength = _sampleLength - _startPoint;
+                    ElBox.Dispatcher.BeginInvoke((new Action(delegate
+                    {
+                        ElBox.Text = _estimationLength.ToString();
+                    })));   
+                }
                 Thread.Sleep(1000);
             }
         }
@@ -338,7 +370,7 @@ namespace AmpIdent.Visual
                     _rls.NumberOfIterations = _iterations;
                     _rls.ComputeRls(_leftChannel1, _leftChannel2, _estimationLength, _recurenceLength);
 
-                    _ploter.PlottingResolution = 100;
+                    _ploter.PlottingResolution = _armax.Yk.Values.Length / 10000;
                     _ploter.Clear();
                     _ploter.Plot(_armax.Yk, 3);
 
@@ -356,7 +388,7 @@ namespace AmpIdent.Visual
             _outputChannel = _armax.Model(_leftChannel1);
             _status = "Output computation: DONE!";
 
-            _ploter.PlottingResolution = 100;
+            _ploter.PlottingResolution = _outputChannel.Values.Length / 10000;
             _ploter.Clear();
             _ploter.Plot(_outputChannel, 4);
             DataContext = _ploter.MainViewModel;
@@ -508,6 +540,25 @@ namespace AmpIdent.Visual
             {
                 _estimationLength = 0;
                 pathBox.Text = "0";
+            }
+        }
+
+        private void SampleLength_TextChange(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            try { _sampleLength = Convert.ToInt32(pathBox.Text); }
+            catch (System.FormatException)
+            {
+                _sampleLength = 0;
+                pathBox.Text = "0";
+            }
+            if (_estimationLength != 0)
+            {
+                _estimationLength = _sampleLength - _startPoint;
+                ElBox.Dispatcher.BeginInvoke((new Action(delegate
+                {
+                    ElBox.Text = _estimationLength.ToString();
+                })));
             }
         }
     }

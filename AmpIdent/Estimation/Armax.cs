@@ -77,6 +77,12 @@ namespace AmpIdent.Estimation
             set { _startingPoint = value; }
         }
 
+        public int Offset
+        {
+            get { return _offset; }
+            set { _offset = value; }
+        }
+
         //matrixes
         public DenseMatrix V0 { get; set; }
 
@@ -123,6 +129,7 @@ namespace AmpIdent.Estimation
                 var tThetaKy1 = thetaT*tFiKt;
                 tYk[i + _startingPoint, 0] = tThetaKy1[0, 0];
             }
+
             _statusString = "Output Creation: DONE";
             return tYk;
         }
