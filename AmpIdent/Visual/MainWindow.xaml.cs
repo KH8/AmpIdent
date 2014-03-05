@@ -307,11 +307,15 @@ namespace AmpIdent.Visual
         {
             while (_thread1.IsAlive)
             {
-                Loading1.Dispatcher.BeginInvoke((new Action(delegate {
-                    Loading1.Content = "File Loaded: " +_loadingPercentage1 + "%";
+                Loading1.Dispatcher.BeginInvoke((new Action(delegate
+                {
+                    Loading1.Content = "File Loaded: " +
+                                       _loadingPercentage1 + "%";
                 })));
-                Loading2.Dispatcher.BeginInvoke((new Action(delegate {
-                    Loading2.Content = "File Loaded: " + _loadingPercentage2 + "%";
+                Loading2.Dispatcher.BeginInvoke((new Action(delegate
+                {
+                    Loading2.Content = "File Loaded: " +
+                                       _loadingPercentage2 + "%";
                 })));
                 OutputBox.Dispatcher.BeginInvoke((new Action(delegate
                 {
@@ -339,9 +343,9 @@ namespace AmpIdent.Visual
                     ElBox.Dispatcher.BeginInvoke((new Action(delegate
                     {
                         ElBox.Text = _estimationLength.ToString();
-                    })));   
+                    })));
                 }
-                Thread.Sleep(1000);
+            Thread.Sleep(1000);
             }
         }
 

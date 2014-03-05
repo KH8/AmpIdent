@@ -58,6 +58,7 @@
                             <Label Content="recurence length:" HorizontalAlignment="Left" Height="26" Margin="557,198,0,0" VerticalAlignment="Top" Width="120"/>
                             <TextBox x:Name="ElBox" HorizontalAlignment="Left" Height="22" Margin="682,227,0,0" TextWrapping="Wrap" Text="250000" VerticalAlignment="Top" Width="70" TextChanged="EiBox_OnTextChanged_TextChange"/>
                             <Label Content="estimation length:" HorizontalAlignment="Left" Height="26" Margin="557,225,0,0" VerticalAlignment="Top" Width="120"/>
+                            <CheckBox x:Name="RlsEnabledBox" Content="Enabled" HorizontalAlignment="Right" Margin="0,203,10,0" VerticalAlignment="Top"/>
                     </Grid>
                 </TabItem>
             </TabControl>
