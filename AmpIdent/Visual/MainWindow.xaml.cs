@@ -384,7 +384,7 @@ namespace AmpIdent.Visual
         private void Output(object sender, RoutedEventArgs e)
         {
             _outputChannel = new DenseMatrix(_samples, 1, 0.0);
-            _outputChannel = _armax.Model(_leftChannel1);
+            _outputChannel = _armax.Model(_leftChannel1, true);
             _status = "Output computation: DONE!";
 
             _ploter.PlottingResolution = _outputChannel.Values.Length / 10000;

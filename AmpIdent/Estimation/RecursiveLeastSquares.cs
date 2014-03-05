@@ -103,7 +103,7 @@ namespace AmpIdent.Estimation
             //END: Vk.................................................................................................................
             
             _modelArmax.Theta = thetaN1;
-            _modelArmax.Yk = _modelArmax.Model(x1);
+            _modelArmax.Yk = _modelArmax.Model(x1, true);
             _statusString = "RLS: Estimation: DONE";
             
             _estimationDone = true;

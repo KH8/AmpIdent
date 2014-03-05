@@ -1,3 +1,4 @@
+using System;
 using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace AmpIdent.Estimation
@@ -113,7 +114,7 @@ namespace AmpIdent.Estimation
         }
 
         //methods
-        public DenseMatrix Model(DenseMatrix tX1)
+        public DenseMatrix Model(DenseMatrix tX1, Boolean clean)
         {
             _fixedLength = _offset + _startingPoint;
 
@@ -130,12 +131,24 @@ namespace AmpIdent.Estimation
                 tYk[i + _startingPoint, 0] = tThetaKy1[0, 0];
             }
 
+            if (clean)
+            {
+                var tYkClean = new DenseMatrix(tX1.Values.Length, 1, 0.0);
+                for (int i = 0; i < tX1.Values.Length; i++)
+                {
+                    tYkClean[i, 0] = tYk[i + _fixedLength, 0];
+                }
+                _statusString = "Output Creation: DONE";
+                return tYkClean;
+            }
+
             _statusString = "Output Creation: DONE";
             return tYk;
         }
 
         private DenseMatrix CreateStartMatrix(DenseMatrix matrix)
         {
+            _fixedLength = _offset + _startingPoint;
             var startMatrix = new DenseMatrix(_fixedLength, 1, 0.0);
 
             for (int i = 0; i < _fixedLength; i++)
@@ -148,17 +161,11 @@ namespace AmpIdent.Estimation
 
         public void CreateStartMatrixX(DenseMatrix matrix)
         {
-            _fixedLength = _offset + _startingPoint;
-
-            _matrixX = new DenseMatrix(_fixedLength, 1, 0.0);
             _matrixX = CreateStartMatrix(matrix);
         }
 
         public void CreateStartMatrixY(DenseMatrix matrix)
         {
-            _fixedLength = _offset + _startingPoint;
-
-            _matrixY = new DenseMatrix(_fixedLength, 1, 0.0);
             _matrixY = CreateStartMatrix(matrix);
         }
     }
