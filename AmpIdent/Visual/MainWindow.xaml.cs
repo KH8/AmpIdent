@@ -339,7 +339,7 @@ namespace AmpIdent.Visual
                 }
                 if (_sampleLength < _estimationLength && _sampleLength != 0)
                 {
-                    _estimationLength = _sampleLength - _startPoint;
+                    _estimationLength = _sampleLength;
                     ElBox.Dispatcher.BeginInvoke((new Action(delegate
                     {
                         ElBox.Text = _estimationLength.ToString();
@@ -557,7 +557,7 @@ namespace AmpIdent.Visual
             }
             if (_estimationLength != 0)
             {
-                _estimationLength = _sampleLength - _startPoint;
+                _estimationLength = _sampleLength;
                 ElBox.Dispatcher.BeginInvoke((new Action(delegate
                 {
                     ElBox.Text = _estimationLength.ToString();
