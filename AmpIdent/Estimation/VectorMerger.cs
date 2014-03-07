@@ -6,6 +6,7 @@ namespace AmpIdent.Estimation
     {
         public static DenseMatrix LinkMatrix(DenseMatrix aMatrix, DenseMatrix bMatrix)
         {
+            // ReSharper disable once CSharpWarnings::CS0618
             var outputMatrix = new DenseMatrix(aMatrix.Values.Length + bMatrix.Values.Length, 1, 0.0);
 
             for (int i = 0; i < aMatrix.Values.Length; i++)

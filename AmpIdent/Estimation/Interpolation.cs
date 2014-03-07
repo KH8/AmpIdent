@@ -49,6 +49,7 @@ namespace AmpIdent.Estimation
             _estimationLength = x1.Values.Length;
             
             //Creation of a Z matrix..................................................................................................
+            // ReSharper disable once CSharpWarnings::CS0618
             var z = new DenseMatrix(_estimationLength, size, 1.0);
             for (var i = 0; i <= _estimationLength - 1; i++)
             {
@@ -63,6 +64,7 @@ namespace AmpIdent.Estimation
             var ztz = zt * z;
             var theta = ztz.Inverse() * zt * x1;
 
+            // ReSharper disable once CSharpWarnings::CS0618
             _output = new DenseMatrix(_estimationLength, 1, 1.0);
 
             //Output creation.........................................................................................................

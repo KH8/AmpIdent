@@ -239,6 +239,7 @@ namespace AmpIdent.Visual
 
         private void Output(object sender, RoutedEventArgs e)
         {
+            // ReSharper disable once CSharpWarnings::CS0618
             _outputChannel = new DenseMatrix(_file1.SampleLength, 1, 0.0);
             _outputChannel = _armax.Model(_file1.LeftChannel, true);
             _status = "Output computation: DONE!";

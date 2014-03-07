@@ -6,6 +6,7 @@ namespace AmpIdent.Estimation
     {
         public DenseMatrix CalculateFi_k(int tNa, int tNb, int tNd, int tNk, int tT, int modelShift, DenseMatrix tX, DenseMatrix tY, DenseMatrix tV)
         {
+            // ReSharper disable once CSharpWarnings::CS0618
             var tFiK = new DenseMatrix(tNa + tNb + tNd, 1, 0.0);
             for (var i = 1; i <= tNa + tNb + tNd; i++)
             {

@@ -14,10 +14,10 @@ namespace AmpIdent.Estimation
 
         //status
         private int _estimationStatusPercentage;
-        internal Boolean _estimationDone;
+        private Boolean _estimationDone;
         private double _estimationError;
         private double _estimationDifference;
-        internal string _statusString;
+        private string _statusString;
 
         //matrixes
         private readonly Armax _modelArmax;
@@ -49,6 +49,7 @@ namespace AmpIdent.Estimation
         public Boolean EstimationDone
         {
             get { return _estimationDone; }
+            set { _estimationDone = value; }
         }
         public double EstimationError
         {
@@ -61,6 +62,7 @@ namespace AmpIdent.Estimation
         public string StatusString
         {
             get { return _statusString; }
+            set { _statusString = value; }
         }
         
 
@@ -93,12 +95,14 @@ namespace AmpIdent.Estimation
 
             //I Step: Y(L)............................................................................................................
 
+            // ReSharper disable once CSharpWarnings::CS0618
             var yl = new DenseMatrix(_estimationLength, 1, 0.0);
             for (var i = 0; i <= _estimationLength - 1; i++) { yl[i, 0] = y1[i + _modelArmax.StartingPoint, 0]; }
             _statusString = "Iterative LS: Step I: DONE";
 
             //II Step: V0.............................................................................................................
 
+            // ReSharper disable once CSharpWarnings::CS0618
             _modelArmax.V0 = new DenseMatrix(x1.Values.Length, 1, 1.0); //
             for (var i = 0; i <= x1.Values.Length - 1; i++) {
                 _modelArmax.V0[i, 0] = random.Next(-100, 100);
@@ -106,13 +110,19 @@ namespace AmpIdent.Estimation
             _statusString = "Iterative LS: Step II: DONE";
 
             //Definition of temporary matrixes
+            // ReSharper disable once CSharpWarnings::CS0618
             var thetaK1 = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, 1, 0.0);
+            // ReSharper disable once CSharpWarnings::CS0618
             var fiKl = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, _estimationLength, 0.0);
+            // ReSharper disable once CSharpWarnings::CS0618
             var vkT = new DenseMatrix(_estimationLength + (_numberOfIterations + 1) * _modelArmax.StartingPoint, 1, 1.0);
+            // ReSharper disable once CSharpWarnings::CS0618
             var thetaDiff = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, 1, 0.0);
 
             //Predefinition of results
+            // ReSharper disable once CSharpWarnings::CS0618
             _modelArmax.Theta = new DenseMatrix(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter, 1, 0.0);
+            // ReSharper disable once CSharpWarnings::CS0618
             _modelArmax.Yk = new DenseMatrix(x1.Values.Length, 1, 0.0);
 
             for (var k = 1; k <= _numberOfIterations; k++)
@@ -175,7 +185,8 @@ namespace AmpIdent.Estimation
 
                 //VII Step: Decision..................................................................................................
 
-                if (_estimationError != _estimationError) k = _numberOfIterations;
+                if (!Double.IsNaN(_estimationError)) k = _numberOfIterations;
+
                 else
                 {
                     _modelArmax.V0 = vkT;

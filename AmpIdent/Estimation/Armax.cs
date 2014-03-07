@@ -118,7 +118,9 @@ namespace AmpIdent.Estimation
         {
             _fixedLength = _offset + _startingPoint;
 
+            // ReSharper disable once CSharpWarnings::CS0618
             var tV0 = new DenseMatrix(tX1.Values.Length + _fixedLength, 1, 0.0);
+            // ReSharper disable once CSharpWarnings::CS0618
             var iYk = new DenseMatrix(tX1.Values.Length, 1, 0.0);
             var tYk = VectorMerger.LinkMatrix(_matrixY, iYk);
             var tXk = VectorMerger.LinkMatrix(_matrixX, tX1);
@@ -133,6 +135,7 @@ namespace AmpIdent.Estimation
 
             if (clean)
             {
+                // ReSharper disable once CSharpWarnings::CS0618
                 var tYkClean = new DenseMatrix(tX1.Values.Length, 1, 0.0);
                 for (int i = 0; i < tX1.Values.Length; i++)
                 {
@@ -149,6 +152,7 @@ namespace AmpIdent.Estimation
         private DenseMatrix CreateStartMatrix(DenseMatrix matrix)
         {
             _fixedLength = _offset + _startingPoint;
+            // ReSharper disable once CSharpWarnings::CS0618
             var startMatrix = new DenseMatrix(_fixedLength, 1, 0.0);
 
             for (int i = 0; i < _fixedLength; i++)

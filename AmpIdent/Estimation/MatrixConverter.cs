@@ -21,6 +21,7 @@ namespace AmpIdent.Estimation
 
         public static DenseMatrix Floats2DenseMatrix(float[] mFloats, int columnCount, int rowCount)
         {
+            // ReSharper disable once CSharpWarnings::CS0618
             var m = new DenseMatrix(rowCount, columnCount, 0.0);
 
             for (int i = 0; i < rowCount; i++)

@@ -63,7 +63,7 @@ namespace AmpIdent.Estimation
             DenseMatrix pN1 = DenseMatrix.Identity(_modelArmax.NaParameter + _modelArmax.NbParameter + _modelArmax.NdParameter);
             pN1 = _delta*pN1;
             var thetaN1 = _modelArmax.Theta;
-            _statusString = "RLS: Step V: DONE";
+            StatusString = "RLS: Step V: DONE";
 
             //VI Step: computation....................................................................................................
 
@@ -96,17 +96,17 @@ namespace AmpIdent.Estimation
                 thetaN1 = (DenseMatrix)thetaN;
 
                 _estimationStatusPercentage = r*100/_recurenceLength;
-                _statusString = "RLS: Step VI: " + _estimationStatusPercentage +"%";
+                StatusString = "RLS: Step VI: " + _estimationStatusPercentage + "%";
             }
-            _statusString = "RLS: Step VI: DONE";
+            StatusString = "RLS: Step VI: DONE";
 
             //END: Vk.................................................................................................................
             
             _modelArmax.Theta = thetaN1;
             _modelArmax.Yk = _modelArmax.Model(x1, true);
-            _statusString = "RLS: Estimation: DONE";
+            StatusString = "RLS: Estimation: DONE";
             
-            _estimationDone = true;
+            EstimationDone = true;
         }
     }
 }

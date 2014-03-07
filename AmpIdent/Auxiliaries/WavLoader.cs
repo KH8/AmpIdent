@@ -5,11 +5,11 @@ namespace AmpIdent.Auxiliaries
 {
     class WavLoader
     {
-        private DenseMatrix _leftChannel;
-        private DenseMatrix _rightChannel;
-        private int _loadingPercentage;
-        private int _sampleLength;
-        private byte[] _wav;
+        private readonly DenseMatrix _leftChannel;
+        private readonly DenseMatrix _rightChannel;
+        private readonly int _loadingPercentage;
+        private readonly int _sampleLength;
+        private readonly byte[] _wav;
 
         public DenseMatrix LeftChannel
         {
@@ -59,7 +59,9 @@ namespace AmpIdent.Auxiliaries
             var pos = 44; // start of data chunk
             _loadingPercentage = 0;
 
+            // ReSharper disable once CSharpWarnings::CS0618
             _leftChannel = new DenseMatrix(_sampleLength, 1, 0.0);
+            // ReSharper disable once CSharpWarnings::CS0618
             _rightChannel = new DenseMatrix(_sampleLength, 1, 0.0);
 
             for (var i = 0; i < _sampleLength - 1; i++)

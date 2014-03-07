@@ -40,13 +40,13 @@
                     <Grid Background="White">
                         <ListBox Name="ModeListBox" HorizontalAlignment="Left" Height="249" VerticalAlignment="Top" Width="544" Margin="0,10,0,0"/>
                         <GroupBox Header="Model" HorizontalAlignment="Center" Height="125" Margin="549,0,0,0" VerticalAlignment="Top" Width="286"/>
-                            <TextBox x:Name="na" HorizontalAlignment="Left" Height="22" Margin="682,16,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="70" TextChanged="Na_TextChange"/>
+                            <TextBox x:Name="Na" HorizontalAlignment="Left" Height="22" Margin="682,16,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="70" TextChanged="Na_TextChange"/>
                             <Label Content="nA:" HorizontalAlignment="Left" Height="26" Margin="557,14,0,0" VerticalAlignment="Top" Width="120"/>
-                            <TextBox x:Name="nb" HorizontalAlignment="Left" Height="22" Margin="682,42,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="70" TextChanged="Nb_TextChange"/>
+                            <TextBox x:Name="Nb" HorizontalAlignment="Left" Height="22" Margin="682,42,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="70" TextChanged="Nb_TextChange"/>
                             <Label Content="nB:" HorizontalAlignment="Left" Height="26" Margin="557,40,0,0" VerticalAlignment="Top" Width="120"/>
-                            <TextBox x:Name="nd" HorizontalAlignment="Left" Height="22" Margin="682,68,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="70" TextChanged="Nd_TextChange"/>
+                            <TextBox x:Name="Nd" HorizontalAlignment="Left" Height="22" Margin="682,68,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="70" TextChanged="Nd_TextChange"/>
                             <Label Content="nD:" HorizontalAlignment="Left" Height="26" Margin="557,66,0,0" VerticalAlignment="Top" Width="120"/>
-                            <TextBox x:Name="nk" HorizontalAlignment="Left" Height="22" Margin="682,94,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="70" TextChanged="Nk_TextChange"/>
+                            <TextBox x:Name="Nk" HorizontalAlignment="Left" Height="22" Margin="682,94,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="70" TextChanged="Nk_TextChange"/>
                             <Label Content="nK:" HorizontalAlignment="Left" Height="26" Margin="557,92,0,0" VerticalAlignment="Top" Width="120"/>
                             <CheckBox x:Name="ModelShifted" Content="Shifted" HorizontalAlignment="Right" Margin="0,19,10,0" VerticalAlignment="Top"/>
                         <GroupBox Header="Estimation" HorizontalAlignment="Center" Height="129" Margin="549,130,0,0" VerticalAlignment="Top" Width="286"/>

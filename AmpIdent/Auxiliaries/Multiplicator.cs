@@ -43,6 +43,7 @@ namespace AmpIdent.Auxiliaries
             {
                 if (_compute)
                 {
+                    // ReSharper disable once CSharpWarnings::CS0618
                     _m = new DenseMatrix(_m1.RowCount, _m2.ColumnCount, 0.0);
 
                     Parallel.For(0, _m1.RowCount, i =>
