@@ -45,7 +45,6 @@ namespace AmpIdent.Visual
                 i += _plottingResolution - 1;
             }
             _mainViewModel.Model.RefreshPlot(true);
-            
         }
 
         public void Clear()

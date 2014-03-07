@@ -1,10 +1,9 @@
 using System;
-using AmpIdent.Estimation;
 using ManagedCuda;
 using ManagedCuda.BasicTypes;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace AmpIdent.Auxiliaries
+namespace AmpIdent.Estimation
 {
     public class MultiplicatorCuda
     {

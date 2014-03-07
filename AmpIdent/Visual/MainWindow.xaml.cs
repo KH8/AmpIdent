@@ -103,12 +103,33 @@ namespace AmpIdent.Visual
 
         private void Load1(object sender, RoutedEventArgs e)
         {
-            _command = 1;
+            _file1 = new WavLoader(_path1, _sampleLength);
+            _1Loaded = true;
+
+            _ploter.PlottingResolution = _file1.SampleLength / 10000;
+            _ploter.Clear();
+            _ploter.Plot(_file1.RightChannel, 1);
+            _ploter.Plot(_file1.LeftChannel, 2);
+            _status = "File1 Loaded";
         }
 
         private void Load2(object sender, RoutedEventArgs e)
         {
-            _command = 2;
+            _file2 = new WavLoader(_path2, _sampleLength);
+
+            _ploter.PlottingResolution = _file2.SampleLength / 10000;
+            _ploter.Clear();
+            _ploter.Plot(_file2.RightChannel, 1);
+            _ploter.Plot(_file2.LeftChannel, 2);
+            _status = "File2 Loaded";
+
+            Graph.Dispatcher.BeginInvoke((new Action(delegate
+            {
+                if (Graph.IsChecked == false && _1Loaded)
+                {
+                    _command = 3;
+                }
+            })));
         }
 
         private void Play1(object sender, RoutedEventArgs e)
@@ -166,41 +187,12 @@ namespace AmpIdent.Visual
             {
                 switch (_command)
                 {
-                    case 0:
-
-                        break;
-
                     case 1:
 
-                        _file1 = new WavLoader(_path1, _sampleLength);
-                        _1Loaded = true;
-
-                        _ploter.PlottingResolution = _file1.SampleLength / 10000;
-                        _ploter.Clear();
-                        _ploter.Plot(_file1.RightChannel, 1);
-                        _ploter.Plot(_file1.LeftChannel, 2);
-                        _status = "File1 Loaded";
-
-                        _command = 0;
                         break;
                         
                     case 2:
 
-                        _file2 = new WavLoader(_path2, _sampleLength);
-
-                        _ploter.PlottingResolution = _file2.SampleLength / 10000;
-                        _ploter.Clear();
-                        _ploter.Plot(_file2.RightChannel, 1);
-                        _ploter.Plot(_file2.LeftChannel, 2);
-                        _status = "File2 Loaded";
-
-                        Graph.Dispatcher.BeginInvoke((new Action(delegate
-                        {
-                            if (Graph.IsChecked == false && _1Loaded)
-                            {
-                                _command = 3;
-                            }
-                        })));
                         break;
 
                     case 3:
@@ -221,7 +213,7 @@ namespace AmpIdent.Visual
                         })));
 
                         _rls.NumberOfIterations = _iterations;
-                        _rls.ComputeRls(_file1.LeftChannel, _file2.LeftChannel, _estimationLength, _recurenceLength);
+                        _rls.ComputeRls(_file1.LeftChannel, _file2.LeftChannel, _estimationLength, _recurenceLength);        
 
                         _ploter.PlottingResolution = _armax.Yk.Values.Length / 10000;
                         _ploter.Clear();
@@ -241,7 +233,8 @@ namespace AmpIdent.Visual
         {
             // ReSharper disable once CSharpWarnings::CS0618
             _outputChannel = new DenseMatrix(_file1.SampleLength, 1, 0.0);
-            _outputChannel = _armax.Model(_file1.LeftChannel, true);
+            _armax.Model(_file1.LeftChannel, true);
+            _outputChannel = _armax.Yk;
             _status = "Output computation: DONE!";
 
             _ploter.PlottingResolution = _outputChannel.Values.Length / 10000;

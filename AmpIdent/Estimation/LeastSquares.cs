@@ -1,5 +1,4 @@
 ﻿using System;
-using AmpIdent.Auxiliaries;
 using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace AmpIdent.Estimation
@@ -209,7 +208,7 @@ namespace AmpIdent.Estimation
             _modelArmax.CreateStartMatrixY(y1);
             
             _modelArmax.Theta = thetaK1;
-            _modelArmax.Yk = _modelArmax.Model(x1, true);
+            _modelArmax.Model(x1, true);
             _statusString = "Iterative LS: Estimation: DONE";
             
             _estimationDone = true;

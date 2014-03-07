@@ -114,7 +114,7 @@ namespace AmpIdent.Estimation
         }
 
         //methods
-        public DenseMatrix Model(DenseMatrix tX1, Boolean clean)
+        public void Model(DenseMatrix tX1, Boolean clean)
         {
             _fixedLength = _offset + _startingPoint;
 
@@ -142,11 +142,13 @@ namespace AmpIdent.Estimation
                     tYkClean[i, 0] = tYk[i + _fixedLength, 0];
                 }
                 _statusString = "Output Creation: DONE";
-                return tYkClean;
+                Yk = tYkClean;
             }
-
-            _statusString = "Output Creation: DONE";
-            return tYk;
+            else
+            {
+                _statusString = "Output Creation: DONE";
+                Yk = tYk;
+            }
         }
 
         private DenseMatrix CreateStartMatrix(DenseMatrix matrix)
