@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
-using System.Media;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,29 +32,20 @@ namespace AmpIdent.Visual
         private int _estimationLength;
         private int _recurenceLength;
 
-        private int _loadingPercentage1;
-        private int _loadingPercentage2;
-        private Boolean _playing1;
-        private Boolean _playing2;
-        private Boolean _playing3;
         private Boolean _1Loaded;
         private string _status;
 
         private readonly Thread _thread1;
         private readonly Thread _thread2;
 
-        private Boolean _compute;
+        private int _command;
+
         private readonly RecursiveLeastSquares _rls;
         private readonly Armax _armax;
-        private DenseMatrix _leftChannel1;
-        private DenseMatrix _rightChannel1;
-        private DenseMatrix _leftChannel2;
-        private DenseMatrix _rightChannel2;
+        private WavLoader _file1;
+        private WavLoader _file2;
         private DenseMatrix _outputChannel;
         private readonly Ploter _ploter;
-        private byte[] _wav1;
-        private byte[] _wav2;
-        private int _samples;
 
         public MainWindow()
         {
@@ -78,12 +69,11 @@ namespace AmpIdent.Visual
             _iterations = 1;
             _estimationLength = 250000;
             _recurenceLength = 5;
-
-            _loadingPercentage1 = 0;
-            _loadingPercentage2 = 0;
             
             _armax = new Armax();
             _rls = new RecursiveLeastSquares(_armax);
+
+            _command = 0;
 
             _thread1 = new Thread(Update);
             _thread2 = new Thread(Compute);
@@ -113,130 +103,12 @@ namespace AmpIdent.Visual
 
         private void Load1(object sender, RoutedEventArgs e)
         {
-            // first we need to read our wav file, so we can get our info:
-            _wav1 = File.ReadAllBytes(_path1);
-
-            // then we are going to get our file's info
-            var numChannels = _wav1[22];
-            //optional
-            //var sampleRate = _wav1[24] + 256 * _wav1[25];
-
-            // nr of samples is the length - the 44 bytes that where needed for the offset
-            _samples = (_wav1.Length - 44) / 2;
-
-            // if there are 2 channels, we need to devide the nr of sample in 2
-            if (numChannels == 2) _samples /= 2;
-            if (_sampleLength != 0)
-            {
-                _samples = numChannels * _sampleLength;
-            }
-
-            var pos = 44; // start of data chunk
-            _loadingPercentage1 = 0;
-
-            _leftChannel1 = new DenseMatrix(_samples, 1, 0.0);
-            _rightChannel1 = new DenseMatrix(_samples, 1, 0.0);
-
-            for (var i = 0; i < _samples - 1; i++)
-            {
-                var number = _wav1[pos] + 256 * _wav1[pos + 1];
-                if (number > 32767) number -= 65534;
-                _leftChannel1[i, 0] = number;
-
-                pos += 2 * numChannels;
-
-                _loadingPercentage1 = i * 50 / _samples;
-            }
-            if (numChannels == 2)
-            {
-                pos = 44;
-                _loadingPercentage1 = 50;
-                for (var i = 0; i < _samples - 3; i++)
-                {
-                    var number = _wav1[pos + 2] + 256 * _wav1[pos + 3];
-                    if (number > 32767) number -= 65534;
-                    _rightChannel1[i, 0] = number;
-
-                    pos += 2 * numChannels;
-
-                    _loadingPercentage1 = 50 + (i * 50 / _samples);
-                }
-            }
-
-            _loadingPercentage1 = 100;
-            _1Loaded = true;
-
-            _ploter.PlottingResolution = _samples / 10000;
-            _ploter.Clear();
-            _ploter.Plot(_rightChannel1, 1);
-            _ploter.Plot(_leftChannel1, 2);
-            _status = "File1 Loaded";
+            _command = 1;
         }
 
         private void Load2(object sender, RoutedEventArgs e)
         {
-            // first we need to read our wav file, so we can get our info:
-            _wav2 = File.ReadAllBytes(_path2);
-
-            // then we are going to get our file's info
-            var numChannels = _wav2[22];
-            //optional
-            //var sampleRate = _wav2[24] + 256 * _wav2[25];
-
-            // nr of samples is the length - the 44 bytes that where needed for the offset
-            _samples = (_wav2.Length - 44) / 2;
-
-            // if there are 2 channels, we need to devide the nr of sample in 2
-            if (numChannels == 2) _samples /= 2;
-            if (_sampleLength != 0)
-            {
-                _samples = numChannels * _sampleLength;
-            }
-
-            var pos = 44; // start of data chunk
-            _loadingPercentage2 = 0;
-
-            _leftChannel2 = new DenseMatrix(_samples, 1, 0.0);
-            _rightChannel2 = new DenseMatrix(_samples, 1, 0.0);
-
-            for (var i = 0; i < _samples - 1; i++)
-            {
-                var number = _wav2[pos] + 256 * _wav2[pos + 1];
-                if (number > 32767) number -= 65534;
-                _leftChannel2[i, 0] = number;
-
-                pos += 2 * numChannels;
-
-                _loadingPercentage2 = i * 50 / _samples;
-            }
-            if (numChannels == 2)
-            {
-                pos = 44;
-                _loadingPercentage2 = 50;
-                for (var i = 0; i < _samples - 3; i++)
-                {
-                    var number = _wav2[pos + 2] + 256 * _wav2[pos + 3];
-                    if (number > 32767) number -= 65534;
-                    _rightChannel2[i, 0] = number;
-
-                    pos += 2 * numChannels;
-
-                    _loadingPercentage2 = 50 + (i * 50 / _samples);
-                }
-            }
-
-            _loadingPercentage2 = 100;
-
-            _ploter.PlottingResolution = _samples / 10000;
-            _ploter.Clear();
-            _ploter.Plot(_rightChannel2, 1);
-            _ploter.Plot(_leftChannel2, 2);
-            _status = "File2 Loaded";
-
-            if (Graph.IsChecked == false && _1Loaded)
-            {
-                _compute = true;
-            }
+            _command = 2;
         }
 
         private void Play1(object sender, RoutedEventArgs e)
@@ -260,17 +132,23 @@ namespace AmpIdent.Visual
             {
                 Loading1.Dispatcher.BeginInvoke((new Action(delegate
                 {
-                    Loading1.Content = "File Loaded: " +
-                                       _loadingPercentage1 + "%";
+                    Loading1.Content = "File Loaded: " + "0" + "%";
+                    if (_file1 != null)
+                    {
+                        Loading1.Content = "File Loaded: " + _file1.LoadingPercentage + "%";
+                    }
                 })));
                 Loading2.Dispatcher.BeginInvoke((new Action(delegate
                 {
-                    Loading2.Content = "File Loaded: " +
-                                       _loadingPercentage2 + "%";
+                    Loading2.Content = "File Loaded: " + "0" + "%";
+                    if (_file2 != null)
+                    {
+                        Loading2.Content = "File Loaded: " + _file2.LoadingPercentage + "%";
+                    }
                 })));
                 OutputBox.Dispatcher.BeginInvoke((new Action(delegate
                 {
-                    if (_compute)
+                    if (_command == 3)
                     {
                         _status = _rls.StatusString;
                     }
@@ -278,7 +156,6 @@ namespace AmpIdent.Visual
                 })));
 
                 VerifyValues();
-
                 Thread.Sleep(1000);
             }
         }
@@ -287,42 +164,83 @@ namespace AmpIdent.Visual
         {
             while (_thread2.IsAlive)
             {
-                if (_compute)
+                switch (_command)
                 {
-                    _armax.NaParameter = _na;
-                    _armax.NbParameter = _nb;
-                    _armax.NdParameter = _nd;
-                    _armax.NkParameter = _nk;
-                    _armax.StartingPoint = _startPoint;
+                    case 0:
 
-                    _armax.ModelShift = 0;
-                    ModelShifted.Dispatcher.BeginInvoke((new Action(delegate
-                    {
-                        if (ModelShifted.IsChecked == true)
+                        break;
+
+                    case 1:
+
+                        _file1 = new WavLoader(_path1, _sampleLength);
+                        _1Loaded = true;
+
+                        _ploter.PlottingResolution = _file1.SampleLength / 10000;
+                        _ploter.Clear();
+                        _ploter.Plot(_file1.RightChannel, 1);
+                        _ploter.Plot(_file1.LeftChannel, 2);
+                        _status = "File1 Loaded";
+
+                        _command = 0;
+                        break;
+                        
+                    case 2:
+
+                        _file2 = new WavLoader(_path2, _sampleLength);
+
+                        _ploter.PlottingResolution = _file2.SampleLength / 10000;
+                        _ploter.Clear();
+                        _ploter.Plot(_file2.RightChannel, 1);
+                        _ploter.Plot(_file2.LeftChannel, 2);
+                        _status = "File2 Loaded";
+
+                        Graph.Dispatcher.BeginInvoke((new Action(delegate
                         {
-                            _armax.ModelShift = 1;
-                        }
-                    })));
+                            if (Graph.IsChecked == false && _1Loaded)
+                            {
+                                _command = 3;
+                            }
+                        })));
+                        break;
 
-                    _rls.NumberOfIterations = _iterations;
-                    _rls.ComputeRls(_leftChannel1, _leftChannel2, _estimationLength, _recurenceLength);
+                    case 3:
 
-                    _ploter.PlottingResolution = _armax.Yk.Values.Length / 10000;
-                    _ploter.Clear();
-                    _ploter.Plot(_armax.Yk, 3);
+                        _armax.NaParameter = _na;
+                        _armax.NbParameter = _nb;
+                        _armax.NdParameter = _nd;
+                        _armax.NkParameter = _nk;
+                        _armax.StartingPoint = _startPoint;
 
-                    _compute = false;
-                    _status = "Model computation: DONE!";
-                    UpdateModel(_armax);
+                        _armax.ModelShift = 0;
+                        ModelShifted.Dispatcher.BeginInvoke((new Action(delegate
+                        {
+                            if (ModelShifted.IsChecked == true)
+                            {
+                                _armax.ModelShift = 1;
+                            }
+                        })));
+
+                        _rls.NumberOfIterations = _iterations;
+                        _rls.ComputeRls(_file1.LeftChannel, _file2.LeftChannel, _estimationLength, _recurenceLength);
+
+                        _ploter.PlottingResolution = _armax.Yk.Values.Length / 10000;
+                        _ploter.Clear();
+                        _ploter.Plot(_armax.Yk, 3);
+
+                        _status = "Model computation: DONE!";
+                        UpdateModel(_armax);
+
+                        _command = 0;
+                        break;
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(10);
             }
         }
 
         private void Output(object sender, RoutedEventArgs e)
         {
-            _outputChannel = new DenseMatrix(_samples, 1, 0.0);
-            _outputChannel = _armax.Model(_leftChannel1, true);
+            _outputChannel = new DenseMatrix(_file1.SampleLength, 1, 0.0);
+            _outputChannel = _armax.Model(_file1.LeftChannel, true);
             _status = "Output computation: DONE!";
 
             _ploter.PlottingResolution = _outputChannel.Values.Length / 10000;
@@ -330,10 +248,10 @@ namespace AmpIdent.Visual
             _ploter.Plot(_outputChannel, 4);
             DataContext = _ploter.MainViewModel;
 
-            var wavOutput = _wav1;
+            var wavOutput = _file1.Wav;
 
             var pos2 = 44;
-            for (var i = 0; i < _samples - 10; i++)
+            for (var i = 0; i < _file1.SampleLength - 10; i++)
             {
                 var value1 = _outputChannel[i, 0];
                 var value2 = (int)value1;
@@ -383,7 +301,6 @@ namespace AmpIdent.Visual
             var pathBox = (TextBox)sender;
             _path1 = pathBox.Text;
         }
-
         private void PathBox_TextChanged_2(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
@@ -394,12 +311,11 @@ namespace AmpIdent.Visual
             var pathBox = (TextBox)sender;
             _outputPath = pathBox.Text;
         }
-
         private void Na_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
             try { _na = Convert.ToInt32(pathBox.Text); }
-            catch (System.FormatException)
+            catch (FormatException)
             {
                 _na = 0;
                 pathBox.Text = "0"; 
@@ -409,7 +325,7 @@ namespace AmpIdent.Visual
         {
             var pathBox = (TextBox)sender;
             try { _nb = Convert.ToInt32(pathBox.Text); }
-            catch (System.FormatException)
+            catch (FormatException)
             {
                 _nb = 0;
                 pathBox.Text = "0";
@@ -419,7 +335,7 @@ namespace AmpIdent.Visual
         {
             var pathBox = (TextBox)sender;
             try { _nd = Convert.ToInt32(pathBox.Text); }
-            catch (System.FormatException)
+            catch (FormatException)
             {
                 _nd = 0;
                 pathBox.Text = "0";
@@ -429,62 +345,57 @@ namespace AmpIdent.Visual
         {
             var pathBox = (TextBox)sender;
             try { _nk = Convert.ToInt32(pathBox.Text); }
-            catch (System.FormatException)
+            catch (FormatException)
             {
                 _nk = 0;
                 pathBox.Text = "0";
             }
         }
-
         private void SpBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
             try { _startPoint = Convert.ToInt32(pathBox.Text); }
-            catch (System.FormatException)
+            catch (FormatException)
             {
                 _startPoint = 0;
                 pathBox.Text = "0";
             }
         }
-
         private void NiBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
             try { _iterations = Convert.ToInt32(pathBox.Text); }
-            catch (System.FormatException)
+            catch (FormatException)
             {
                 _iterations = 0;
                 pathBox.Text = "0";
             }
         }
-
         private void RlBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
             try { _recurenceLength = Convert.ToInt32(pathBox.Text); }
-            catch (System.FormatException)
+            catch (FormatException)
             {
                 _recurenceLength = 0;
                 pathBox.Text = "0";
             }
         }
-
         private void EiBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
             try { _estimationLength = Convert.ToInt32(pathBox.Text); }
-            catch (System.FormatException)
+            catch (FormatException)
             {
                 _estimationLength = 0;
                 pathBox.Text = "0";
             }
         }
-
         private void SampleLength_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
             try { _sampleLength = Convert.ToInt32(pathBox.Text); }
-            catch (System.FormatException)
+            catch (FormatException)
             {
                 _sampleLength = 0;
                 pathBox.Text = "0";
@@ -494,7 +405,7 @@ namespace AmpIdent.Visual
                 _estimationLength = _sampleLength;
                 ElBox.Dispatcher.BeginInvoke((new Action(delegate
                 {
-                    ElBox.Text = _estimationLength.ToString();
+                    ElBox.Text = _estimationLength.ToString(CultureInfo.InvariantCulture);
                 })));
             }
         }
@@ -506,12 +417,12 @@ namespace AmpIdent.Visual
                 int sp = _na + _nb + _nd + _nk;
 
                 _startPoint = sp;
-                SpBox.Dispatcher.BeginInvoke((new Action(delegate { SpBox.Text = sp.ToString(); })));
+                SpBox.Dispatcher.BeginInvoke((new Action(delegate { SpBox.Text = sp.ToString(CultureInfo.InvariantCulture); })));
             }
             if (_sampleLength < _estimationLength && _sampleLength != 0)
             {
                 _estimationLength = _sampleLength;
-                ElBox.Dispatcher.BeginInvoke((new Action(delegate { ElBox.Text = _estimationLength.ToString(); })));
+                ElBox.Dispatcher.BeginInvoke((new Action(delegate { ElBox.Text = _estimationLength.ToString(CultureInfo.InvariantCulture); })));
             }
         }
     }

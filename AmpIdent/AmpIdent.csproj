@@ -68,6 +68,7 @@
     <Compile Include="Auxiliaries\Multiplicator.cs" />
     <Compile Include="Auxiliaries\MultiplicatorCuda.cs" />
     <Compile Include="Auxiliaries\Player.cs" />
+    <Compile Include="Auxiliaries\WavLoader.cs" />
     <Compile Include="Estimation\MatrixConverter.cs" />
     <Compile Include="Estimation\RecursiveLeastSquares.cs" />
     <Compile Include="Estimation\VectorMerger.cs" />
