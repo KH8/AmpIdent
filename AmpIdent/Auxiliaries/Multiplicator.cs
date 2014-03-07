@@ -3,14 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace AmpIdent.Estimation
+namespace AmpIdent.Auxiliaries
 {
     public class Multiplicator
     {
-        private Boolean _compute;
-        private DenseMatrix _m1;
-        private DenseMatrix _m2;
-        private DenseMatrix _m;
+        private static Boolean _compute;
+        private static DenseMatrix _m1;
+        private static DenseMatrix _m2;
+        private static DenseMatrix _m;
 
         private readonly Thread _thread;
 
@@ -23,7 +23,7 @@ namespace AmpIdent.Estimation
             _thread.Start();
         }
 
-        public DenseMatrix Multiply(DenseMatrix m1, DenseMatrix m2)
+        public static DenseMatrix Multiply(DenseMatrix m1, DenseMatrix m2)
         {
             _m1 = m1;
             _m2 = m2;

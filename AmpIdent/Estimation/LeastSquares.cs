@@ -1,4 +1,5 @@
 ﻿using System;
+using AmpIdent.Auxiliaries;
 using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace AmpIdent.Estimation

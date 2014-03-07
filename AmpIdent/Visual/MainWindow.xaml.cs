@@ -5,6 +5,7 @@ using System.Media;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using AmpIdent.Auxiliaries;
 using AmpIdent.Estimation;
 using MathNet.Numerics.LinearAlgebra.Double;
 
@@ -43,7 +44,6 @@ namespace AmpIdent.Visual
         private readonly Thread _thread2;
 
         private Boolean _compute;
-        private readonly SoundPlayer _sp;
         private readonly RecursiveLeastSquares _rls;
         private readonly Armax _armax;
         private DenseMatrix _leftChannel1;
@@ -59,7 +59,6 @@ namespace AmpIdent.Visual
         public MainWindow()
         {
             InitializeComponent();
-            _sp = new SoundPlayer();
             _ploter = new Ploter();
 
             //Loading.Content = "Loading: " + _loadingPercentage.ToString() + "%";
@@ -242,65 +241,17 @@ namespace AmpIdent.Visual
 
         private void Play1(object sender, RoutedEventArgs e)
         {
-            var button = (Button)sender;
-
-            if (!_playing1)
-            {
-                _sp.Stop();
-                _sp.SoundLocation = _path1;
-                _sp.LoadAsync();
-                _sp.Play();
-                _playing1 = true;
-                button.Content = "Stop";
-            }
-            else
-            {
-                _sp.Stop();
-                _playing1 = false;
-                button.Content = "Play";
-            }
+            Player.Play((Button)sender, _path1);
         }
 
         private void Play2(object sender, RoutedEventArgs e)
         {
-            var button = (Button)sender;
-
-            if (!_playing2)
-            {
-                _sp.Stop();
-                _sp.SoundLocation = _path2;
-                _sp.LoadAsync();
-                _sp.Play();
-                _playing2 = true;
-                button.Content = "Stop";
-            }
-            else
-            {
-                _sp.Stop();
-                _playing2 = false;
-                button.Content = "Play";
-            }
+            Player.Play((Button)sender, _path2);
         }
 
         private void Play3(object sender, RoutedEventArgs e)
         {
-            var button = (Button)sender;
-
-            if (!_playing3)
-            {
-                _sp.Stop();
-                _sp.SoundLocation = _outputPath;
-                _sp.LoadAsync();
-                _sp.Play();
-                _playing3 = true;
-                button.Content = "Stop";
-            }
-            else
-            {
-                _sp.Stop();
-                _playing2 = false;
-                button.Content = "Play";
-            }
+            Player.Play((Button)sender, _outputPath);
         }
 
         private void Update()
@@ -326,26 +277,9 @@ namespace AmpIdent.Visual
                     OutputBox.Text = _status;
                 })));
 
-                //values verification
-                if (_startPoint < _na + _nb + _nd + _nk)
-                {
-                    int sp = _na + _nb + _nd + _nk;
+                VerifyValues();
 
-                    _startPoint = sp;
-                    SpBox.Dispatcher.BeginInvoke((new Action(delegate
-                    {
-                        SpBox.Text = sp.ToString();
-                    })));
-                }
-                if (_sampleLength < _estimationLength && _sampleLength != 0)
-                {
-                    _estimationLength = _sampleLength;
-                    ElBox.Dispatcher.BeginInvoke((new Action(delegate
-                    {
-                        ElBox.Text = _estimationLength.ToString();
-                    })));
-                }
-            Thread.Sleep(1000);
+                Thread.Sleep(1000);
             }
         }
 
@@ -562,6 +496,22 @@ namespace AmpIdent.Visual
                 {
                     ElBox.Text = _estimationLength.ToString();
                 })));
+            }
+        }
+
+        private void VerifyValues()
+        {
+            if (_startPoint < _na + _nb + _nd + _nk)
+            {
+                int sp = _na + _nb + _nd + _nk;
+
+                _startPoint = sp;
+                SpBox.Dispatcher.BeginInvoke((new Action(delegate { SpBox.Text = sp.ToString(); })));
+            }
+            if (_sampleLength < _estimationLength && _sampleLength != 0)
+            {
+                _estimationLength = _sampleLength;
+                ElBox.Dispatcher.BeginInvoke((new Action(delegate { ElBox.Text = _estimationLength.ToString(); })));
             }
         }
     }
