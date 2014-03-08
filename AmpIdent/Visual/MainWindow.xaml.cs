@@ -235,7 +235,6 @@ namespace AmpIdent.Visual
                         UpdateModel(_armax);
 
                         _command = 0;
-
                         break;
                 }
                 Thread.Sleep(10);
