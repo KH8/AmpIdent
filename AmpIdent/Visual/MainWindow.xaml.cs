@@ -47,7 +47,7 @@ namespace AmpIdent.Visual
         private WavLoader _file1;
         private WavLoader _file2;
         private DenseMatrix _outputChannel;
-        private readonly Ploter _ploter;
+        private Ploter _ploter;
 
         public MainWindow()
         {
@@ -145,6 +145,103 @@ namespace AmpIdent.Visual
             Player.Play((Button)sender, _outputPath);
         }
 
+        private void ComputeModel(object sender, RoutedEventArgs e)
+        {
+            RlsEnabledBox.Dispatcher.BeginInvoke((new Action(delegate
+            {
+                if (RlsEnabledBox.IsChecked == true & _1Loaded & _2Loaded)
+                {
+                    _command = 3;
+                }
+                else if (_1Loaded & _2Loaded)
+                {
+                    _command = 4;
+                }
+            })));
+        }
+
+        private void Output(object sender, RoutedEventArgs e)
+        {
+            // ReSharper disable once CSharpWarnings::CS0618
+            _outputChannel = new DenseMatrix(_file1.SampleLength, 1, 0.0);
+            _armax.Model(_file1.LeftChannel, true);
+            _outputChannel = _armax.Yk;
+            _status = "Output computation: DONE!";
+
+            _ploter.PlottingResolution = _outputChannel.Values.Length / 10000;
+            _ploter.Clear();
+            _ploter.Plot(_outputChannel, 4);
+            DataContext = _ploter.MainViewModel;
+
+            var wavOutput = _file1.Wav;
+
+            var pos2 = 44;
+            for (var i = 0; i < _file1.SampleLength - 10; i++)
+            {
+                var value1 = _outputChannel[i, 0];
+                var value2 = (int)value1;
+                var value = BitConverter.GetBytes(value2);
+
+                wavOutput[pos2] = value[0];
+                wavOutput[pos2 + 1] = value[1];
+                wavOutput[pos2 + 2] = value[0];
+                wavOutput[pos2 + 3] = value[1];
+
+                pos2 += 4;
+            }
+            File.WriteAllBytes(_outputPath, wavOutput);
+            _status = "File creation: DONE!";
+        }
+
+        private void Compute()
+        {
+            while (_thread2.IsAlive)
+            {
+                switch (_command)
+                {
+                    case 1:
+                        _command = 0;
+                        break;
+
+                    case 2:
+                        _command = 0;
+                        break;
+
+                    case 3:
+
+                        _rls.NumberOfIterations = _iterations;
+                        _rls.ComputeRls(_file1.LeftChannel, _file2.LeftChannel, _estimationLength, _recurenceLength);
+
+                        _ploter.PlottingResolution = _armax.Yk.Values.Length / 10000;
+                        _ploter.Clear();
+                        _ploter.Plot(_armax.Yk, 3);
+
+                        _status = "Model computation: DONE!";
+                        UpdateModel(_armax);
+
+                        _command = 0;
+                        break;
+
+                    case 4:
+
+                        _ls.NumberOfIterations = _iterations;
+                        _ls.Compute(_file1.LeftChannel, _file2.LeftChannel, _estimationLength);
+
+                        _ploter.PlottingResolution = _armax.Yk.Values.Length / 10000;
+                        _ploter.Clear();
+                        _ploter.Plot(_armax.Yk, 3);
+
+                        _status = "Model computation: DONE!";
+                        UpdateModel(_armax);
+
+                        _command = 0;
+
+                        break;
+                }
+                Thread.Sleep(10);
+            }
+        }
+
         private void Update()
         {
             while (_thread1.IsAlive)
@@ -200,103 +297,6 @@ namespace AmpIdent.Visual
             }
         }
 
-        private void Compute()
-        {
-            while (_thread2.IsAlive)
-            {
-                switch (_command)
-                {
-                    case 1:
-
-                        break;
-                        
-                    case 2:
-
-                        break;
-
-                    case 3:
-
-                        _rls.NumberOfIterations = _iterations;
-                        _rls.ComputeRls(_file1.LeftChannel, _file2.LeftChannel, _estimationLength, _recurenceLength);        
-
-                        _ploter.PlottingResolution = _armax.Yk.Values.Length / 10000;
-                        _ploter.Clear();
-                        _ploter.Plot(_armax.Yk, 3);
-
-                        _status = "Model computation: DONE!";
-                        UpdateModel(_armax);
-
-                        _command = 0;
-                        break;
-
-                    case 4:
-
-                        _ls.NumberOfIterations = _iterations;
-                        _ls.Compute(_file1.LeftChannel, _file2.LeftChannel, _estimationLength);        
-
-                        _ploter.PlottingResolution = _armax.Yk.Values.Length / 10000;
-                        _ploter.Clear();
-                        _ploter.Plot(_armax.Yk, 3);
-
-                        _status = "Model computation: DONE!";
-                        UpdateModel(_armax);
-
-                        _command = 0;
-
-                        break;
-                }
-                Thread.Sleep(10);
-            }
-        }
-
-        private void Output(object sender, RoutedEventArgs e)
-        {
-            // ReSharper disable once CSharpWarnings::CS0618
-            _outputChannel = new DenseMatrix(_file1.SampleLength, 1, 0.0);
-            _armax.Model(_file1.LeftChannel, true);
-            _outputChannel = _armax.Yk;
-            _status = "Output computation: DONE!";
-
-            _ploter.PlottingResolution = _outputChannel.Values.Length / 10000;
-            _ploter.Clear();
-            _ploter.Plot(_outputChannel, 4);
-            DataContext = _ploter.MainViewModel;
-
-            var wavOutput = _file1.Wav;
-
-            var pos2 = 44;
-            for (var i = 0; i < _file1.SampleLength - 10; i++)
-            {
-                var value1 = _outputChannel[i, 0];
-                var value2 = (int)value1;
-                var value = BitConverter.GetBytes(value2);
-
-                wavOutput[pos2] = value[0];
-                wavOutput[pos2 + 1] = value[1];
-                wavOutput[pos2 + 2] = value[0];
-                wavOutput[pos2 + 3] = value[1];
-
-                pos2 += 4;
-            }
-            File.WriteAllBytes(_outputPath, wavOutput);
-            _status = "File creation: DONE!";
-        }
-
-        private void ComputeModel(object sender, RoutedEventArgs e)
-        {
-            RlsEnabledBox.Dispatcher.BeginInvoke((new Action(delegate
-            {
-                if (RlsEnabledBox.IsChecked == true & _1Loaded & _2Loaded)
-                {
-                    _command = 3;
-                }
-                else if (_1Loaded & _2Loaded)
-                {
-                    _command = 4;
-                }
-            })));
-        }
-
         public void UpdateModel(Armax modelArmax)
         {
             ModeListBox.Dispatcher.BeginInvoke((new Action(delegate
@@ -324,22 +324,25 @@ namespace AmpIdent.Visual
         {
             Environment.Exit(0);
         }
-
+        
         private void PathBox_TextChanged_1(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
             _path1 = pathBox.Text;
         }
+
         private void PathBox_TextChanged_2(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
             _path2 = pathBox.Text;
         }
+
         private void OutputBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
             _outputPath = pathBox.Text;
         }
+
         private void Na_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
@@ -350,6 +353,7 @@ namespace AmpIdent.Visual
                 pathBox.Text = "0"; 
             }
         }
+
         private void Nb_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
@@ -360,6 +364,7 @@ namespace AmpIdent.Visual
                 pathBox.Text = "0";
             }
         }
+
         private void Nd_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
@@ -370,6 +375,7 @@ namespace AmpIdent.Visual
                 pathBox.Text = "0";
             }
         }
+
         private void Nk_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
@@ -380,6 +386,7 @@ namespace AmpIdent.Visual
                 pathBox.Text = "0";
             }
         }
+
         private void SpBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
@@ -390,6 +397,7 @@ namespace AmpIdent.Visual
                 pathBox.Text = "0";
             }
         }
+
         private void NiBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
@@ -400,6 +408,7 @@ namespace AmpIdent.Visual
                 pathBox.Text = "0";
             }
         }
+
         private void RlBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
@@ -410,6 +419,7 @@ namespace AmpIdent.Visual
                 pathBox.Text = "0";
             }
         }
+
         private void EiBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
@@ -420,6 +430,7 @@ namespace AmpIdent.Visual
                 pathBox.Text = "0";
             }
         }
+
         private void SampleLength_TextChange(object sender, TextChangedEventArgs e)
         {
             var pathBox = (TextBox)sender;
@@ -438,7 +449,7 @@ namespace AmpIdent.Visual
                 })));
             }
         }
-
+        
         private void VerifyValues()
         {
             if (_startPoint < _na + _nb + _nd + _nk)
