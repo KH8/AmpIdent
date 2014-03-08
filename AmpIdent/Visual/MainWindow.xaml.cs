@@ -33,6 +33,7 @@ namespace AmpIdent.Visual
         private int _recurenceLength;
 
         private Boolean _1Loaded;
+        private Boolean _2Loaded;
         private string _status;
 
         private readonly Thread _thread1;
@@ -40,6 +41,7 @@ namespace AmpIdent.Visual
 
         private int _command;
 
+        private readonly LeastSquares _ls;
         private readonly RecursiveLeastSquares _rls;
         private readonly Armax _armax;
         private WavLoader _file1;
@@ -72,6 +74,7 @@ namespace AmpIdent.Visual
             
             _armax = new Armax();
             _rls = new RecursiveLeastSquares(_armax);
+            _ls = new RecursiveLeastSquares(_armax);
 
             _command = 0;
 
@@ -104,13 +107,14 @@ namespace AmpIdent.Visual
         private void Load1(object sender, RoutedEventArgs e)
         {
             _file1 = new WavLoader(_path1, _sampleLength);
-            _1Loaded = true;
 
             _ploter.PlottingResolution = _file1.SampleLength / 10000;
             _ploter.Clear();
             _ploter.Plot(_file1.RightChannel, 1);
             _ploter.Plot(_file1.LeftChannel, 2);
             _status = "File1 Loaded";
+
+            _1Loaded = true;
         }
 
         private void Load2(object sender, RoutedEventArgs e)
@@ -123,13 +127,7 @@ namespace AmpIdent.Visual
             _ploter.Plot(_file2.LeftChannel, 2);
             _status = "File2 Loaded";
 
-            Graph.Dispatcher.BeginInvoke((new Action(delegate
-            {
-                if (Graph.IsChecked == false && _1Loaded)
-                {
-                    _command = 3;
-                }
-            })));
+            _2Loaded = true;
         }
 
         private void Play1(object sender, RoutedEventArgs e)
@@ -151,6 +149,7 @@ namespace AmpIdent.Visual
         {
             while (_thread1.IsAlive)
             {
+                //Display up-to-date
                 Loading1.Dispatcher.BeginInvoke((new Action(delegate
                 {
                     Loading1.Content = "File Loaded: " + "0" + "%";
@@ -173,7 +172,27 @@ namespace AmpIdent.Visual
                     {
                         _status = _rls.StatusString;
                     }
+                    else if (_command == 4)
+                    {
+                        _status = _ls.StatusString;
+                    }
                     OutputBox.Text = _status;
+                })));
+
+                //Model parameters up-to-date
+                _armax.NaParameter = _na;
+                _armax.NbParameter = _nb;
+                _armax.NdParameter = _nd;
+                _armax.NkParameter = _nk;
+                _armax.StartingPoint = _startPoint;
+
+                _armax.ModelShift = 0;
+                ModelShifted.Dispatcher.BeginInvoke((new Action(delegate
+                {
+                    if (ModelShifted.IsChecked == true)
+                    {
+                        _armax.ModelShift = 1;
+                    }
                 })));
 
                 VerifyValues();
@@ -197,21 +216,6 @@ namespace AmpIdent.Visual
 
                     case 3:
 
-                        _armax.NaParameter = _na;
-                        _armax.NbParameter = _nb;
-                        _armax.NdParameter = _nd;
-                        _armax.NkParameter = _nk;
-                        _armax.StartingPoint = _startPoint;
-
-                        _armax.ModelShift = 0;
-                        ModelShifted.Dispatcher.BeginInvoke((new Action(delegate
-                        {
-                            if (ModelShifted.IsChecked == true)
-                            {
-                                _armax.ModelShift = 1;
-                            }
-                        })));
-
                         _rls.NumberOfIterations = _iterations;
                         _rls.ComputeRls(_file1.LeftChannel, _file2.LeftChannel, _estimationLength, _recurenceLength);        
 
@@ -223,6 +227,22 @@ namespace AmpIdent.Visual
                         UpdateModel(_armax);
 
                         _command = 0;
+                        break;
+
+                    case 4:
+
+                        _ls.NumberOfIterations = _iterations;
+                        _ls.Compute(_file1.LeftChannel, _file2.LeftChannel, _estimationLength);        
+
+                        _ploter.PlottingResolution = _armax.Yk.Values.Length / 10000;
+                        _ploter.Clear();
+                        _ploter.Plot(_armax.Yk, 3);
+
+                        _status = "Model computation: DONE!";
+                        UpdateModel(_armax);
+
+                        _command = 0;
+
                         break;
                 }
                 Thread.Sleep(10);
@@ -260,6 +280,21 @@ namespace AmpIdent.Visual
             }
             File.WriteAllBytes(_outputPath, wavOutput);
             _status = "File creation: DONE!";
+        }
+
+        private void ComputeModel(object sender, RoutedEventArgs e)
+        {
+            RlsEnabledBox.Dispatcher.BeginInvoke((new Action(delegate
+            {
+                if (RlsEnabledBox.IsChecked == true & _1Loaded & _2Loaded)
+                {
+                    _command = 3;
+                }
+                else if (_1Loaded & _2Loaded)
+                {
+                    _command = 4;
+                }
+            })));
         }
 
         public void UpdateModel(Armax modelArmax)
