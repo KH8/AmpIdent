@@ -14,6 +14,8 @@ namespace AmpIdent.Visual
         private readonly int _precentageOfPlotting;
         private Thread _thread;
         private Boolean _plotCmd;
+        private DenseMatrix _vector;
+        private int _layer;
 
         //Public
         public MainViewModel MainViewModel { get { return _mainViewModel; } }
@@ -53,9 +55,9 @@ namespace AmpIdent.Visual
                 if (_plotCmd)
                 {
                     if (_plottingResolution < 1) _plottingResolution = 1;
-                    for (var i = 0; i < vector.Values.Length - 1 / _plottingResolution; i++)
+                    for (var i = 0; i < _vector.Values.Length - 1 / _plottingResolution; i++)
                     {
-                        _mainViewModel.AddPoint(layer, new DataPoint(i, vector[i, 0]));
+                        _mainViewModel.AddPoint(_layer, new DataPoint(i, _vector[i, 0]));
                         i += _plottingResolution - 1;
                     }
                     _mainViewModel.Model.RefreshPlot(true);
@@ -66,7 +68,9 @@ namespace AmpIdent.Visual
 
         public void Plot(DenseMatrix vector, int layer)
         {
-            _
+            _vector = vector;
+            _layer = layer;
+            _plotCmd = true;
         }
 
         public void Clear()

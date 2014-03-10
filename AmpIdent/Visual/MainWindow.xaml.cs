@@ -107,27 +107,13 @@ namespace AmpIdent.Visual
         private void Load1(object sender, RoutedEventArgs e)
         {
             _file1 = new WavLoader(_path1, _sampleLength);
-
-            _ploter.PlottingResolution = _file1.SampleLength / 10000;
-            _ploter.Clear();
-            _ploter.Plot(_file1.RightChannel, 1);
-            _ploter.Plot(_file1.LeftChannel, 2);
-            _status = "File1 Loaded";
-
-            _1Loaded = true;
+            _command = 1;
         }
 
         private void Load2(object sender, RoutedEventArgs e)
         {
             _file2 = new WavLoader(_path2, _sampleLength);
-
-            _ploter.PlottingResolution = _file2.SampleLength / 10000;
-            _ploter.Clear();
-            _ploter.Plot(_file2.RightChannel, 1);
-            _ploter.Plot(_file2.LeftChannel, 2);
-            _status = "File2 Loaded";
-
-            _2Loaded = true;
+            _command = 2;
         }
 
         private void Play1(object sender, RoutedEventArgs e)
@@ -200,10 +186,26 @@ namespace AmpIdent.Visual
                 switch (_command)
                 {
                     case 1:
+
+                        _ploter.PlottingResolution = _file1.SampleLength / 10000;
+                        _ploter.Clear();
+                        _ploter.Plot(_file1.RightChannel, 1);
+                        _ploter.Plot(_file1.LeftChannel, 2);
+                        _status = "File1 Loaded";
+                        _1Loaded = true;
+
                         _command = 0;
                         break;
 
                     case 2:
+
+                        _ploter.PlottingResolution = _file2.SampleLength / 10000;
+                        _ploter.Clear();
+                        _ploter.Plot(_file2.RightChannel, 1);
+                        _ploter.Plot(_file2.LeftChannel, 2);
+                        _status = "File2 Loaded";
+                        _2Loaded = true;
+
                         _command = 0;
                         break;
 
