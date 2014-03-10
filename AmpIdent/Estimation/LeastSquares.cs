@@ -184,7 +184,7 @@ namespace AmpIdent.Estimation
 
                 //VII Step: Decision..................................................................................................
 
-                if (!Double.IsNaN(_estimationError)) k = _numberOfIterations;
+                if (Double.IsNaN(_estimationError)) k = _numberOfIterations;
 
                 else
                 {
