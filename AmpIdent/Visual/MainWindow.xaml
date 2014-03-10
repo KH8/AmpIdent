@@ -6,12 +6,12 @@
         Closing="ClosingHanler" SizeToContent="Width">
     <Grid>
         <GroupBox Header="File input" HorizontalAlignment="Center" Height="89" Margin="16,10,19,0" VerticalAlignment="Top" Width="868"/>
-            <TextBox Name="PathBox1" HorizontalAlignment="Left" Height="22" Margin="104,34,0,0" TextWrapping="Wrap" Text="c:\avril_clean.wav" VerticalAlignment="Top" Width="203" TextChanged="PathBox_TextChanged_1"/>
+            <TextBox Name="PathBox1" HorizontalAlignment="Left" Height="22" Margin="104,34,0,0" TextWrapping="Wrap" Text="c:\avril_clean.wav" VerticalAlignment="Top" Width="203" IsEnabled="False"/>
             <Label Content="WAV1 path:" HorizontalAlignment="Left" Height="26" Margin="27,32,0,0" VerticalAlignment="Top" Width="76"/>
-            <Label Name="Loading1" Content="..." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="472,34,0,0" Width="168"/>
-            <Button Content="Load" HorizontalAlignment="Left" Margin="312,36,0,0" VerticalAlignment="Top" Width="75" Click="Load1"/>
-            <Button Content="Play" HorizontalAlignment="Left" Margin="392,36,0,0" VerticalAlignment="Top" Width="75" Click="Play1"/>
-        <TextBox x:Name="PathBox2" HorizontalAlignment="Left" Height="22" Margin="104,63,0,0" TextWrapping="Wrap" Text="c:\avril_scolpture.wav" VerticalAlignment="Top" Width="203" TextChanged="PathBox_TextChanged_2"/>
+            <Label Name="Loading1" Content="..." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="472,32,0,0" Width="168"/>
+            <Button Content="Load" HorizontalAlignment="Left" Margin="312,34,0,0" VerticalAlignment="Top" Width="75" Click="Load1"/>
+            <Button Content="Play" HorizontalAlignment="Left" Margin="392,34,0,0" VerticalAlignment="Top" Width="75" Click="Play1"/>
+        <TextBox x:Name="PathBox2" HorizontalAlignment="Left" Height="22" Margin="104,63,0,0" TextWrapping="Wrap" Text="c:\avril_scolpture.wav" VerticalAlignment="Top" Width="203" IsEnabled="False"/>
             <Label Content="WAV2 path:" HorizontalAlignment="Left" Height="26" Margin="27,62,0,0" VerticalAlignment="Top" Width="76"/>
             <Button Content="Load" HorizontalAlignment="Left" Margin="312,63,0,0" VerticalAlignment="Top" Width="75" Click="Load2"/>
             <Button Content="Play" HorizontalAlignment="Left" Margin="392,63,0,0" VerticalAlignment="Top" Width="75" Click="Play2"/>

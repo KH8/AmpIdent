@@ -56,9 +56,9 @@ namespace AmpIdent.Visual
 
             //Loading.Content = "Loading: " + _loadingPercentage.ToString() + "%";
 
-            _path1 = "c:\\avril_clean.wav";
-            _path2 = "c:\\avril_scolpture.wav";
-            _outputPath = "c:\\Output\\output.wav";
+            _path1 = "C:\\avril_clean.wav";
+            _path2 = "C:\\avril_scolpture.wav";
+            _outputPath = "C:\\Output\\output.wav";
 
             _sampleLength = 0;
 
@@ -106,12 +106,38 @@ namespace AmpIdent.Visual
 
         private void Load1(object sender, RoutedEventArgs e)
         {
+            var dlg = new Microsoft.Win32.OpenFileDialog();
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".wav";
+            dlg.Filter = "WAV Files (*.wav)|*.wav";
+            // Display OpenFileDialog by calling ShowDialog method 
+            var result = dlg.ShowDialog();
+            // Get the selected file name and display in a TextBox 
+            if (result == true)
+            {
+                // Open document 
+                _path1 = dlg.FileName;
+                PathBox1.Text = _path1;
+            }
             _file1 = new WavLoader(_path1, _sampleLength);
             _command = 1;
         }
 
         private void Load2(object sender, RoutedEventArgs e)
         {
+            var dlg = new Microsoft.Win32.OpenFileDialog();
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".wav";
+            dlg.Filter = "WAV Files (*.wav)|*.wav";
+            // Display OpenFileDialog by calling ShowDialog method 
+            var result = dlg.ShowDialog();
+            // Get the selected file name and display in a TextBox 
+            if (result == true)
+            {
+                // Open document 
+                _path2 = dlg.FileName;
+                PathBox2.Text = _path2;
+            }
             _file2 = new WavLoader(_path2, _sampleLength);
             _command = 2;
         }
@@ -324,18 +350,6 @@ namespace AmpIdent.Visual
         private void ClosingHanler(object sender, CancelEventArgs e)
         {
             Environment.Exit(0);
-        }
-        
-        private void PathBox_TextChanged_1(object sender, TextChangedEventArgs e)
-        {
-            var pathBox = (TextBox)sender;
-            _path1 = pathBox.Text;
-        }
-
-        private void PathBox_TextChanged_2(object sender, TextChangedEventArgs e)
-        {
-            var pathBox = (TextBox)sender;
-            _path2 = pathBox.Text;
         }
 
         private void OutputBox_TextChanged(object sender, TextChangedEventArgs e)
