@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="4d7f2719-18e7-4fbd-8327-453820b0c556" name="UseCase" linkedPackageId="43d685eb-5493-4000-82b8-60e85e2e389d" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" dslVersion="1.0.0.0" Id="4d7f2719-18e7-4fbd-8327-453820b0c556" name="UseCase" linkedPackageId="43d685eb-5493-4000-82b8-60e85e2e389d" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
   <ownedCommentsInternal>
     <comment Id="ef2c6c6b-9f50-43c9-990b-18f19d3dfbd1">
       <elementDefinition Id="63084ece-0665-448b-8506-12c24355a3b0" />
@@ -321,7 +321,7 @@ the model computation</body>
       </actor>
     </useCaseModelRootHasTypes>
     <useCaseModelRootHasTypes>
-      <subsystem Id="66a57494-12df-4cdc-8073-4888468260c6" name="Project" isAbstract="false" isLeaf="false" isActiveClass="false">
+      <subsystem Id="66a57494-12df-4cdc-8073-4888468260c6" name="Project Module" isAbstract="false" isLeaf="false" isActiveClass="false">
         <elementDefinition Id="dae8497e-3516-483f-93c5-39f02a79de6e" />
       </subsystem>
     </useCaseModelRootHasTypes>
@@ -358,7 +358,7 @@ the model computation</body>
           </association>
         </targetEnds>
         <subjects>
-          <subsystemMoniker Id="66a57494-12df-4cdc-8073-4888468260c6" LastKnownName="Project" />
+          <subsystemMoniker Id="66a57494-12df-4cdc-8073-4888468260c6" LastKnownName="Project Module" />
         </subjects>
       </useCase>
     </packageHasNamedElement>
@@ -384,7 +384,7 @@ the model computation</body>
           </association>
         </targetEnds>
         <subjects>
-          <subsystemMoniker Id="66a57494-12df-4cdc-8073-4888468260c6" LastKnownName="Project" />
+          <subsystemMoniker Id="66a57494-12df-4cdc-8073-4888468260c6" LastKnownName="Project Module" />
         </subjects>
       </useCase>
     </packageHasNamedElement>
@@ -392,7 +392,7 @@ the model computation</body>
       <useCase Id="44fe5dd9-8bc9-4af1-b814-061b8e1dd50c" name="SaveProject" isAbstract="false" isLeaf="false">
         <elementDefinition Id="b832ae2e-a442-42ed-bff8-9f85b855def3" />
         <subjects>
-          <subsystemMoniker Id="66a57494-12df-4cdc-8073-4888468260c6" LastKnownName="Project" />
+          <subsystemMoniker Id="66a57494-12df-4cdc-8073-4888468260c6" LastKnownName="Project Module" />
         </subjects>
       </useCase>
     </packageHasNamedElement>
