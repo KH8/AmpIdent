@@ -36,7 +36,7 @@ namespace AmpIdent.Auxiliaries
             get { return _wav; }
         }
 
-        public WavLoader(string path, int sampleLength)
+        public WavLoader(string path, int sampleLength, int density)
         {
             // first we need to read our wav file, so we can get our info:
             _wav = File.ReadAllBytes(path);
@@ -56,6 +56,8 @@ namespace AmpIdent.Auxiliaries
                 _sampleLength = numChannels * sampleLength;
             }
 
+            _sampleLength = _sampleLength/density;
+
             var pos = 44; // start of data chunk
             _loadingPercentage = 0;
 
@@ -70,7 +72,7 @@ namespace AmpIdent.Auxiliaries
                 if (number > 32767) number -= 65534;
                 _leftChannel[i, 0] = number;
 
-                pos += 2 * numChannels;
+                pos += 2 * numChannels * density;
 
                 _loadingPercentage = i * 50 / _sampleLength;
             }
@@ -84,7 +86,7 @@ namespace AmpIdent.Auxiliaries
                     if (number > 32767) number -= 65534;
                     _rightChannel[i, 0] = number;
 
-                    pos += 2 * numChannels;
+                    pos += 2 * numChannels * density;
 
                     _loadingPercentage = 50 + (i * 50 / _sampleLength);
                 }

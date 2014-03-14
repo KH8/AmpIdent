@@ -95,7 +95,7 @@ namespace AmpIdent.Estimation
                 pN1 = (DenseMatrix) pN;
                 thetaN1 = (DenseMatrix)thetaN;
 
-                _estimationStatusPercentage = r*100/_recurenceLength;
+                _estimationStatusPercentage = ( r - _modelArmax.StartingPoint )* 100 / _recurenceLength;
                 StatusString = "RLS: Step VI: " + _estimationStatusPercentage + "%";
             }
             StatusString = "RLS: Step VI: DONE";

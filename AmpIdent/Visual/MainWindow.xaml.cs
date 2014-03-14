@@ -21,6 +21,7 @@ namespace AmpIdent.Visual
         private string _outputPath;
 
         private int _sampleLength;
+        private int _density;
 
         private int _na;
         private int _nb;
@@ -61,6 +62,7 @@ namespace AmpIdent.Visual
             _outputPath = "C:\\Output\\output.wav";
 
             _sampleLength = 0;
+            _density = 1;
 
             _na = 5;
             _nb = 5;
@@ -119,7 +121,7 @@ namespace AmpIdent.Visual
                 _path1 = dlg.FileName;
                 PathBox1.Text = _path1;
             }
-            _file1 = new WavLoader(_path1, _sampleLength);
+            _file1 = new WavLoader(_path1, _sampleLength, _density);
             _command = 1;
         }
 
@@ -138,7 +140,7 @@ namespace AmpIdent.Visual
                 _path2 = dlg.FileName;
                 PathBox2.Text = _path2;
             }
-            _file2 = new WavLoader(_path2, _sampleLength);
+            _file2 = new WavLoader(_path2, _sampleLength, _density);
             _command = 2;
         }
 
@@ -464,6 +466,17 @@ namespace AmpIdent.Visual
                 })));
             }
         }
+
+        private void Density_TextChange(object sender, TextChangedEventArgs e)
+        {
+            var pathBox = (TextBox)sender;
+            try { _density = Convert.ToInt32(pathBox.Text); }
+            catch (FormatException)
+            {
+                _density = 1;
+                pathBox.Text = "1";
+            }
+        }
         
         private void VerifyValues()
         {
@@ -478,6 +491,11 @@ namespace AmpIdent.Visual
             {
                 _estimationLength = _sampleLength;
                 ElBox.Dispatcher.BeginInvoke((new Action(delegate { ElBox.Text = _estimationLength.ToString(CultureInfo.InvariantCulture); })));
+            }
+            if (_density < 1)
+            {
+                _density = 1;
+                DensityBox.Dispatcher.BeginInvoke((new Action(delegate { DensityBox.Text = _density.ToString(CultureInfo.InvariantCulture); })));
             }
         }
     }

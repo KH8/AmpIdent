@@ -70,5 +70,16 @@
         <Button Content="Create Output" HorizontalAlignment="Right" Margin="0,0,114,58" VerticalAlignment="Bottom" Width="100" Click="Output"/>
         <Button Content="Play" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Click="Play3" Margin="0,0,34,58"/>
         <Label Content="Output path:" HorizontalAlignment="Left" Height="26" Margin="22,0,0,54" VerticalAlignment="Bottom" Width="76" RenderTransformOrigin="0.487,-0.346"/>
+        <Label Content="Density:" HorizontalAlignment="Left" Height="26" Margin="663,62,0,0" VerticalAlignment="Top" Width="117"/>
+        <TextBox x:Name="DensityBox" HorizontalAlignment="Right" Height="22" Margin="0,64,28,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="76" TextChanged="Density_TextChange" RenderTransformOrigin="0.418,0.364" TextAlignment="Right">
+            <TextBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="0.082"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBox.RenderTransform>
+        </TextBox>
     </Grid>
 </Window>
