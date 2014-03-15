@@ -8,14 +8,14 @@
         <GroupBox Header="File input" HorizontalAlignment="Center" Height="89" Margin="16,10,19,0" VerticalAlignment="Top" Width="868"/>
             <TextBox Name="PathBox1" HorizontalAlignment="Left" Height="22" Margin="104,34,0,0" TextWrapping="Wrap" Text="c:\avril_clean.wav" VerticalAlignment="Top" Width="203" IsEnabled="False"/>
             <Label Content="WAV1 path:" HorizontalAlignment="Left" Height="26" Margin="27,32,0,0" VerticalAlignment="Top" Width="76"/>
-            <Label Name="Loading1" Content="..." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="472,32,0,0" Width="168"/>
+            <Label Name="Loading1" Content="..." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="472,32,0,0" Width="44"/>
             <Button Content="Load" HorizontalAlignment="Left" Margin="312,34,0,0" VerticalAlignment="Top" Width="75" Click="Load1"/>
             <Button Content="Play" HorizontalAlignment="Left" Margin="392,34,0,0" VerticalAlignment="Top" Width="75" Click="Play1"/>
         <TextBox x:Name="PathBox2" HorizontalAlignment="Left" Height="22" Margin="104,63,0,0" TextWrapping="Wrap" Text="c:\avril_scolpture.wav" VerticalAlignment="Top" Width="203" IsEnabled="False"/>
             <Label Content="WAV2 path:" HorizontalAlignment="Left" Height="26" Margin="27,62,0,0" VerticalAlignment="Top" Width="76"/>
             <Button Content="Load" HorizontalAlignment="Left" Margin="312,63,0,0" VerticalAlignment="Top" Width="75" Click="Load2"/>
             <Button Content="Play" HorizontalAlignment="Left" Margin="392,63,0,0" VerticalAlignment="Top" Width="75" Click="Play2"/>
-            <Label x:Name="Loading2" Content="..." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="472,61,0,0" Width="168"/>
+            <Label x:Name="Loading2" Content="..." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="472,61,0,0" Width="44"/>
             <Label Content="Use sample length:" HorizontalAlignment="Left" Height="26" Margin="663,32,0,0" VerticalAlignment="Top" Width="117"/>
             <TextBox Name="SampleLenthBox" HorizontalAlignment="Right" Height="22" Margin="0,34,28,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="76" TextChanged="SampleLength_TextChange" RenderTransformOrigin="0.418,0.364" TextAlignment="Right">
             <TextBox.RenderTransform>
@@ -81,5 +81,7 @@
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
+        <Label x:Name="Samples1Label" Content="0 samples" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="521,32,0,0" Width="97"/>
+        <Label x:Name="Samples2Label" Content="0 samples" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="521,61,0,0" Width="97"/>
     </Grid>
 </Window>

@@ -51,12 +51,12 @@ namespace AmpIdent.Auxiliaries
 
             // if there are 2 channels, we need to devide the nr of sample in 2
             if (numChannels == 2) _sampleLength /= 2;
+            _sampleLength = _sampleLength / density;
+
             if (sampleLength != 0)
             {
-                _sampleLength = numChannels * sampleLength;
+                _sampleLength = sampleLength;
             }
-
-            _sampleLength = _sampleLength/density;
 
             var pos = 44; // start of data chunk
             _loadingPercentage = 0;
@@ -66,7 +66,9 @@ namespace AmpIdent.Auxiliaries
             // ReSharper disable once CSharpWarnings::CS0618
             _rightChannel = new DenseMatrix(_sampleLength, 1, 0.0);
 
-            for (var i = 0; i < _sampleLength - 1; i++)
+            var iterationLength = _sampleLength;
+
+            for (var i = 0; i < iterationLength - 1; i++)
             {
                 var number = _wav[pos] + 256 * _wav[pos + 1];
                 if (number > 32767) number -= 65534;
@@ -74,13 +76,13 @@ namespace AmpIdent.Auxiliaries
 
                 pos += 2 * numChannels * density;
 
-                _loadingPercentage = i * 50 / _sampleLength;
+                _loadingPercentage = i * 50 / iterationLength;
             }
             if (numChannels == 2)
             {
                 pos = 44;
                 _loadingPercentage = 50;
-                for (var i = 0; i < _sampleLength - 3; i++)
+                for (var i = 0; i < iterationLength - 3; i++)
                 {
                     var number = _wav[pos + 2] + 256 * _wav[pos + 3];
                     if (number > 32767) number -= 65534;
@@ -88,7 +90,7 @@ namespace AmpIdent.Auxiliaries
 
                     pos += 2 * numChannels * density;
 
-                    _loadingPercentage = 50 + (i * 50 / _sampleLength);
+                    _loadingPercentage = 50 + (i * 50 / iterationLength);
                 }
             }
 

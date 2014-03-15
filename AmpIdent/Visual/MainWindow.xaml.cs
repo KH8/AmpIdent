@@ -222,6 +222,15 @@ namespace AmpIdent.Visual
                         _status = "File1 Loaded";
                         _1Loaded = true;
 
+                        Samples1Label.Dispatcher.BeginInvoke((new Action(delegate
+                        {
+                            Samples1Label.Content = "0" + " samples";
+                            if (_file1 != null)
+                            {
+                                Samples1Label.Content = _file1.SampleLength + " samples";
+                            }
+                        })));
+                
                         _command = 0;
                         break;
 
@@ -233,6 +242,15 @@ namespace AmpIdent.Visual
                         _ploter.Plot(_file2.LeftChannel, 2);
                         _status = "File2 Loaded";
                         _2Loaded = true;
+
+                        Samples2Label.Dispatcher.BeginInvoke((new Action(delegate
+                        {
+                            Samples2Label.Content = "0" + " samples";
+                            if (_file2 != null)
+                            {
+                                Samples2Label.Content = _file2.SampleLength + " samples";
+                            }
+                        })));
 
                         _command = 0;
                         break;
@@ -278,18 +296,18 @@ namespace AmpIdent.Visual
                 //Display up-to-date
                 Loading1.Dispatcher.BeginInvoke((new Action(delegate
                 {
-                    Loading1.Content = "File Loaded: " + "0" + "%";
+                    Loading1.Content = "0" + "%";
                     if (_file1 != null)
                     {
-                        Loading1.Content = "File Loaded: " + _file1.LoadingPercentage + "%";
+                        Loading1.Content = _file1.LoadingPercentage + "%";
                     }
                 })));
                 Loading2.Dispatcher.BeginInvoke((new Action(delegate
                 {
-                    Loading2.Content = "File Loaded: " + "0" + "%";
+                    Loading2.Content = "0" + "%";
                     if (_file2 != null)
                     {
-                        Loading2.Content = "File Loaded: " + _file2.LoadingPercentage + "%";
+                        Loading2.Content = _file2.LoadingPercentage + "%";
                     }
                 })));
                 OutputBox.Dispatcher.BeginInvoke((new Action(delegate
@@ -489,8 +507,16 @@ namespace AmpIdent.Visual
             }
             if (_sampleLength < _estimationLength && _sampleLength != 0)
             {
-                _estimationLength = _sampleLength;
+                _estimationLength = _sampleLength - _startPoint;
                 ElBox.Dispatcher.BeginInvoke((new Action(delegate { ElBox.Text = _estimationLength.ToString(CultureInfo.InvariantCulture); })));
+            }
+            if (_file1 != null)
+            {
+                if (_estimationLength > _file1.SampleLength - _startPoint )
+                {
+                    _estimationLength = _file1.SampleLength - _startPoint;
+                    ElBox.Dispatcher.BeginInvoke((new Action(delegate { ElBox.Text = _estimationLength.ToString(CultureInfo.InvariantCulture); })));
+                }
             }
             if (_density < 1)
             {

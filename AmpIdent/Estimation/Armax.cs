@@ -125,7 +125,7 @@ namespace AmpIdent.Estimation
             var tYk = VectorMerger.LinkMatrix(_matrixY, iYk);
             var tXk = VectorMerger.LinkMatrix(_matrixX, tX1);
 
-            for (var i = 0; i <= tX1.Values.Length - _startingPoint - 1; i++)
+            for (var i = 0; i <= tXk.Values.Length - _startingPoint - 1; i++)
             {
                 var tFiKt = _fiCalculator.CalculateFi_k(_naParameter, _nbParameter, _ndParameter, _nkParameter, i + _startingPoint, _modelShift, tXk, tYk, tV0);
                 var thetaT = _theta.Transpose();
