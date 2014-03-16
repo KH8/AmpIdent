@@ -36,7 +36,7 @@ namespace AmpIdent.Auxiliaries
             get { return _wav; }
         }
 
-        public WavLoader(string path, int sampleLength, int density)
+        public WavLoader(string path, int sampleLength, int density, int startPoint)
         {
             // first we need to read our wav file, so we can get our info:
             _wav = File.ReadAllBytes(path);
@@ -58,8 +58,10 @@ namespace AmpIdent.Auxiliaries
                 _sampleLength = sampleLength;
             }
 
-            var pos = 44; // start of data chunk
+            var pos = 44 + (startPoint * 2); // start of data chunk
             _loadingPercentage = 0;
+
+            _sampleLength -= startPoint;
 
             // ReSharper disable once CSharpWarnings::CS0618
             _leftChannel = new DenseMatrix(_sampleLength, 1, 0.0);
@@ -80,7 +82,7 @@ namespace AmpIdent.Auxiliaries
             }
             if (numChannels == 2)
             {
-                pos = 44;
+                pos = 44 + (startPoint * 2);
                 _loadingPercentage = 50;
                 for (var i = 0; i < iterationLength - 3; i++)
                 {

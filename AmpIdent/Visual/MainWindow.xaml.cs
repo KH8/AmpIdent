@@ -22,6 +22,7 @@ namespace AmpIdent.Visual
 
         private int _sampleLength;
         private int _density;
+        private int _fileStartPoint;
 
         private int _na;
         private int _nb;
@@ -63,6 +64,7 @@ namespace AmpIdent.Visual
 
             _sampleLength = 0;
             _density = 1;
+            _fileStartPoint = 0;
 
             _na = 5;
             _nb = 5;
@@ -121,7 +123,7 @@ namespace AmpIdent.Visual
                 _path1 = dlg.FileName;
                 PathBox1.Text = _path1;
             }
-            _file1 = new WavLoader(_path1, _sampleLength, _density);
+            _file1 = new WavLoader(_path1, _sampleLength, _density, _fileStartPoint);
             _command = 1;
         }
 
@@ -140,7 +142,7 @@ namespace AmpIdent.Visual
                 _path2 = dlg.FileName;
                 PathBox2.Text = _path2;
             }
-            _file2 = new WavLoader(_path2, _sampleLength, _density);
+            _file2 = new WavLoader(_path2, _sampleLength, _density, _fileStartPoint);
             _command = 2;
         }
 
@@ -374,106 +376,106 @@ namespace AmpIdent.Visual
 
         private void OutputBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var pathBox = (TextBox)sender;
-            _outputPath = pathBox.Text;
+            var testBox = (TextBox)sender;
+            _outputPath = testBox.Text;
         }
 
         private void Na_TextChange(object sender, TextChangedEventArgs e)
         {
-            var pathBox = (TextBox)sender;
-            try { _na = Convert.ToInt32(pathBox.Text); }
+            var testBox = (TextBox)sender;
+            try { _na = Convert.ToInt32(testBox.Text); }
             catch (FormatException)
             {
                 _na = 0;
-                pathBox.Text = "0"; 
+                testBox.Text = "0"; 
             }
         }
 
         private void Nb_TextChange(object sender, TextChangedEventArgs e)
         {
-            var pathBox = (TextBox)sender;
-            try { _nb = Convert.ToInt32(pathBox.Text); }
+            var testBox = (TextBox)sender;
+            try { _nb = Convert.ToInt32(testBox.Text); }
             catch (FormatException)
             {
                 _nb = 0;
-                pathBox.Text = "0";
+                testBox.Text = "0";
             }
         }
 
         private void Nd_TextChange(object sender, TextChangedEventArgs e)
         {
-            var pathBox = (TextBox)sender;
-            try { _nd = Convert.ToInt32(pathBox.Text); }
+            var testBox = (TextBox)sender;
+            try { _nd = Convert.ToInt32(testBox.Text); }
             catch (FormatException)
             {
                 _nd = 0;
-                pathBox.Text = "0";
+                testBox.Text = "0";
             }
         }
 
         private void Nk_TextChange(object sender, TextChangedEventArgs e)
         {
-            var pathBox = (TextBox)sender;
-            try { _nk = Convert.ToInt32(pathBox.Text); }
+            var testBox = (TextBox)sender;
+            try { _nk = Convert.ToInt32(testBox.Text); }
             catch (FormatException)
             {
                 _nk = 0;
-                pathBox.Text = "0";
+                testBox.Text = "0";
             }
         }
 
         private void SpBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
-            var pathBox = (TextBox)sender;
-            try { _startPoint = Convert.ToInt32(pathBox.Text); }
+            var testBox = (TextBox)sender;
+            try { _startPoint = Convert.ToInt32(testBox.Text); }
             catch (FormatException)
             {
                 _startPoint = 0;
-                pathBox.Text = "0";
+                testBox.Text = "0";
             }
         }
 
         private void NiBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
-            var pathBox = (TextBox)sender;
-            try { _iterations = Convert.ToInt32(pathBox.Text); }
+            var testBox = (TextBox)sender;
+            try { _iterations = Convert.ToInt32(testBox.Text); }
             catch (FormatException)
             {
                 _iterations = 0;
-                pathBox.Text = "0";
+                testBox.Text = "0";
             }
         }
 
         private void RlBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
-            var pathBox = (TextBox)sender;
-            try { _recurenceLength = Convert.ToInt32(pathBox.Text); }
+            var testBox = (TextBox)sender;
+            try { _recurenceLength = Convert.ToInt32(testBox.Text); }
             catch (FormatException)
             {
                 _recurenceLength = 0;
-                pathBox.Text = "0";
+                testBox.Text = "0";
             }
         }
 
         private void EiBox_OnTextChanged_TextChange(object sender, TextChangedEventArgs e)
         {
-            var pathBox = (TextBox)sender;
-            try { _estimationLength = Convert.ToInt32(pathBox.Text); }
+            var testBox = (TextBox)sender;
+            try { _estimationLength = Convert.ToInt32(testBox.Text); }
             catch (FormatException)
             {
                 _estimationLength = 0;
-                pathBox.Text = "0";
+                testBox.Text = "0";
             }
         }
 
         private void SampleLength_TextChange(object sender, TextChangedEventArgs e)
         {
-            var pathBox = (TextBox)sender;
-            try { _sampleLength = Convert.ToInt32(pathBox.Text); }
+            var testBox = (TextBox)sender;
+            try { _sampleLength = Convert.ToInt32(testBox.Text); }
             catch (FormatException)
             {
                 _sampleLength = 0;
-                pathBox.Text = "0";
+                testBox.Text = "0";
             }
             if (_estimationLength != 0)
             {
@@ -487,12 +489,23 @@ namespace AmpIdent.Visual
 
         private void Density_TextChange(object sender, TextChangedEventArgs e)
         {
-            var pathBox = (TextBox)sender;
-            try { _density = Convert.ToInt32(pathBox.Text); }
+            var testBox = (TextBox)sender;
+            try { _density = Convert.ToInt32(testBox.Text); }
             catch (FormatException)
             {
                 _density = 1;
-                pathBox.Text = "1";
+                testBox.Text = "1";
+            }
+        }
+
+        private void StartPoint_TextChange(object sender, TextChangedEventArgs e)
+        {
+            var testBox = (TextBox)sender;
+            try { _fileStartPoint = Convert.ToInt32(testBox.Text); }
+            catch (FormatException)
+            {
+                _fileStartPoint = 0;
+                testBox.Text = "0";
             }
         }
         
@@ -522,6 +535,11 @@ namespace AmpIdent.Visual
             {
                 _density = 1;
                 DensityBox.Dispatcher.BeginInvoke((new Action(delegate { DensityBox.Text = _density.ToString(CultureInfo.InvariantCulture); })));
+            }
+            if (_fileStartPoint < 0)
+            {
+                _fileStartPoint = 0;
+                StartPointBox.Dispatcher.BeginInvoke((new Action(delegate { StartPointBox.Text = _fileStartPoint.ToString(CultureInfo.InvariantCulture); })));
             }
         }
     }
