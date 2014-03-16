@@ -56,8 +56,6 @@ namespace AmpIdent.Visual
             InitializeComponent();
             _ploter = new Ploter();
 
-            //Loading.Content = "Loading: " + _loadingPercentage.ToString() + "%";
-
             _path1 = "C:\\avril_clean.wav";
             _path2 = "C:\\avril_scolpture.wav";
             _outputPath = "C:\\Output\\output.wav";
@@ -342,6 +340,7 @@ namespace AmpIdent.Visual
                 })));
 
                 VerifyValues();
+
                 Thread.Sleep(1000);
             }
         }
@@ -541,6 +540,19 @@ namespace AmpIdent.Visual
                 _fileStartPoint = 0;
                 StartPointBox.Dispatcher.BeginInvoke((new Action(delegate { StartPointBox.Text = _fileStartPoint.ToString(CultureInfo.InvariantCulture); })));
             }
+        }
+
+        private void WindowSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var window = (Window)sender;
+            ModelGroupBox.Width = window.ActualWidth - 40;
+            ModelGroupBox.Height = window.ActualHeight - 293;
+            MainTabControl.Width = window.ActualWidth - 65;
+            MainTabControl.Height = window.ActualHeight - 333;
+            OutputGroupBox.Width = window.ActualWidth - 40;
+            OutputBox.Width = window.ActualWidth - 70;
+            ModeListBox.Width = window.ActualWidth - 390;
+            ModeListBox.Height = window.ActualHeight - 386;
         }
     }
 }
